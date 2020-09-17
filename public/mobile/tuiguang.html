@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<title>个人中心</title>
+    <link rel="stylesheet" type="text/css" href="css/common.css" />
+	<link rel="stylesheet" type="text/css" href="fonts/iconfont.css" />
+	<link rel="stylesheet" type="text/css" href="font/iconfont.css" />
+	<link rel="stylesheet" type="text/css" href="css/footer.css">
+</head>
+<style>
+.header h4{
+    font-size: 18px;
+}
+.bg-img{
+    position: relative;
+}
+.bg-img img{
+    width: 100%;
+    height: 200px;
+}
+.bg-num{
+    position: absolute;
+    top: 80px;
+    width: 100%;
+    text-align: center;
+}
+.bg-num span{
+    font-size: 30px;
+    display: block;
+    color:#fff;
+    margin-bottom: 10px;
+}
+.bg-num em{
+    color:#d5e7ff;
+    font-size: 12px;
+}
+.bg-box{
+display: flex;
+    flex-direction: row;
+    background: #fff;
+    border-radius: 10px;
+    margin: 0 3%;
+    position: absolute;
+    bottom: -10px;
+    width: 94%;
+}
+.bg-list span{
+    font-size: 16px;
+    font-weight: bold;
+}
+.bg-list em{
+    color:#8d9dbc;
+    font-size: 12px;
+}
+.bg-list::after{
+    content: "";
+    position: absolute;
+    left: 0;
+    height: 20px;
+    background: #e7eaed;
+    width: 1px;
+    top: 25px;
+}
+.bg-list{
+    position: relative;
+    padding: 15px 0;
+    width: 33.33%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+}
+.my-kehu{
+    margin: 20px 3%;
+}
+.my-kehu-title{
+    font-size: 12px;
+    color:#8d9dbc;
+}
+.my-kefu-box{
+    
+    background: #fff;
+    border-radius: 10px;
+}
+.my-kefu-list{
+    display: flex;
+    flex-direction: row;
+}
+.my-kefu-list span{
+    width: 33.33%;
+    padding: 10px 0;
+    text-align: center;
+    font-size: 16px;
+    color:#c6ced3;
+}
+
+.active{
+    border-bottom:1px solid #588bf7 !important;
+    color:#000 !important;
+}
+.my-kehu-total span{
+    color: #8d9dbc;
+}
+.my-kehu-total em{
+    font-size: 16px;
+    color: #588bf7;
+    font-weight: bold;
+}
+.my-kehu-total{
+    padding: 15px 5%;
+    display: flex;
+    flex-direction: row;
+    justify-content:space-between;
+}
+</style>
+
+<body>
+	<div id="app" v-cloak>
+	    <div id="app" v-clock>
+			<header class="header">
+				<a class="back mt5" href="javascript:history.go(-1)">
+					
+				</a>
+				<h4 class="ft14" data-localize="zdy.mytuiguang">我的推广</h4>
+			</header>
+     <div class="header-space"></div>
+     <div class="bg-img">
+         <img src="images/new/zc_top_bg.f9e162b.png">
+         <div class="bg-num">
+             <span>123</span>
+             <em data-localize="zdy.tuiguangrenshu">推广人数</em>
+         </div>
+          <div class="bg-box">
+         <div class="bg-list">
+             <span>0</span>
+             <em data-localize="zdy.yidairenshu">一代人数</em>
+         </div>
+         <div class="bg-list">
+             <span>0</span>
+             <em  data-localize="zdy.erdairenshu">二代人数</em>
+         </div>
+         <div class="bg-list">
+             <span>0</span>
+             <em  data-localize="zdy.sandairenshu">三代人数</em>
+         </div>
+     </div>
+     </div>
+    
+     <div class="my-kehu">
+         <div class="my-kehu-title">我的客户</div>
+         <div class="my-kefu-box">
+         <div class="my-kefu-list">
+             <span @click="tabClick(0)" data-localize="zdy.yidai" :class="tabIndex==0?'active':''">一代</span>
+             <span @click="tabClick(1)" data-localize="zdy.erdai" :class="tabIndex==1?'active':''">二代</span>
+             <span  @click="tabClick(2)"  data-localize="zdy.sandai" :class="tabIndex==2?'active':''">三代</span>
+         </div>
+         <div class="my-kehu-total">
+             <span>合计(昨日)</span>
+             <em>0 UDST</em>
+         </div>
+         </div>
+     </div>
+	</div>
+	<script type="text/javascript" src="lib/jquery-2.1.1.min.js"></script>
+	<script type="text/javascript" src="lib/layer_mobile/layer.js"></script>
+	<script type="text/javascript" src="javascripts/jquery.cookie.js"></script>
+	<script type="text/javascript" src="lib/jquery.localize.min.js"></script>
+	<script type="text/javascript" src="lib/language_cookie.js"></script>
+	<script type="text/javascript" src="javascripts/main.js"></script>
+	<script type="text/javascript" src="lib/vue.min.js"></script>
+	<script>
+	    new Vue({
+	        el:"#app",
+	        data:{
+	            tabIndex:0,
+	        },
+	        mounted(){
+            	initDataTokens({
+    				url: 'user/numberPromoters'
+    			}, function (res) {
+    			    console.log(res);
+    			})  
+	        },
+	        methods:{
+	            tabClick(i){
+	                this.tabIndex=i;
+	            }
+	        }
+	    })
+	</script>
+</body>
+
+</html>

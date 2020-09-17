@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="../css/common.css">
+		<title></title>
+		<style type="text/css">
+			div#content{
+				padding: 10px 10px;
+				font-size: 1rem;
+			}
+			div#content ul{
+				list-style: none;
+			}
+			div#content p{
+				line-height: 25px;
+				
+			}
+			div#correlation ol{
+				margin-left: 30px;
+			}
+			div#correlation ol li{
+				line-height: 1.6rem;
+			}
+			div#correlation ol li a{
+				text-decoration: none;
+			}
+			div#content h2,
+			div#correlation h2{
+				margin-bottom: 10px;
+			}
+			p{
+				background: transparent !important;
+			}
+			/* span{
+				color: #728DAF !important;
+			} */
+			h4{
+				background-color: transparent;
+			}
+			#correlation{
+				padding: 0 15px;
+			}
+			#content img{
+				max-width: 100%;
+			}
+		</style>
+	</head>
+	<body class="bgBalck">
+		<div id="journalism">
+				<header class="header">
+            <a class="back mt5" href="javascript:history.go(-1)">
+               
+            </a>
+            <h4 class="ft20 blod"></h4>
+				</header>
+				<div class="header-space"></div>
+			<div id="content">
+				<!-- <h2></h2> -->
+				<div></div>
+			</div>
+			<!-- <div id="correlation">
+				<h2>相关新闻</h2>
+				<ol></ol>
+			</div> -->
+		</div>
+		
+		
+		<script type="text/javascript" src="../lib/jquery-2.1.1.min.js"></script>
+		<script type="text/javascript" src="../lib/vue.min.js"></script>
+		<script type="text/javascript" src="../lib/jquery.localize.min.js"></script>
+		<script type="text/javascript" src="../lib/language_cookie.js"></script>
+		<script type="text/javascript" src="../lib/layer_mobile/layer.js"></script>
+		<script type="text/javascript" src="../javascripts/main.js"></script>
+		
+		<script type="text/javascript">
+		var vue = new Vue({
+				el: '#app',
+				data: {
+					tabList: [],
+					detailList: [],
+					selectId: 0,
+				},
+				filters: {
+					toFixeds: function(value) {
+						var vals = iTofixed(value,2)
+						return vals;
+					},
+					toFixed2: function(value, options) {
+						var vals = iTofixed(value,3)
+						return vals;
+					}
+				},
+				mounted: function() {
+					let that = this;
+				},
+				methods: {
+				}
+			});
+  	//===============新闻详情======================
+			var id = request('id');
+			
+			if(request('type')){
+				$.ajax({
+						type: 'post',
+						url: _API + 'news/list',
+						dataType: 'json',
+						data: {
+							c_id: id
+						},
+						success: function (data) {
+							console.log(data);
+							if (data.type == 'ok') {
+								initDataTokens({
+									url: 'news/detail',
+									type: 'post',
+									data: {
+										id: data.message.list[0].id
+									},
+								}, function (res) {
+									console.log(res);
+									if (res.type == 'ok') {
+										$('#content>div').html(res.message.content);
+										$('.header h4').text(res.message.title);
+									}
+								});
+							}
+						}
+					});
+			}else{
+				$.ajax({
+       	    type:'post',
+          	url:_API + 'news/detail',
+          	dataType:'json',	
+			data:{
+          		id:id
+          	},
+          	success:function(data){			
+				$('#content>div').html(data.message.content);
+				$('.header h4').text(data.message.title);
+          	}
+        });
+			}
+  	
+  	  	
+	    $.ajax({
+       	    type:'post',
+          	url:_API + 'news/list',
+          	dataType:'json',	
+          	success:function(data){
+          		var attr=[];
+          		var attr1=[];
+				for(i=0;i<data.message.list.length;i++){
+					if(data.message.list[i].id != id){
+						attr.push(data.message.list[i].title);
+						attr1.push(data.message.list[i].id);
+					}else{
+						$('#content>h2').html(data.message.list[i].title);
+					}
+				};
+				var Attr = attr.slice(0,5);
+				var Attr1 = attr1.slice(0,5);
+				var html='';
+				for(x = 0;x < Attr.length;x++){
+					html +="<li onclick=''><a href='journalism.html?id="+Attr1[x]+"'>"+Attr[x]+"</a></li>"
+				};				
+				$('#correlation>ol').html(html);
+				
+          	}
+        });
+
+		//==================获取地址后缀======================
+		function request(key) {
+		    var url = location.search; //获取url中"?"符后的字串
+		    var theRequest = {};
+		    if (url.indexOf("?") != -1) {
+		        var str = url.substr(1);
+		        strs = str.split("&");
+		        for(var i = 0; i < strs.length; i ++) {
+		            theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+		        }
+		    }
+		    return theRequest[key] || null;
+		}
+		</script>
+	</body>
+</html>

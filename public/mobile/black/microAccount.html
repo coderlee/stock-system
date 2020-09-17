@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>秒合约账户</title>
+    <link rel="stylesheet" type="text/css" href="../css/common.css" />
+</head>
+<style>
+    .gtop {
+        padding-top: 10px;
+    }
+
+    .line {
+        height: 10px;
+        background: linear-gradient(to right, #50667E, #3F556D);
+    }
+
+    .listbox li {
+
+        margin-top: 10px;
+    }
+
+    .titlebox li,
+    .listbox li span {
+        flex: 1;
+    }
+
+    .recordnone {
+        min-height: 150px;
+    }
+
+    .recordnone img {
+        width: 80px;
+    }
+
+    .btbox {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        z-index: 99;
+        width: 100%;
+        padding: 10px 0;
+        background: #202833;
+        border-top: 1px solid #12151c;
+    }
+
+    .btbox a {
+        display: block;
+        flex: 1;
+        text-align: center
+    }
+
+    .btbox a img {
+        width: 40px;
+    }
+
+    .gotrade {
+        height: 30px;
+        line-height: 30px;
+        border-radius: 2px;
+        padding: 0 15px;
+        border: 1px solid #acc5ef6b;
+        display: inline-block;
+    }
+
+    .iconbox {
+        width: 60px;
+        height: 60px;
+        text-align: center;
+        margin: 0 auto;
+        border-radius: 2px;
+
+
+    }
+
+    .btbox a img {
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    .pd85 {
+        padding-bottom: 85px
+    }
+
+    .record_li {
+        border-bottom: 1px solid #202833;
+        padding: 10px 0;
+    }
+
+    .ul_list_box {
+        overflow-y: scroll;
+    }
+</style>
+
+<body class="bgBalck">
+    <header class="header">
+        <a class="back mt5" href="javascript:history.go(-1)">
+
+        </a>
+        <h4 class="ft20 bold" data-localize="assets.secondContractAccount">秒合约账户</h4>
+    </header>
+    <div class="header-space"></div>
+    <div class="pd85">
+        <div class="ggbox plr15">
+            <div class="gtop flex between alcenter">
+                <div class="title ft20 bold blue"></div>
+            </div>
+            <ul class="flex titlebox mt20  ft14 white_gray">
+                <li data-localize="assets.avaiable">可用</li>
+                <li class="ml5" data-localize="assets.lock">冻结</li>
+                <li class="tr" data-localize="assets.conversion">折合(CNY)</li>
+            </ul>
+            <ul class="listbox ft14">
+                <li class="flex alcenter">
+                    <span class="balance-num"></span>
+                    <span class="lock-num ml5"></span>
+                    <span class="tr cny-num"></span>
+                </li>
+            </ul>
+            <p class="lines"></p>
+        </div>
+        <div style="height:10px;background:#202833;margin: 20px 0"></div>
+
+        <div class="apply plr15 mb20">
+            <div class="flex between alcenter">
+                <p class="ft20  bold" data-localize="assets.caidata">财务记录</p>
+
+            </div>
+            <div class="recordnone tc flex alcenter hide">
+                <div style="width:100%">
+                    <img src="../images/anonymous.png" />
+                    <p data-localize="transaction.nodata">暂无记录</p>
+                </div>
+            </div>
+            <div class="record_ul_box">
+                <div class="record_li flex mt10 alcenter  ft14 plr20">
+                    <span class="flex1 tl bold" data-localize="assets.num">数量</span>
+                    <span class="flex1 tc bold" data-localize="assets.record">记录</span>
+                    <span class="flex1 tr bold" data-localize="assets.time">时间</span>
+                </div>
+                <div class="ul_list_box">
+                    <ul class="record_ul colorGrey">
+
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="btbox">
+        <div class="flex">
+            <a class="huazhuan" href="transferredLegal.html">
+                <div class="iconbox flex alcenter">
+                    <img src="../images/hua1.png" alt="">
+                </div>
+                <p class="mt5 " data-localize="assets.transfer">划转</p>
+            </a>
+            <!-- <a href="javascript:;" class="charge">
+                <div class="iconbox flex alcenter">
+                    <img src="../images/cb1.png" alt="">
+                </div>
+                <p class="mt5" data-localize="assets.cmoney">充币</p>
+            </a>
+            <a href="javascript:;" class="moneyout">
+                <div class="iconbox flex alcenter">
+                    <img src="../images/tb1.png" alt="">
+                </div>
+                <p class="mt5" data-localize="assets.tmoney">提币</p>
+            </a> -->
+        </div>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="../lib/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="../lib/layer_mobile/layer.js"></script>
+<script type="text/javascript" src="../javascripts/jquery.cookie.js"></script>
+<script type="text/javascript" src="../lib/jquery.localize.min.js"></script>
+<script type="text/javascript" src="../lib/language_cookie.js"></script>
+<script type="text/javascript" src="../javascripts/main.js"></script>
+<script>
+    $(function () {
+        // FastClick.attach(document.body);
+        var currency = get_param('id'),
+            type = get_param('type'),
+            type_name;
+        // $('.huazhuan').attr('href', 'transferredLegal.html?id=' + currency + '&type=' + type);
+        if (type == 3) {
+            type_name = 'lever'
+        } else if (type == 4) {
+            type_name = 'micro'
+        } else if(type == 2){
+            type_name = 'change'
+        }else if(type == 1){
+            type_name = 'legal'
+        }
+        initDataToken({
+            url: 'wallet/detail',
+            type: 'post',
+            data: {
+                currency,
+                type: type_name
+            }
+        }, function (res) {
+            var cny = res.ExRate - 0;
+            var tocny = ((res.micro_balance - 0) + (res.lock_micro_balance - 0)) * res.cny_price * cny;
+            $('.balance-num').html(res.micro_balance)
+            $('.lock-num').html(res.lock_micro_balance)
+            $('.cny-num').html(iTofixed((res.usdt_price - 0) * (res.micro_balance - 0),4))
+            $('.title').html(res.currency_name)
+        });
+        var page = 1;
+        //获取财务记录
+        getdata();
+
+        function getdata() {
+            initDataToken01({
+                url: 'wallet/legal_log',
+                type: 'post',
+                data: {
+                    currency,
+                    type,
+                    page
+                }
+            }, function (res) {
+                if (res.type == 'ok') {
+                    var msg = res.message.list;
+                    var html = '';
+                    if (res.message.is_open_CTbi == 1) {
+                        $('.charge').attr('href', 'chargeMoney.html?id=' + currency + '&name=' + name)
+                        $('.moneyout').attr('href', 'mentionMoney.html?id=' + currency + '&type=legal');
+                    } else {
+                        $('.charge').click(function () {
+                            layer_msg(getlg('noOpen'))
+                        })
+                        $('.moneyout').click(function () {
+                            layer_msg(getlg('noOpen'))
+                        })
+
+                    }
+                    if (msg.length == 0) {
+                        if (page == 1) {
+                            $('.record_ul_box').addClass('hide');
+                            $('.recordnone').removeClass('hide');
+                        }
+                    } else {
+                        $('.record_ul_box').removeClass('hide');
+                        $('.recordnone').addClass('hide');
+                    }
+
+                    $.each(msg, function (k, v) {
+                        html +=
+                            `
+                    <li class="record_li flex alcentercolor1 ft12">
+                            <span class="flex1 tl">${v.value}</span>
+                            <span class="flex1 tl">${v.info}</span>
+                            <span class="flex1 tr">${v.created_time}</span>
+                        </li>
+                    `
+                    });
+                    $('.record_ul').append(html);
+                } else if (res.type == 'error') {
+                    $('.record_ul_box').addClass('hide');
+                    $('.recordnone').removeClass('hide');
+                }
+
+            })
+        }
+        $('.ul_list_box').scroll(function () {
+            var scrollTop = $(this).scrollTop();
+            var height = $('.record_ul').height();
+            var hegiht2 = $(this).height();
+            if (scrollTop + hegiht2 == height) {
+                page++
+                getdata();
+            }
+        })
+    })
+</script>

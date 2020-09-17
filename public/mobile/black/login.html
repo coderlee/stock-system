@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../lib/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../css/common.css" />
+    <link rel="stylesheet" type="text/css" href="../css/login.css" />
+    <style>
+         .selected img{
+            width: 15px;
+            height:15px;
+            margin-left: 5px;
+            margin-right: 5px;
+           
+        }
+        .selected p{
+            min-width: 40px;
+            text-align: center;
+            font-size: 14px;
+
+        }
+        .mask-content{
+            width: 100.0vw;
+            background-color: #12151c;
+            top:48px;
+            position: absolute;
+            left: 0;
+            border-radius: 2px;
+            height: calc(100.0vh - 48px);
+        }
+        .area-code li{
+            line-height: 40px;
+            text-align: center;
+            border-bottom: 1px solid #000;
+            font-size: 14px!important;
+        }
+        .area-code li:last-child{
+            border: none;
+        }
+        .logtxt{
+            background-color: rgba(0, 0, 0, 0)
+        }
+        .logtxt input{
+            color: #fff;
+        }
+        .form-control{
+            border: none;
+        }
+        .active{
+            color: #f0b90b;
+        }
+    </style>
+</head>
+
+<body class="bgBalck">
+    <div id="app" v-cloak>
+        <header class="header">
+            <a class="back mt5" href="javascript:history.go(-1)">
+
+            </a>
+            <h4 class="ft16" data-localize="lg.lgs">登录</h4>
+        </header>
+        <div class="header-space"></div>
+        <div id="login">
+            <div class="logo">
+                <img src="../images/logo1.png" />
+                <!-- <h5 class="white_gray mt10" data-localize="lg.lgs">登录 GEMINI</h5> -->
+            </div>
+            <div class="theme mt40">
+                    <div class="flex jucenter mb10">
+                            <p :class="status=='mobile'?'active':''" @click="status='mobile'">{{getlg('phregister1')}}</p>
+                            <p class="ml40" :class="status=='email'?'active':''" @click="status='email'">{{getlg('emregister1')}}</p>
+                        </div>
+                    <div class="flex alcenter posRelt">
+                            <div class="flex alcenter logtxt" v-if="status=='mobile'">
+                                <div class="flex selected alcenter" @click="selectedTab">
+                                    <p class="white">+{{areaCode}}</p>
+                                    <img width="15px" src="../images/downs.png" alt="">
+                                </div>
+                                <div class="flex2">
+                                    <input type="text" id="name" v-model="userName" :placeholder="getlg('pmobile')" name="name" value=""
+                                        @keyup="userConfirm" />
+                                </div>
+                            </div>
+                            <div class="logtxt" v-if="status=='email'">
+                                    <input type="text" class="focu" id="email-account" data-localize="lg.pemail"
+                                        :placeholder="getlg('enterEmail')" name="email" value="" />
+                             </div>
+                            <!-- <div class="flex alcenter logtxt" v-else>
+                                    <div class="flex2">
+                                        <input type="text" id="name" v-model="userName" data-localize="lg.email"  placeholder="邮箱" name="name" value=""
+                                            @keyup="userConfirm" />
+                                    </div>
+                                </div> -->
+                        </div>
+
+                <div class="mt10 logtxt">
+                    <input type="password" id="password" v-model="passwords" data-localize="safe.ppwd" placeholder="密码" name="password" value=""
+                        @blur="passblur" @keyup="passwordConfirm" />
+                </div>
+                <a class="btn btn-default" id="sendLogin" @click="logon" data-localize="lg.lgs">登录</a>
+                <!-- <div class="mt20" @click="slectedTap">{{status=='email'?getlg('phregister1'):getlg('emregister1')}}</div> -->
+                <a class="help-block" href="forgetpass.html" data-localize="lg.ftpwds">忘记密码？</a>
+            </div>
+            <div class="nocount"><span data-localize="lg.noaccount">还没有 GEMINI账号？</span><a href="register.html" data-localize="lg.register">注册</a></div>
+        </div>
+        <div class="mask-content" v-show="listShow">
+            <ul class="area-code" >
+                <li v-for="item in areaList" :key="item.id" @click="areaSelected(item.id,item.area_code,item.name)" class="flex between plr15">
+                    <p>{{item.name}}</p>
+                    <p>+{{item.area_code}}</p>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <script type="text/javascript" src="../lib/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="../javascripts/jquery.cookie.js"></script>
+    <script type="text/javascript" src="../lib/layer_mobile/layer.js"></script>
+    <script type="text/javascript" src="../lib/jquery.localize.min.js"></script>
+	<script type="text/javascript" src="../lib/language_cookie.js"></script>
+    <script type="text/javascript" src="../lib/vue.min.js"></script>
+    <script type="text/javascript" src="../javascripts/main.js"></script>
+    <script type="text/javascript" src="../javascripts/login.js"></script>
+</body>
+
+</html>

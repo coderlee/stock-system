@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<title>重置密码</title>
+		<link rel="stylesheet" type="text/css" href="../lib/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="../css/common.css">
+		<link rel="stylesheet" type="text/css" href="../css/style.css"/>
+		
+	</head>
+	<body class="bgBalck">
+		<header class="header">
+			<a class="back mt5" href="javascript:history.go(-1)">
+				
+			</a>
+			<h4 class="ftw ft16" data-localize="safe.newPwd">重新设置密码</h4>
+		</header>
+		<div class="header-space"></div>
+		<div id="resetpass">
+			<div class="theme ftw ft16">
+				<div class="tips">
+					<img src="../images/warning.png" >
+					<span data-localize="safe.len">密码需要6-20个字符</span>
+				</div>
+				<form>
+					<div class="form-group">
+						<input type="password"  id="setpassword" data-localize="safe.ppwd" placeholder="请输入新密码" name="password" value="" />
+					</div>
+					<div class="form-group">
+						<input type="password" id="verifypassword" data-localize="safe.reppwd" placeholder="请再次输入新密码" name="repassword" value="" />
+					</div>
+					<a class="btn btn-default ftw ft16" id="resetp" data-localize="safe.repwd">重置密码</a>
+				</form>
+			</div>
+		</div>
+		<script type="text/javascript" src="../lib/jquery-2.1.1.min.js"></script>
+		<script type="text/javascript" src="../lib/jquery.localize.min.js"></script>
+		<script type="text/javascript" src="../lib/language_cookie.js"></script>
+		<script type="text/javascript" src="../javascripts/jquery.cookie.js"></script>
+		<script type="text/javascript" src="../lib/layer_mobile/layer.js"></script>
+		<script type="text/javascript" src="../javascripts/main.js"></script>
+		<script type="text/javascript">
+		$(function(){
+			// FastClick.attach(document.body);
+			$("#setpassword").change(function() {
+				var pass = $("#setpassword").val();
+				if (pass.length < 6 || pass.length > 16) {
+					$("#mes1").html(getlg('plength'));
+
+				} else {
+					$("#mes1").html("");
+				}
+			})
+			$("#verifypassword").change(function() {
+
+				if ($("#setpassword").val() != $("#verifypassword").val()) {
+					$("#mes2").html(getlg('twonot'));
+					return;
+				} else {
+					$("#mes2").html("");
+				}
+
+			})
+			//重置密码
+			$('#resetp').click(function() {
+				var s = function() {
+
+					var ps = /^[a-zA-Z0-9]{6,16}$/;
+					if (!ps.test($('#setpassword').val())) {
+						layer_msg(getlg('plength'));
+					} else {
+						return true;
+					}
+				}
+
+				var ss = function() {
+					if ($('#verifypassword').val() == $('#setpassword').val()) {
+						return true;
+					} else {
+						layer_msg(getlg('twonot'));
+					}
+				}
+				var pass = $('#setpassword').val();
+				var repass = $('#verifypassword').val();
+
+
+				if (s() == true && ss() == true) {
+
+					var token = get_user_login();
+					$.ajax({
+						type: "post",
+						url: _API + "safe/update_password",
+						data: {
+							password: pass,
+							re_password: repass
+						},
+						datatype: "json",
+						beforeSend: function beforeSend(request) {
+							request.setRequestHeader("Authorization", token);
+						},
+						success: function(data) {
+							layer_msg(data.message);
+							if (data.type == "ok") {
+
+								setTimeout(function() {
+									window.location.href = "Security.html";
+								}, 2000);
+
+
+							}
+						}
+					});
+				} else {
+					//layer_msg(getlg('information'))
+				}
+			})
+		})
+			
+		</script>
+	</body>
+</html>

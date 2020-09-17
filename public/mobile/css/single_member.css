@@ -1,0 +1,127 @@
+.member-bg{
+	border-radius: 5px;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	padding:10px 5%;
+	margin: 0  5%;
+	background: #f0b90b;
+}
+.member-bg span{
+	color:#fff;
+	font-size: 16px;
+}
+.member-bg img{
+	width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+.member-container{
+	box-shadow:0 1px 10px rgba(0,0,0,0.05);
+	padding: 10px 0;
+	background: #fff;
+}
+.member-assest{
+	margin: 15px 0 10px;
+	display: flex;
+}
+.member-assest span{
+	margin-bottom: 10px;
+	color:#999
+}
+.member-assest article:nth-child(2) h1{
+	color:#f0b90b;
+}
+.member-assest article h1{
+	font-size: 16px;
+}
+.member-assest article{
+	width: 50%;
+	text-align: center;
+	display: flex;
+	flex-direction: column;
+}
+.member-menu{
+	text-align: center;
+	display: flex;
+	flex-direction: row;
+	background: #fff;
+	margin-top: 15px;
+}
+.member-menu article span{
+	color:#999;
+	padding: 15px 0;
+}
+.menu-active{
+	color:#333;
+	border-bottom:2px solid #f0b90b;
+}
+.member-menu article{
+	padding: 15px 0;
+	width: 50%;
+	position: relative;
+}
+.member-kg{
+	box-shadow: 0 0 10px rgba(0,0,0,0.05);
+	border-radius: 5px;
+	margin: 0 3%;
+	margin-top: 15px;
+	background: #fff;
+}
+.member-kg-title{
+	font-size: 14px;
+	font-weight: bold;
+	color:#333;
+	padding: 10px 5%;
+	border-bottom: 1px solid #eee;
+}
+.member-kg-list article span{
+	margin-bottom: 10px;
+	color:#999;
+}
+.member-kg-list article h1{
+	color:#333;
+	font-size: 16px;
+}
+.member-kg-list article{
+	text-align: center;
+	width: 50%;
+	display: flex;
+	flex-direction: column;
+}
+.member-kg-list{
+	margin:15px 0 0;
+	padding-bottom: 15px;
+	border-bottom: 1px dashed #ddd;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
+.member-kg-time{
+	text-align: center;
+	color:#999;
+	padding: 10px 0;
+}
+.member-content{
+	padding: 10px 5%;
+}
+.member-fix{
+	position: fixed;
+    width: 100%;
+    bottom: 0;
+    padding: 10px 0;
+    background: #fff
+}
+.member-fix button{
+	width: 80%;
+	margin: 0 10%;
+	padding: 10px 0;
+	border: 0;
+	border-radius: 20px;
+	background: #f0b90b;
+	color:#fff;
+}
+.btm-mar{
+	padding-bottom: 80px;
+}

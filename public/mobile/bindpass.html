@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta name="apple-mobile-web-app-casubmitpable" content="yes" />
+		<title>交易密码</title>
+		<!--<title>CoinBase-Max</title>-->
+		
+		<link rel="stylesheet" type="text/css" href="lib/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="css/common.css">
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		
+        <style>
+            body{
+                background: #fff;
+            }
+            .theme .form-group{
+                position: relative;
+            }
+            
+            .theme .form-group input{
+                color:#000;
+            }
+            .sendcode{
+                top: -10px;
+                right: 0;
+                position: absolute;
+                background: #f0b90b;
+                border: 0;
+                padding: 5px;
+            }
+            #resetp{
+                 background: #f0b90b;
+            }
+        </style>
+	</head>
+	<body>
+	    <div id="app" v-cloak>
+		<header class="header">
+			<a class="back mt5" href="javascript:history.go(-1)">
+				
+			</a>
+			<h4 class=" ft16">{{getlg('czjymm')}}</h4>
+		</header>
+		<div class="header-space"></div>
+		<div id="resetpass">
+			<div class="theme ftw ft16">
+				<div class="tips">
+					<img src="images/warning.png" >
+					<span data-localize="safe.len">密码需要6-16个字符</span>
+				</div>
+				<!--<form>-->
+					<div class="form-group">
+						<input type="password"  id="setpassword" v-model="password" data-localize="safe.ppwd" placeholder="请输入密码" name="password" value="" />
+						<!-- <p id="mes1" style="color:#cc704b;font-size: 12px;margin:5px 0 0 10px;"></p> -->
+					</div>
+					<div class="form-group">
+						<input type="password" id="verifypassword" v-model="repassword" data-localize="safe.reppwd" placeholder="请再次输入密码" name="repassword" value="" />
+						<!-- <p id="mes2" style="color:#cc704b;font-size:12px;margin:5px 0 0 10px;"></p> -->
+					</div>
+					<div class="form-group" >
+						<input type="text" id="code" v-model="code"  :placeholder="getlg('pyan')" name="repassword" value="" />
+						<button class="sendcode" @click="sendcode()" :style="yzmbool?'background:#999':'background:#f0b90b'">{{yzmtxt}}</button>
+					</div>
+					<a class="btn btn-default ftw ft16" id="resetp" @click="submit()">{{getlg('czjymm')}}</a>
+					<!-- <p id="mes3" style="color:#cc704b;font-size: 12px;margin:5px 0 0 10px;"></p> -->
+				<!--</form>-->
+			</div>
+		</div>
+		</div>
+		<script type="text/javascript" src="lib/jquery-2.1.1.min.js"></script>
+		<script type="text/javascript" src="javascripts/jquery.cookie.js"></script>
+		<script type="text/javascript" src="lib/layer_mobile/layer.js"></script>
+		<script type="text/javascript" src="lib/jquery.localize.min.js"></script>
+		<script type="text/javascript" src="lib/language_cookie.js"></script>
+		<script type="text/javascript" src="javascripts/main.js"></script>
+		<script type="text/javascript" src="lib/vue.min.js"></script>
+		<script>
+		    new Vue({
+	            el: '#app',
+		        data:{
+		            yzmbool:false,
+		            yzmtxt:getlg('getcode'),
+		            code:'',
+		            password:'',
+		            repassword:'',
+		            userInfo:'',
+		        },
+		        mounted(){
+		            this.getUserInfo();
+		        },
+		        filters: {
+            	    toFixed4: function (value) {
+            			var vals = iTofixed(value,5)
+            			return vals;
+            		},
+            		toFixedTwo: function (value) {
+            			var vals = iTofixed(value,5)
+            			return vals;
+            		}
+            	},
+            	methods: {
+            	    sendcode(){
+            	        let that=this;
+            	        let token=get_user_login();
+            	        if(isNaN(this.yzmtxt)){
+            	            if(that.userInfo.phone){
+                    	      $.ajax({
+                    	          type:"post",
+                    	          url:_API+"sms_send",
+                    	          data:{
+                    	              type: 'forget',
+                                        user_string: that.userInfo.phone,
+                                        area_code_id: that.userInfo.area_code_id,
+                                        area_code: that.userInfo.area_code
+                    	          },
+                    	   //       beforeSend: function beforeSend(request) {
+                    				// 	request.setRequestHeader("Authorization", token);
+                    				// },
+                    	          success:function(res){
+                    	              that.yzmbool=true;
+                    	              that.settime();
+                    	          }
+                    	      })
+            	            }else{
+            	                 $.ajax({
+                        	          type:"post",
+                        	          url:_API+"sms_mail",
+                        	          data:{
+                        	              type: 'forget',
+                                            user_string: that.userInfo.email,
+                                            area_code_id: that.userInfo.area_code_id,
+                                            area_code: that.userInfo.area_code
+                        	          },
+                        	   //       beforeSend: function beforeSend(request) {
+                        				// 	request.setRequestHeader("Authorization", token);
+                        				// },
+                        	          success:function(res){
+                        	              that.yzmbool=true;
+                        	              that.settime();
+                        	          }
+                        	      })
+            	            }
+            	        }
+            	    },
+            	    settime(){
+            	        let that=this;
+            	        if(isNaN(this.yzmtxt)){
+            	            that.yzmtxt=59;
+            	            setTimeout(function(){
+            	                that.settime();
+            	            },1000)
+            	        }else{
+            	            that.yzmtxt--;
+            	            if(that.yzmtxt<=0){
+            	                that.yzmbool=false;
+            	                that.yzmtxt=getlg('getcode');
+            	            }else{
+            	                setTimeout(function(){
+                	                that.settime();
+                	            },1000)
+            	            }
+            	        }
+            	    },
+            	    getUserInfo(){
+            	         let that=this;
+            	        initDataToken({
+            	            url:"user/info",
+            	            data:{},
+            	        },function(res){
+            	            that.userInfo=res;
+            	        })
+            	    },
+            	    submit(){
+            	        let that=this;
+            	        if (this.password < 6 || this.length > 16) {
+        					return layer_msg(getlg('plength'));
+        
+        				} 
+        	        	if (this.password != this.repassword) {
+        					return layer_msg(getlg('twonot'));
+        				}
+        				if(this.code==''){
+        				    return layer_msg(getlg('pyan'));
+        				}
+        				let token=get_user_login();
+        				layer.load(1);
+        				$.ajax({
+    						type: "post",
+    						url: _API + "safe/update_password",
+    						data: {
+    						    code:that.code,
+    							password: that.password,
+    							re_password: that.repassword
+    						},
+    						datatype: "json",
+    						beforeSend: function beforeSend(request) {
+    							request.setRequestHeader("Authorization", token);
+    						},
+    						success: function(data) {
+    							layer_msg(data.message);
+    							if (data.type == "ok") {
+    
+    								setTimeout(function() {
+    								    window.history.go(-1);
+    								}, 2000);
+    							}
+    						}
+    					});
+            	    }
+            	}
+		    })
+		</script>
+		<script type="text/javascript">
+// 		$(function(){
+// 			$("#setpassword").change(function() {
+// 				var pass = $("#setpassword").val();
+// 				if (pass.length < 6 || pass.length > 16) {
+// 					$("#mes1").html(getlg('plength'));
+
+// 				} else {
+// 					$("#mes1").html("");
+// 				}
+// 			})
+// 			$("#verifypassword").change(function() {
+
+// 				if ($("#setpassword").val() != $("#verifypassword").val()) {
+// 					$("#mes2").html(getlg('twonot'));
+// 					return;
+// 				} else {
+// 					$("#mes2").html("");
+// 				}
+
+// 			})
+// 			//重置密码
+// 			$('#resetp').click(function() {
+// 				var s = function() {
+
+// 					var ps = /^[a-zA-Z0-9]{6,16}$/;
+// 					if (!ps.test($('#setpassword').val())) {
+// 						layer_msg(getlg('plength'));
+// 					} else {
+// 						return true;
+// 					}
+// 				}
+
+// 				var ss = function() {
+// 					if ($('#verifypassword').val() == $('#setpassword').val()) {
+// 						return true;
+// 					} else {
+// 						layer_msg(getlg('twonot'));
+// 					}
+// 				}
+// 				var pass = $('#setpassword').val();
+// 				var repass = $('#verifypassword').val();
+
+
+// 				if (s() == true && ss() == true) {
+
+// 					var token = get_user_login();
+// 					$.ajax({
+// 						type: "post",
+// 						url: _API + "safe/update_password",
+// 						data: {
+// 							password: pass,
+// 							re_password: repass
+// 						},
+// 						datatype: "json",
+// 						beforeSend: function beforeSend(request) {
+// 							request.setRequestHeader("Authorization", token);
+// 						},
+// 						success: function(data) {
+// 							layer_msg(data.message);
+// 							if (data.type == "ok") {
+
+// 								setTimeout(function() {
+// 									window.location.href = "Security.html";
+// 								}, 2000);
+
+
+// 							}
+// 						}
+// 					});
+// 				} else {
+// 					//layer_msg(getlg('information'))
+// 				}
+// 			})
+// 		})
+			
+		</script>
+	</body>
+</html>

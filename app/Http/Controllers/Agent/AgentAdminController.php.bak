@@ -1,0 +1,109 @@
+<?php
+
+namespace App\Http\Controllers\Agent;
+
+use App\Agent;
+use App\AgentAdmin;
+use App\AgentRole;
+use Illuminate\Support\Facades\Input;
+use Symfony\Component\HttpFoundation\Request;
+use Validator;
+use App\Users;
+
+
+
+class AgentAdminController extends Controller{
+
+    public function list1(Request $request)
+    {
+//        if(session()->get('admin_is_super') != '1') {
+//            abort(403);
+//        }
+//        var_dump(5436254635);die;
+        $access_token = $request->get('access_token', 0);
+        $adminUses = AgentAdmin::all();
+        return response()->json(['code'=>0,'data'=>$adminUses]);
+    }
+    public function agentadmin_add_show(Request $request){
+        $returnData = AgentRole::get();
+        return $this->ajaxReturn($returnData);
+    }
+
+    public function add(){
+
+
+        if(session()->get('admin_is_super') != '1') {
+            abort(404);
+        }
+        $id = Input::get('id',null);
+
+        if(empty($id)){
+            $adminRole = New AgentAdmin();
+            $adminRole -> is_super = 0;
+        }else{
+            $adminRole = AgentAdmin::find($id);
+            if($adminRole == null) {
+                abort(404);
+            }
+        }
+        return view('agent.manager.role_add', ['admin_role' => $adminRole]);
+    }
+
+    public function postAdd(){//添加代理商管理员
+
+        $gent_id = Agent::getAgent()->id;
+//        var_dump($gent_id);die;
+//        if(session()->get('admin_is_super') != '1') {
+//            abort(403);
+//        }
+        $id = Input::get('id', null);
+//        var_dump($id);die;
+        $validator = Validator::make(Input::all(), [
+            'username' => 'required',
+        ], [
+            'name.required' => '角色名称必须填写',
+        ]);
+
+        if(empty($id)) {
+            $adminRole = new AgentAdmin();
+        }else{
+            $adminRole = AgentAdmin::find($id);
+            if($adminRole == null) {
+                return redirect()->back();
+            }
+        }
+
+        $adminRole->username = Input::get('username', '');
+//        $adminRole->is_super = Input::get('is_super', '');
+        $password = Input::get('password', '');
+        $adminRole->role_id = Input::get('role_id', '0');
+        if(Input::get('password', '') != '') {
+            $adminRole->password = Users::MakePassword($password);
+        }
+        $adminRole->agent_id = $gent_id;
+
+        if($validator->fails()) {
+            return $this->error($validator->errors()->first());
+        }
+        try {
+            $adminRole->save();
+        }catch (\Exception $ex){
+            $validator->errors()->add('error', $ex->getMessage());
+            return $this->error($validator->errors()->first());
+        }
+        return $this->success('添加成功');
+    }
+
+    public function del(Request $request){
+        $id = $request->get('id');
+        $admin_role = AgentAdmin::find($id);
+        $bool = $admin_role->delete();
+        if($bool){
+            return $this->success('删除成功');
+        }else{
+            return $this->error('删除失败');
+        }
+
+    }
+}
+?>

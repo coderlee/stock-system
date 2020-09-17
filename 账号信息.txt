@@ -1,0 +1,27 @@
+﻿
+后台:
+http://域名/winadmin/   账户：admin 密码  198510aa  或者123456
+
+前台:
+http://域名/mobile
+
+前台账号 928857699  密码 928857699
+
+币值市场:
+https://coinmarketcap.com/ 账号: stock-system@protonmail.com 密码: stock-system
+
+邮箱账号:
+https://mail.protonmail.com/ 账号: stock-system@protonmail.com 密码: tock-system
+
+
+精品IP:154.212.114.35
+154.212.114.37
+高防IP:122.10.48.113
+端口:60690
+账户:root
+密码: c8JjndfRpFrU4t
+
+宝塔
+面板地址: http://154.212.114.35:8888/51718421
+username: 0wv9zqdi
+password: d7b125dc

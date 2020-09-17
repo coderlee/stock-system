@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>财务记录</title>
+	<link rel="stylesheet" type="text/css" href="../lib/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="../css/common.css">
+	<link rel="stylesheet" type="text/css" href="../css/BorrowingRecord.css" />
+</head>
+
+<body class="bgBalck">
+	<div id="app">
+		<header class="header">
+			<a class="back" href="javascript:history.go(-1)">
+
+			</a>
+			<h4 class="ft16" data-localize="assets.caidata">财务记录</h4>
+		</header>
+		<div class="header-space"></div>
+		<div id="record">
+			<ul class="list bgBlackColor">
+				<li class="flex blue2">
+					
+					<p data-localize="assets.num">数量</p>
+					<p data-localize="assets.record">记录</p>
+					<p data-localize="assets.time">时间</p>
+				</li>
+				<li class="flex" v-for="(item,index) in list" :key="item.id" v-if="index < 5">
+					<p>{{item.value}}</p>
+					<p>{{item.info}}</p>
+					<p>{{item.created_time}}</p>
+				</li>
+			</ul>
+			<div class="nodata" v-if="list.length == 0">
+				<p><img src="../images/anonymous.png" /></p>
+				<p data-localize="transaction.nodata">暂无记录</p>
+			</div>
+		</div>
+		
+	</div>
+	<script type="text/javascript" src="../lib/jquery-2.1.1.min.js"></script>
+	<script type="text/javascript" src="../lib/vue.min.js"></script>
+	<script type="text/javascript" src="../javascripts/jquery.cookie.js"></script>
+	<script type="text/javascript" src="../lib/layer_mobile/layer.js"></script>
+	<script type="text/javascript" src="../lib/jquery.localize.min.js"></script>
+	<script type="text/javascript" src="../lib/language_cookie.js"></script>
+	<script type="text/javascript" src="../javascripts/main.js"></script>
+	<script>
+		new Vue({
+			el: '#app',
+			data: {
+				list: [],
+				
+			},
+			filters: {
+				
+			},
+			mounted: function () {
+				let that = this;
+				initDataTokens({
+					url: 'charge_mention/log',
+					data:{
+						limit:5
+					}
+				}, function(res){
+					if(res.type == 'ok'){
+						that.list = res.message.data;
+					}
+				});
+			},
+			methods: {
+				
+			}
+		});
+	</script>
+</body>
+
+</html>

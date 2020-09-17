@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, viewport-fit=cover" />
+    <title>跟单管理</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/single_manage.css" />
+    <style>
+        .back_index{
+            width: 25px;
+            margin-left: 30px;
+            margin-top: 8px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id='app' v-cloak>
+	<header class="header">
+		<a href="javascript:history.go(-1)" class="back mt5"></a>
+		<!--<h4 class="ft16">跟单</h4>-->
+		<a href="index.html"><img src="images/back_index.png" class="back_index"></a>
+	</header>
+	<div class="header-space"></div>
+	<div class="content">
+		<div class="manage-title">
+			<h1>{{getlg('gdgl')}}</h1>
+		</div>
+		<!--<div class="manage-box">-->
+		<!--	<div class="manage-box-list">-->
+		<!--		<span>0.00</span>-->
+		<!--		<em>模拟金累计跟单手数(VST)</em>-->
+		<!--	</div>-->
+		<!--	<div class="manage-box-list">-->
+		<!--		<span>0.00</span>-->
+		<!--		<em>模拟金跟单总收益(VST)</em>-->
+		<!--	</div>-->
+		<!--	<div class="manage-fix">模拟金</div>-->
+		<!--</div>-->
+		<div class="manage-box">
+			<div class="manage-box-list">
+				<span>0.00</span>
+				<em>{{getlg('ljgdbz')}}(USDT)</em>
+			</div>
+			<div class="manage-box-list">
+				<span>0.00</span>
+				<em>{{getlg('gdzsl')}}(USDT)</em>
+			</div>
+			<div class="manage-fix">{{getlg('gdmx')}}</div>
+		</div>
+		<div class="manage-btm-title">
+			<h1>{{getlg('zzgs')}}</h1>
+		</div>
+		<div class="single-top">
+			<article>
+				<img src="images/cn.png">
+				<span>其实金融学院</span>
+			</article>
+			<aside onclick="window.location.href='single_edit.html'">{{getlg('edit')}}</aside>
+		</div>
+		<div class="manage-btm-box">
+			<div class="manage-box-list">
+				<span>0.00</span>
+				<em>{{getlg('ljgdbz')}}(USDT)</em>
+			</div>
+			<div class="manage-box-list">
+				<span>0.00</span>
+				<em>{{getlg('gdsy')}}(USDT)</em>
+			</div>
+		</div>
+		<div class="manage-bg">
+			<h1>{{getlg('gdmoney')}}：2.00USDT</h1>
+			<span>{{getlg('daygsbz')}}：2000.00,{{getlg('maxccbz')}}:不限.</span>
+		</div>
+	</div>
+	<div class="line"></div>
+	</div>
+    <script type="text/javascript" src="lib/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="lib/bootstrap.min.js"></script>
+	<script type="text/javascript" src="javascripts/jquery.cookie.js"></script>
+	<script type="text/javascript" src="lib/layer_mobile/layer.js"></script>
+	<script type="text/javascript" src="lib/jquery.localize.min.js?v=10"></script>
+	<script type="text/javascript" src="lib/language_cookie.js"></script>
+	<script type="text/javascript" src="javascripts/main.js"></script>
+	<script type="text/javascript" src="lib/vue.min.js"></script>
+	<script>
+		var vue =new Vue({
+			el:"#app",
+			data:{
+			},
+			mounted: function () {
+            },
+            methods: {
+            }
+		})
+	</script>
+</body>
+
+</html>

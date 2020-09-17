@@ -1,0 +1,1361 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title></title>
+	<link rel="stylesheet" type="text/css" href="../element-ui/lib/theme-chalk/index.css" />
+	<link rel="stylesheet" type="text/css" href="../lib/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="../css/common.css">
+	<link rel="stylesheet" type="text/css" href="../lib/kline/kline.css">
+	<link rel="stylesheet" type="text/css" href="../css/dataMap.css" />
+</head>
+
+<body class="bgBalck">
+	<div id="app" v-cloak class="bgBalck">
+		<div id="header">
+			<div class='header'>
+				<p class="pull-left">
+					<img onclick="javascript:history.go(-1);" class="return" src="../images/return3.png" alt="">
+					<span class="tabs-data-map" @click="showLeft">
+						<img src="../images/list3.png" alt="">
+						<b class="coinname ftw" v-if="tradeId">{{currencyName}}</b>
+						<b class="coinname ftw" v-else>{{symbol}}</b>
+					</span>
+				</p>
+				<div class="pull-right flex insure-header tr" v-show="tradeId">
+					<p data-localize="contract.insuredAssets">受保资产：</p>
+					<div class="insure">
+						
+						<div class="flex">
+								<p>{{bmbBalance || '0.00' |toFixed1}}</p>
+						
+							<p>YMT</p>
+							<span class="colorGrey" @click="insure1(item.id)" v-for="item in insurancType" :class="[{'active':item.id == userInsurancId}]">{{item.name}}</span>
+						</div>
+					</div>
+				</div>
+				
+			</div>
+			<div class="CNY">
+
+				<div class="pull-left">
+					<h2 :class="['new-price',{'red': updown.substring(0,1) == '-'}]">{{newprice | toFixed4}}</h2>
+					<h4 class="flex alcenter">
+						<span style="margin-left:5px"
+							:class="['updown',{'red': updown.substring(0,1) == '-'}]">{{updown | toFixeds}}%</span>
+					</h4>
+				</div>
+				<ul class="pull-right ft12">
+					<li class="flex alcenter between">
+						<p data-localize="mk.high">高</p><span class="max-price">{{maxprice | toFixeds}}</span>
+					</li>
+					<li class="flex alcenter between">
+						<p data-localize="mk.low">低</p><span class="min-price">{{minprice | toFixeds}}</span>
+					</li>
+					<li class="flex alcenter between">
+						<p data-localize="index.vol">24H量</p><span class="dayVom">{{dayvom | toFixeds}}</span>
+					</li>
+				</ul>
+
+			</div>
+		</div>
+		<div id="tv_chart_container" style="width:100%;height:55.0vh;margin-top: 5px;padding-bottom: 10px;"></div>
+		<!--订单列表 -->
+		<div class="order-list" v-show="tradeId">
+			<p v-show="false">{{CountDown}}</p>
+			<div class="flex order-list-header between">
+				<p class="tc" :class="[{'active':status == 1}]" @click="selectOrder(1)" data-localize="contract.positionList">持仓列表</p>
+				<p class="tc" :class="[{'active':status == -1}]" @click="selectOrder(-1)" data-localize="td.drecord">订单记录</p>
+			</div>
+			<ul class="lists">
+				<li class="flex between ft10">
+					<p data-localize="assets.num">数量</p>
+					<p data-localize="contract.purchasePrice">购买价</p>
+					<p v-show="status == 1" data-localize="deals.nowprice">{{getlg('tnowprice')}}</p>
+					<p v-show="status == -1" data-localize="contract.transactionPrice">成交价</p>
+					<p v-show="status == 1" data-localize="contract.estimated">预计盈亏</p>
+					<p v-show="status == 1" data-localize="contract.countDown">倒计时</p>
+					<p v-show="status == -1" data-localize="deals.fee">手续费</p>
+					<p v-show="status == -1" data-localize="contract.profitAndLoss">盈亏</p>
+				</li>
+				<li
+					v-if="orderList.length > 0 && item.remain_milli_seconds >0 && status==1 || status ==-1 && orderList.length >0||item.status==3 && orderList.length >0"
+					v-for="(item,index) in orderList" :key="item.id" class="flex between ft10">
+					<!-- <p :class="item.type == 1?'green':'red'">{{item.number || '0' | toFixedNum}}{{item.currency_name}}</p> -->
+					<p v-if="item.is_insurance == 1">{{item.number || '0' | toFixedNum}}{{item.currency_name}}{{getlg('just')}}</p>
+					<p v-else-if="item.is_insurance == 2">{{item.number || '0' | toFixedNum}}{{item.currency_name}}{{getlg('back')}}</p>
+					<p v-else>{{item.number || '0' | toFixedNum}}{{item.currency_name}}</p>
+					<p>{{item.open_price || '0.00' | toFixed4}} <img v-if="item.type == 1" width="10" src="../images/buy.png" alt="">
+						<img v-else width="10" src="../images/sell.png" alt=""></p>
+					<p v-if="status == 1&&item.status == 1">{{newprice || '0.00' | toFixed4}}</p>
+					<p v-if="status == 1&&item.status == 3">{{item.end_price || '0.00' | toFixed4}}</p>
+					<p v-if="status == -1&&item.remain_milli_seconds>0">--</p>
+					<p v-if="status == -1&&item.remain_milli_seconds<=0">{{item.end_price || '0.00' | toFixed4}}</p>
+					<p v-if="status == 1&&item.status == 1 && (item.open_price -0) == (newprice -0)" class="green">0</p>
+					<p v-if="status == 1&&item.status == 1 && item.type == 1 && (item.open_price -0) > (newprice -0)" class="red">
+						-{{item.number || '0' | toFixedNum}}</p>
+					<p v-if="status == 1&&item.status == 1 && item.type == 1 && (item.open_price -0) < (newprice -0)" class="green">
+						{{(item.number * item.profit_ratio -0) /100 || '0.00' | toFixedNum}}</p>
+					<p v-if="status == 1&&item.status == 1 && item.type == 2 && (item.open_price -0) > (newprice -0)" class="green">
+						{{(item.number * item.profit_ratio -0) /100 || '0.00' | toFixedNum}}</p>
+					<p v-if="status == 1&&item.status == 1 && item.type == 2 && (item.open_price -0) < (newprice -0)" class="red">
+						-{{(item.number -0) || '0.00' | toFixedNum}}</p>
+						<p v-if="status == 1&&item.status == 3" :class="item.fact_profits >= 0?'green':'red'">{{item.fact_profits || '0' | toFixedNum}}</p>
+					<p v-if="status == 1&&item.status == 1" class="times">
+						{{countDown(item.endTime,index,item.seconds,item.remain_milli_seconds,item.id)}}s</p>
+						<p v-if="status == 1&&item.status == 3" class="times">0.0s</p>
+					<p v-if="status == -1&&item.remain_milli_seconds>0">--</p>
+					<p v-if="status == -1&&item.remain_milli_seconds<=0">{{item.fee || '0.00' | toFixed1}}</p>
+					<p v-if="status == -1&&item.remain_milli_seconds>0">--</p>
+					<p v-if="status == -1&&item.remain_milli_seconds<=0" :class="item.fact_profits >= 0?'green':'red'">
+						{{item.fact_profits || '0' | toFixedNum}}</p>
+						<!-- <p v-if="item.status == 3">{{item.fact_profits || '0' | toFixedNum}}</p> -->
+				</li>
+			</ul>
+			<div v-if="orderList.length == 0" class="tc mt10" data-localize="transaction.nodata">暂无记录</div>
+		</div>
+		<div style="height:160px;"></div>
+		<!-- 底部 -->
+		<div id="bottom" class="flex between" v-if="tradeId">
+			<div class="flex bottom-left between" @click="slectedTime()">
+				<div class="tc">
+					<p data-localize="assets.num">数量</p>
+					<p class="ftColor">{{inputValue || '0.00' | toFixedNum}}</p>
+				</div>
+				<div class="tc">
+					<p data-localize="assets.time">时间</p>
+					<p class="ftColor">{{seconds || '00'}}s</p>
+				</div>
+				<div class="tc">
+					<p data-localize="contract.profitRate">盈利率</p>
+					<p class="ftColor">{{profitRatio || '00' | toFixedNum}}%</p>
+				</div>
+				<div class="logo-down">
+					<img src="../images/downs.png" alt="">
+				</div>
+			</div>
+			<div class="flex">
+				<button class="second-buy" @click="buyModal(1)" data-localize="contract.buyUp">买涨</button>
+				<button class="second-sell" @click="buyModal(2)" data-localize="contract.buyAll">买跌</button>
+			</div>
+
+		</div>
+		<div id="bottom" class="flex between" v-else>
+			<button class="goTranbuy" @click="buyModals(1)" data-localize="transaction.buy">买入</button>
+			<button class="goTransell" @click="buyModals(2)" data-localize="transaction.sell">卖出</button>
+		</div>
+
+		<!-- 左侧内容 -->
+		<div id="sideColumn" class="bgBlackColor" v-if="tradeId">
+			<h4>
+			</h4>
+			<div class="ft20 bold bdbs pl20 texts-lever" data-localize="contract.secondContract">秒合约</div>
+			<ol class="tabs hide">
+				<li class="currency_name side side2" data-id="3">USDT</li>
+			</ol>
+			<ul class="ul">
+				<li v-for="item in currencyList" :key="item.id" v-if="item.is_display == 1&&item.open_microtrade == 1"
+					:class="['legal_name flex between',{'bg_active':currency_id==item.currency_id}]"
+					@click="selectCurrencys(item.id,item.legal_id,item.currency_id,item.legal_name,item.currency_name)">
+					<strong><span>{{item.currency_name}}</span></strong>
+					<p :class="['fontC',{'gre':item.now_price>=0}]">
+						<span>{{item.now_price}}<b>{{item.legal_name}}</b></span>
+					</p>
+				</li>
+			</ul>
+		</div>
+		<div id="sideColumn" class="bgBlackColor" v-else>
+			<h4>
+			</h4>
+			<div class="ft20 bold bdbs pl20 texts-lever" data-localize="contract.contract">合约</div>
+			<ol class="tabs hide">
+				<li class="currency_name side side2" data-id="3">USDT</li>
+			</ol>
+			<ul class="ul">
+				<li v-for="item in currencyList" :key="item.id" v-if="item.is_display == 1&&item.open_lever == 1"
+					:class="['legal_name flex between',{'bg_active':currency_id==item.currency_id}]"
+					@click="selectCurrencys(item.id,item.legal_id,item.currency_id,item.legal_name,item.currency_name)">
+					<strong><span>{{item.currency_name}}</span></strong>
+					<p :class="['fontC',{'gre':item.now_price>=0}]">
+						<span>{{item.now_price}}<b>{{item.legal_name}}</b></span>
+					</p>
+				</li>
+			</ul>
+		</div>
+
+		<!-- 倒计时下单弹窗 -->
+		<div class="time-modal">
+			<div class="time-header">
+				<div>
+					<p class="colorGrey ft12" data-localize="contract.transactionMode">交易模式</p>
+					<div class="flex warps currency-list mt10">
+						<p :class="[{'active':tradeCurrencyId == item.id}]" v-for="item in tradeCurrency" :key="item.id"
+							@click="tradeCurrencyClick(item.id,item.name)">{{item.name}}</p>
+
+					</div>
+
+				</div>
+
+			</div>
+			<div class="time-content mt10">
+				<p class="colorGrey ft12" data-localize="contract.openQuantity">开仓数量</p>
+				<div class="time-num between">
+					<ul class="flex warps1">
+						<li v-for="item in tradeNUm" :key="item.id" @click="tabNumbers(item.number)">
+							<p :class="[{'active':(inputValue-0) == (item.number -0).toFixed(0)}]">{{item.number |toFixedNum}}</p>
+						</li>
+					</ul>
+					<input type="number" data-localize="contract.otherQuantities" placeholder="其他数量" v-model="inputValue">
+				</div>
+
+				<div class="time-list">
+					<p class="colorGrey ft12" data-localize="deals.optime">开仓时间</p>
+					<div class="flex warps1 currency-list mt10">
+						<p :class="[{'active':seconds == item.seconds}]" v-for="item in timeList" :key="item.id"
+							@click="selectTime(item.seconds,item.profit_ratio)">{{item.seconds}}s</p>
+
+					</div>
+				</div>
+				<div class="flex between ft14">
+					<p><span data-localize="contract.accountBalance">账户余额</span>: <span class="green bold">{{balance}} {{tradeCurrencyName}}</span></p>
+					<p><span data-localize="contract.profitRate">盈利率</span>: <span class="green bold ft20">{{profitRatio | toFixedNum}}%</span></p>
+
+				</div>
+			</div>
+		</div>
+
+		<!-- 下单之后的弹窗 -->
+		<div class="orders">
+			<div>
+				<div class="mt20 orders-list">
+					<p class="mt10">
+						<span data-localize="assets.num">数量</span>：
+						<span>{{inputValue || '0' |toFixedNum}} {{tradeCurrencyName}}</span>
+					</p>
+					<p class="mt10">
+						<span data-localize="assets.time">时间</span>：
+						<span>{{seconds}} S</span>
+					</p>
+					<p class="mt10">
+						<span data-localize="contract.profitRate">盈利率</span>：
+						<span>{{profitRatio}}%</span>
+					</p>
+				</div>
+			</div>
+		</div>
+		<div id="mask1" @click="closeLeft"></div>
+
+	</div>
+
+
+	<script type="text/javascript" src="../lib/vue.min.js"></script>
+	<script type="text/javascript" src="../lib/jquery-2.1.1.min.js"></script>
+	<script type="text/javascript" src="../javascripts/jquery.cookie.js"></script>
+	<script type="text/javascript" src="../lib/layer_mobile/layer.js"></script>
+	<script type="text/javascript" src="../element-ui/lib/index.js"></script>
+	<script type="text/javascript" src="tradeview/charting_library/charting_library.min.js"></script>
+	<script type="text/javascript" src="../javascripts/socket.io.js"></script>
+	<script type="text/javascript" src="../lib/jquery.localize.min.js"></script>
+	<script type="text/javascript" src="../lib/language_cookie.js"></script>
+	<script type="text/javascript" src="../javascripts/main.js"></script>
+	<script type="text/javascript" src="../javascripts/dataMap.js"></script>
+	<script>
+		var vm = new Vue({
+			el: '#app',
+			data: {
+				widget: null,
+				symbolInfo: null,
+				feed: null,
+				wsEx: null,
+				ws: null,
+				lists: [],
+				newData: '',
+				symbol: '',
+				priceScale: 10000,
+				histime: '',
+				newprice: '0.00',
+				updown: '0.00',
+				maxprice: '0.00',
+				minprice: '0.00',
+				dayvom: '0.00',
+				currencyList: [],
+				couponSelected: '',
+				legal_id: get_param('legal_id'),
+				currency_id: get_param('currency_id'),
+				tradeId: get_param('tradeId'),
+				sellType: 'buy',
+				multipleList: [],
+				legal_name: '',
+				CountDown: '',
+				balance: '',
+				rate: '',
+				numbers: '0.00',
+				expectedReturn: '0.00',
+				guaranteeAmount: '0.00',
+				tradeType: '',
+				tradeCurrency: [],
+				tradeCurrencyId: '',
+				tradeCurrencyName: '',
+				tradeCurrencyData: [],
+				tradeNUm: [],
+				timeList: [],
+				seconds: '',
+				inputValue: '',
+				profitRatio: '',
+				tradeCurrencyIdTest: '',
+				secondsTest: '',
+				inputValueTest: '',
+				profitRatioTest: '',
+				balanceTest: '',
+				rateTest: '',
+				orderData: {
+
+				},
+				progress: 100,
+				set: null,
+				status: 1,
+				currencyName: "",
+				orderList: [],
+				set: null,
+				bmbBalance: '',
+				sets: null,
+				insurancType:[],
+				userInsurancId:''
+
+			},
+			filters: {
+				toFixeds: function (value) {
+					var vals = iTofixed(value,2)
+					return vals;
+				},
+				toFixeds1: function (value) {
+					var vals = iTofixed(value,8)
+					return vals;
+				},
+				toFixed4: function (value) {
+					var vals = iTofixed(value,4)
+					return vals;
+				},
+				toFixedNum: function (value) {
+					var vals = iTofixed(value,0)
+					return vals;
+				},
+				toFixed1: function (value) {
+					var vals = iTofixed(value,1)
+					return vals;
+				},
+			},
+			created() {
+				var that = this;
+				var paramsed = get_all_params();
+				that.symbol = paramsed.symbol;
+				var arr = that.symbol.split('/');
+				that.currencyName = arr[0];
+				that.init();
+			},
+			computed: {
+				listenState() { //监听交易对
+					return this.symbol;
+				}
+			},
+			watch: {
+				listenState: function (a, b) { //监听交易对
+					if (a != b && b != '') {
+						this.widget.setSymbol(a, localStorage.getItem('tim'), function onReadyCallback() {}) //切换币种
+					}
+				}
+			},
+			mounted() {
+				this.createWidget();
+				// this.connects();
+				this.getList();
+			},
+			destroyed() {
+				this.removeWidget();
+			},
+			beforeDestroy() {
+
+			},
+
+			methods: {
+				init() {
+					var that = this;
+					initDataTokens({
+						url: 'currency/quotation_new'
+					}, function (res) {
+						if (res.type == 'ok') {
+							var data1 = res.message;
+							for (var i = 0; i < data1.length; i++) {
+								if (data1[i].id == that.legal_id) {
+									var data2 = data1[i].quotation;
+									that.currencyList = data2;
+									for (var j = 0; j < data2.length; j++) {
+										if (that.currency_id == data2[j].currency_id) {
+											that.couponSelected = data2[j].currency_name + '/' + data2[j].legal_name;
+											that.legal_name = data2[j].legal_name;
+										}
+									}
+								}
+							}
+						}
+					})
+					initDataTokens({
+						url: 'microtrade/payable_currencies'
+					}, function (res) {
+						if (res.type == 'ok') {
+							that.tradeCurrency = res.message;
+							if (res.message.length > 0) {
+								for (var i = 0; i < res.message.length; i++) {
+									if (res.message[i].name == 'YMT') {
+										that.bmbBalance = res.message[i].user_wallet.insurance_balance;
+										that.insurancType = res.message[i].insurance_types;
+										if(res.message[i].user_insurance){
+											that.userInsurancId = res.message[i].user_insurance.insurance_type_id;
+										}
+										
+									}
+								}
+								that.tradeCurrencyId = res.message[0].id;
+								that.tradeCurrencyName = res.message[0].name;
+								that.tradeCurrencyIdTest = res.message[0].id
+								that.tradeNUm = res.message[0].micro_numbers;
+								that.balance = res.message[0].user_wallet.micro_with_insurance;
+								that.balanceTest = res.message[0].user_wallet.micro_with_insurance;
+								that.rate = res.message[0].micro_trade_fee;
+								that.rateTest = res.message[0].micro_trade_fee;
+								if (that.tradeNUm.length > 0) {
+									that.inputValue = iTofixed(that.tradeNUm[0].number,0);
+									that.inputValueTest = that.tradeNUm[0].number;
+								}
+							}
+
+						}
+					})
+					initDataTokens({
+						url: 'microtrade/seconds'
+					}, function (res) {
+						if (res.type == 'ok') {
+							that.timeList = res.message;
+							if (res.message.length > 0) {
+								that.seconds = res.message[0].seconds;
+								that.profitRatio = res.message[0].profit_ratio;
+								that.secondsTest = res.message[0].seconds;
+								that.profitRatioTest = res.message[0].profit_ratio
+							}
+
+						}
+					})
+				},
+				// 获取秒合约订单列表
+				getList() {
+					var that = this;
+					// that.orderList = [];
+					var arr = [];
+					clearTimeout(that.set);
+					clearInterval(that.sets);
+					initDataTokenNo({
+						url: 'microtrade/lists',
+						data: {
+							page: 1,
+							status: that.status,
+							limit: 20,
+							match_id: that.tradeId
+						}
+					}, function (res) {
+						if (res.type == 'ok') {
+							arr = res.message.data;
+							if (arr.length > 0) {
+
+								var nowTime = new Date().getTime();
+								for (var i = 0; i < arr.length; i++) {
+									arr[i].endTime = (nowTime - 0) + (arr[i].remain_milli_seconds - 0);
+								}
+								that.orderList = arr;
+								that.Djs_time();
+								that.set = setTimeout(that.countDown, 200);
+							}
+
+						}
+					})
+				},
+				// 订单倒计时
+				countDown(val, indexs, seconds, relSeconds) {
+					var that = this;
+					var timeValue = '';
+					var process = 100 / Number(seconds);
+					var endItem = val; //获取列表传的截止时间
+					var nowItem = new Date().getTime(); //获取当前时间
+					var timeSpace = endItem - nowItem; //截止时间减去当前时间
+					var seconds = '';
+					if (timeSpace > 0) {
+						seconds = iTofixed(timeSpace / 1000,1);
+						return seconds;
+					} else if (timeSpace <= 0) {
+						return 0.0;
+						// 倒计时结束打开
+						// clearTimeout(that.set);
+						// var arr = that.orderList;
+						// arr.splice(indexs,1)
+						// that.orderList = arr;
+						// console.log(that.orderList.splice(indexs,1))
+						// that.orderList = that.orderList.splice(indexs,1);
+						// that.getList();
+						// 或者刷新页面
+						// location.reload();
+					}
+
+
+				},
+				Djs_time: function () {
+					this.sets = setInterval(() => {
+						var presentTime = new Date().getTime();
+						this.CountDown = presentTime
+					}, 200);
+				},
+				// 选择秒合约订单类型
+				selectOrder(types) {
+					var that = this;
+					that.status = types;
+					that.orderList = [];
+					that.getList();
+					changeLg();
+				},
+				selectCurrencys(ids,legalId, currencyId, legalName, currencyName) {
+					var that = this;
+					that.tradeId = ids;
+					that.legal_id = legalId;
+					that.currency_id = currencyId;
+					that.symbol = currencyName + '/' + legalName;
+					that.legal_name = legalName;
+					$('#mask1').hide();
+					$('#sideColumn').animate({
+						left: '-70%'
+					}, 100);
+					that.init();
+					that.createWidget();
+					// that.connects();
+					that.getList();
+
+				},
+				tradeCurrencyClick(num, names) {
+					var that = this;
+					that.tradeCurrencyId = num;
+					that.tradeCurrencyName = names;
+					for (var i = 0; i < that.tradeCurrency.length; i++) {
+						if (that.tradeCurrency[i].id == num) {
+							that.tradeNUm = that.tradeCurrency[i].micro_numbers;
+							if (that.tradeCurrency[i].user_wallet) {
+								that.balance = that.tradeCurrency[i].user_wallet.micro_with_insurance;
+							}
+
+							that.rate = that.tradeCurrency[i].micro_trade_fee;
+							if (that.tradeNUm.length > 0) {
+								that.inputValue = iTofixed(that.tradeNUm[0].number,0);
+
+							}
+						}
+					}
+				},
+				tabNumbers(num) {
+					var that = this;
+					that.inputValue = iTofixed(num,0);
+				},
+				// 显示左侧
+				showLeft() {
+					var that = this;
+					$('#mask1').show();
+					$('#sideColumn').animate({
+						left: '0'
+					}, 100);
+				},
+				// 关闭左侧
+				closeLeft() {
+					var that = this;
+					$('#mask1').hide();
+					$('#sideColumn').animate({
+						left: '-70%'
+					}, 100);
+				},
+
+
+
+				// 买入/卖出按钮点击
+				buyModal(types) {
+					var that = this;
+					that.progress = 100;
+					layer.closeAll();
+					clearInterval(that.set);
+					that.tradeType = types;
+					var text1 = '';
+					var skin = 'confirm-modal btn-text ';
+					if (types == 1) {
+						text1 = getlg('buyUp') + that.currencyName;
+						skin = 'confirm-modal btn-text buys';
+					} else {
+						text1 = getlg('buyAll') + that.currencyName;
+						skin = 'confirm-modal btn-text sells';
+					}
+					layer.open({
+						type: 1,
+						title: text1,
+						area: ['90%', 'auto'],
+						skin: skin,
+						content: $('.orders'),
+						shadeClose: true,
+						btn: [getlg('ceil'), text1],
+						btn2: function (index) {
+							that.taderSubmit()
+						},
+						success: function () {
+
+						}
+					})
+				},
+				slectedTime() {
+					var that = this;
+					that.progress = 100;
+					layer.closeAll();
+					clearInterval(that.set);
+					layer.open({
+						type: 1,
+						title: false,
+						area: ['100%', 'auto'],
+						skin: 'confirm-modal btn-text second-modal',
+						content: $('.time-modal'),
+						shadeClose: true,
+						fixed: true,
+						offset: 'b',
+						closeBtn: 0,
+						// scrollbar: false,
+						tipsMore: true,
+						btn: [getlg('buyUp'), getlg('buyAll')],
+						btn2: function (index) {
+							that.buyModal(2);
+						},
+						yes: function () {
+							that.buyModal(1)
+						}
+					})
+				},
+				// 下单
+				taderSubmit() {
+					var that = this;
+					if (!that.seconds) {
+						layer_msg(getlg('chooseTime'));
+						return false;
+
+					}
+					if (!that.inputValue) {
+						layer_msg(getlg('selectQuantities'));
+						return false;
+					} else if (that.inputValue % 10 != 0) {
+						layer_msg(getlg('multipleTen'));
+						return false;
+					}
+					initDataTokens({
+						url: 'microtrade/submit',
+						data: {
+							match_id: that.tradeId,
+							currency_id: that.tradeCurrencyId,
+							type: that.tradeType,
+							seconds: that.seconds,
+							number: that.inputValue
+						},
+						type: 'post'
+					}, function (res) {
+						if (res.type == 'ok') {
+							layer_msg(getlg('checkoutSuccess'));
+							initDataTokens({
+								url: 'microtrade/payable_currencies'
+							}, function (res) {
+								if (res.type == 'ok') {
+									if (res.message.length > 0) {
+										for (var i = 0; i < res.message.length; i++) {
+											if (res.message[i].id == that.tradeCurrencyId) {
+												that.balance = res.message[i].user_wallet.micro_with_insurance;
+											}
+											if (res.message[i].name == 'YMT') {
+												that.bmbBalance = res.message[i].user_wallet.insurance_balance;
+											}
+										}
+									}
+
+								}
+							})
+							// location.reload();
+							that.getList();
+
+						}
+					})
+				},
+				selectTime(num, num1) {
+					var that = this;
+					that.seconds = num;
+					that.profitRatio = num1;
+				},
+				// 合约跳转
+				buyModals(types) {
+					var that = this;
+					location.href = 'LeveragedDeals.html?id1=' + that.legal_id + '&id2=' + that.currency_id + '&name1=' + that
+						.legal_name + '&name2=' + that.currencyName + '&type=' + types;
+				},
+				insure1() {
+					location.href = "exchange.html?type=insurance&insuranceType=1";
+				},
+				insure2() {
+					location.href = "exchange.html?type=insurance&insuranceType=2";
+				},
+
+				// 默认
+				connect(real) { //封装推送数据
+					var that = this;
+					var socketio = io(socket_api)
+					initDataTokens({
+						url: 'user/info'
+					}, function (res) {
+						if (res.type == 'ok') {
+							socketio.emit('login', res.message.id);
+							socketio.on('kline', function (msg) {
+								if (msg.type == 'kline') {
+									let obj = {}
+									let types = localStorage.getItem('types');
+									if (that.symbol == msg.symbol&&types == msg.period) {
+										obj.open = Number(msg.open);
+										obj.low = Number(msg.low);
+										obj.high = Number(msg.high);
+										obj.close = Number(msg.close);
+										obj.volume = Number(msg.volume);
+										obj.time = Number(msg.time);
+										that.newprice = msg.close;
+										real(obj)
+
+									}
+								}
+							});
+							socketio.on('daymarket', function (msg) {
+								if (msg.type == 'daymarket') {
+									let obj = {}
+									if (that.symbol == msg.symbol) {
+
+										that.maxprice = msg.high
+										that.minprice = msg.low
+										that.dayvom = iTofixed(msg.volume,4);
+										that.updown = msg.change;
+									}
+								}
+							});
+							socketio.on('closed_microorder', function (msg) {
+							
+								if (msg.type == 'closed_microorder') {
+									var datas =msg.data;
+									for (var i = 0; i < that.orderList.length; i++) {
+										if (that.orderList[i].id == datas.id) {
+											that.orderList[i] = datas;
+											setTimeout(function () {
+												var arr = that.orderList;
+												arr.splice(i, 1)
+												that.orderList = arr;
+											}, 500)
+											
+											return false;
+										}
+									}
+									
+
+								}
+							})
+
+
+						}
+					});
+				},
+				connects() { //封装推送数据
+					var that = this;
+					var socketio = io(socket_api)
+					var socket_user_id = (new Date()).getTime();
+					socketio.emit('login', socket_user_id);
+					socketio.on('daymarket', function (msg) {
+						if (msg.type == 'daymarket') {
+							let obj = {}
+							if (that.symbol == msg.symbol) {
+								that.maxprice = msg.high
+								that.minprice = msg.low
+								that.dayvom = iTofixed(msg.volume,4);
+								that.updown = msg.change;
+							}
+						}
+					});
+				},
+				createWidget() {
+					let _this = this;
+
+					this.$nextTick(function () {
+						let widget = _this.widget = new TradingView.widget({
+							symbol: _this.symbol,
+							interval: 1,
+							debug: true,
+							fullscreen: false,
+							autosize: true,
+							container_id: "tv_chart_container",
+							// datafeed: new Datafeeds.UDFCompatibleDatafeed("http://demo_feed.tradingview.com"),
+							datafeed: _this.createFeed(),
+							library_path: "tradeview/charting_library/",
+							custom_css_url: 'bundles/new.css',
+							locale: "zh",
+							width: "100%",
+							height: 516,
+							drawings_access: {
+								type: 'black',
+								tools: [{
+									name: "Regression Trend"
+								}]
+							},
+							disabled_features: [ //  禁用的功能
+								'left_toolbar', 'widget_logo', 'header_saveload', 'compare_symbol', 'display_market_status',
+								'go_to_date', 'header_chart_type', 'header_compare', 'header_interval_dialog_button',
+								'header_resolutions', 'header_screenshot', 'header_symbol_search', 'header_undo_redo',
+								'legend_context_menu', 'show_hide_button_in_legend', 'show_interval_dialog_on_key_press',
+								'snapshot_trading_drawings', 'symbol_info', 'timeframes_toolbar',
+								'use_localstorage_for_settings',
+								'volume_force_overlay'
+							],
+							enabled_features: [ //  启用的功能（备注：disable_resolution_rebuild 功能用于控制当时间范围为1个月时，日期刻度是否都是每个月1号
+								'dont_show_boolean_study_arguments', 'hide_last_na_study_output', 'move_logo_to_main_pane',
+								'same_data_requery', 'side_toolbar_in_fullscreen_mode', 'disable_resolution_rebuild'
+							],
+							charts_storage_url: 'http://saveload.tradingview.com',
+							charts_storage_api_version: "1.1",
+							toolbar_bg: "transparent",
+							timezone: "Asia/Shanghai",
+							studies_overrides: {
+								'volume.precision': '1000'
+							},
+							overrides: _this.overrides()
+						});
+
+						widget.MAStudies = [];
+						widget.selectedIntervalButton = null;
+						// widget.setLanguage('en')
+						widget.onChartReady(function () { //图表方法
+							// document.getElementById('trade-view').childNodes[0].setAttribute('style', 'display:block;width:100%;height:100%;');
+							//let that =this
+
+							// widget.chart().createStudy('Moving Average', false, true, [15, 'close', 0], null, {
+							// 	'Plot.color': '#e843da'
+							// });
+							// widget.chart().createStudy("MA Cross", false, false, [10, 20]);
+							widget.chart().createStudy('Moving Average', false, false, [15, 'close', 0], null, {
+								'Plot.color': '#a039a2'
+							},{checkLimit:true});
+							widget.chart().createStudy("Moving Average", false, false, [10, 'close', 0], null, {
+								'Plot.color': 'green'
+							},{checkLimit:true});
+							widget.chart().createStudy("Moving Average", false, false, [20, 'close', 0], null, {
+								'Plot.color': 'red'
+							},{checkLimit:true});
+
+							let buttonArr = [{
+								value: "1min",
+									period: "1",
+									text: getlg('klineText1'),
+									chartType: 3,
+									type:"1min"
+								},
+								{
+									value: "1",
+									period: "1m",
+									text: getlg('klineText2'),
+									chartType: 1,
+									type:"1min"
+								},
+								{
+									value: "5",
+									period: "5m",
+									text: getlg('klineText3'),
+									chartType: 1,
+									type:"5min"
+								},
+								{
+									value: "30",
+									period: "30m",
+									text: getlg('klineText5'),
+									chartType: 1,
+									type:"30min"
+								},
+								{
+									value: "60",
+									period: "60分钟",
+									text: getlg('klineText6'),
+									chartType: 1,
+									type:"60min"
+								},
+								{
+									value: "1D",
+									period: "1D",
+									text: getlg('klineText7'),
+									chartType: 1,
+									type:"1day"
+								},
+								{
+									value: "1W",
+									period: "1W",
+									text: getlg('klineText8'),
+									chartType: 1,
+									type:"1week"
+								},
+								{
+									value: "1M",
+									period: "1M",
+									text: getlg('klineText9'),
+									chartType: 1,
+									type:"1mon"
+								}
+							];
+							let btn = {};
+							let nowTime = '';
+							buttonArr.forEach((v, i) => {
+								let button = widget.createButton()
+								button.attr('title', v.text)
+									.addClass("my2")
+									.text(v.text)
+
+								if (v.text == getlg('klineText2')) {
+									button.css({
+										'color': '#588bf7',
+										'border-bottom': '1px solid #588bf7'
+									})
+									localStorage.setItem('tim', '1') //默认为1分钟
+									localStorage.setItem('types', '1min')
+								}
+								btn = button.on("click", function (e) {
+									$(this).parents(".left").children().find(".my2").removeAttr("style"); //去掉1分钟的
+									handleClick(e, v.value,v.type);
+
+									widget.chart().setChartType(v.chartType); //改变K线类型
+								});
+
+
+							});
+							let handleClick = (e, value,type) => {
+								_this.setSymbol = function (symbol, value) {
+									gh.chart().setSymbol(symbol, value);
+								};
+								localStorage.setItem('tim', value);
+								localStorage.setItem('types', type);
+								widget.chart().setResolution(value, function onReadyCallback() {}); //改变分辨率
+
+								$(e.target)
+									.addClass("mydate")
+									.closest("div.space-single")
+									.siblings("div.space-single")
+									.find("div.button")
+									.removeClass("mydate")
+							};
+
+						});
+
+
+						_this.widget = widget;
+					})
+				},
+				createFeed() {
+					let this_vue = this;
+					let Datafeed = {};
+
+
+					Datafeed.DataPulseUpdater = function (datafeed, updateFrequency) {
+						this._datafeed = datafeed;
+						this._subscribers = {};
+
+						this._requestsPending = 0;
+						var that = this;
+
+						var update = function () {
+							if (that._requestsPending > 0) {
+								return;
+							}
+
+							for (var listenerGUID in that._subscribers) {
+								var subscriptionRecord = that._subscribers[listenerGUID];
+								var resolution = subscriptionRecord.resolution;
+
+								var datesRangeRight = parseInt((new Date().valueOf()) / 1000);
+
+
+								//	BEWARE: please note we really need 2 bars, not the only last one
+								//	see the explanation below. `10` is the `large enough` value to work around holidays
+								var datesRangeLeft = datesRangeRight - that.periodLengthSeconds(resolution, 10);
+
+								that._requestsPending++;
+
+								(function (_subscriptionRecord) { // eslint-disable-line
+									that._datafeed.getBars(_subscriptionRecord.symbolInfo, resolution, datesRangeLeft,
+										datesRangeRight,
+										function (bars) {
+											that._requestsPending--;
+
+											//	means the subscription was cancelled while waiting for data
+											if (!that._subscribers.hasOwnProperty(listenerGUID)) {
+												return;
+											}
+
+											if (bars.length === 0) {
+												return;
+											}
+
+											var lastBar = bars[bars.length - 1];
+											if (!isNaN(_subscriptionRecord.lastBarTime) && lastBar.time < _subscriptionRecord
+												.lastBarTime) {
+												return;
+											}
+
+											var subscribers = _subscriptionRecord.listeners;
+
+											//	BEWARE: this one isn't working when first update comes and this update makes a new bar. In this case
+											//	_subscriptionRecord.lastBarTime = NaN
+											var isNewBar = !isNaN(_subscriptionRecord.lastBarTime) && lastBar.time >
+												_subscriptionRecord.lastBarTime;
+
+											//	Pulse updating may miss some trades data (ie, if pulse period = 10 secods and new bar is started 5 seconds later after the last update, the
+											//	old bar's last 5 seconds trades will be lost). Thus, at fist we should broadcast old bar updates when it's ready.
+											if (isNewBar) {
+												if (bars.length < 2) {
+													throw new Error(
+														'Not enough bars in history for proper pulse update. Need at least 2.');
+												}
+
+												var previousBar = bars[bars.length - 2];
+												for (var i = 0; i < subscribers.length; ++i) {
+													subscribers[i](previousBar);
+												}
+											}
+
+											_subscriptionRecord.lastBarTime = lastBar.time;
+
+											for (var i = 0; i < subscribers.length; ++i) {
+												subscribers[i](lastBar);
+											}
+										},
+
+										//	on error
+										function () {
+											that._requestsPending--;
+										});
+								})(subscriptionRecord);
+							}
+						};
+
+						if (typeof updateFrequency != 'undefined' && updateFrequency > 0) {
+							setInterval(update, updateFrequency);
+						}
+					};
+
+					Datafeed.DataPulseUpdater.prototype.periodLengthSeconds = function (resolution, requiredPeriodsCount) {
+						var daysCount = 0;
+
+						if (resolution === 'D') {
+							daysCount = requiredPeriodsCount;
+						} else if (resolution === 'M') {
+							daysCount = 31 * requiredPeriodsCount;
+						} else if (resolution === 'W') {
+							daysCount = 7 * requiredPeriodsCount;
+						} else {
+							daysCount = requiredPeriodsCount * resolution / (24 * 60);
+						}
+
+						return daysCount * 24 * 60 * 60;
+					};
+
+					Datafeed.DataPulseUpdater.prototype.subscribeDataListener = function (symbolInfo, resolution,
+						newDataCallback,
+						listenerGUID) {
+						this._datafeed._logMessage('Subscribing ' + listenerGUID);
+
+						if (!this._subscribers.hasOwnProperty(listenerGUID)) {
+							this._subscribers[listenerGUID] = {
+								symbolInfo: symbolInfo,
+								resolution: resolution,
+								lastBarTime: NaN,
+								listeners: []
+							};
+						}
+
+						this._subscribers[listenerGUID].listeners.push(newDataCallback);
+					};
+
+					Datafeed.DataPulseUpdater.prototype.unsubscribeDataListener = function (listenerGUID) {
+						this._datafeed._logMessage('Unsubscribing ' + listenerGUID);
+						delete this._subscribers[listenerGUID];
+					};
+
+					Datafeed.Container = function (updateFrequency) {
+						this._configuration = {
+							supports_search: false,
+							supports_group_request: false,
+							supported_resolutions: ['1', '3', '5', '15', '30', '60', '120', '240', '360', '720', '1D', '3D',
+								'1W', '1M'
+							],
+							supports_marks: true,
+							supports_timescale_marks: true,
+							exchanges: ['gh']
+						};
+
+						this._barsPulseUpdater = new Datafeed.DataPulseUpdater(this, updateFrequency || 10 * 1000);
+						// this._quotesPulseUpdater = new Datafeed.QuotesPulseUpdater(this);
+
+						this._enableLogging = true;
+						this._callbacks = {};
+
+						this._initializationFinished = true;
+						this._fireEvent('initialized');
+						this._fireEvent('configuration_ready');
+					};
+
+					Datafeed.Container.prototype._fireEvent = function (event, argument) {
+						if (this._callbacks.hasOwnProperty(event)) {
+							var callbacksChain = this._callbacks[event];
+							for (var i = 0; i < callbacksChain.length; ++i) {
+								callbacksChain[i](argument);
+							}
+
+							this._callbacks[event] = [];
+						}
+					};
+
+					Datafeed.Container.prototype._logMessage = function (message) {
+						if (this._enableLogging) {
+							var now = new Date();
+						}
+					};
+
+					Datafeed.Container.prototype.on = function (event, callback) {
+						if (!this._callbacks.hasOwnProperty(event)) {
+							this._callbacks[event] = [];
+						}
+
+						this._callbacks[event].push(callback);
+						return this;
+					};
+
+					Datafeed.Container.prototype.onReady = function (callback) {
+						let that = this;
+						if (this._configuration) {
+							setTimeout(function () {
+								callback(that._configuration);
+							}, 0);
+						} else {
+							this.on('configuration_ready', function () {
+								callback(that._configuration);
+							});
+						}
+					};
+
+					Datafeed.Container.prototype.resolveSymbol = function (symbolName, onSymbolResolvedCallback,
+						onResolveErrorCallback) {
+						this._logMessage("GOWNO :: resolve symbol " + symbolName);
+						Promise.resolve().then(() => {
+
+
+							// this._logMessage("GOWNO :: onResultReady inject "+'AAPL');
+							onSymbolResolvedCallback({
+								"name": this_vue.symbol,
+								"timezone": "Asia/Shanghai",
+								"pricescale": this_vue.priceScale,
+								"minmov": 1, //minmov(最小波动), pricescale(价格精度), minmove2, fractional(分数)
+								"minmov2": 0, //这是一个神奇的数字来格式化复杂情况下的价格。
+								"ticker": this_vue.symbol,
+								"description": "",
+								"type": "bitcoin",
+								"volume_precision": 8,
+								// "exchange-traded": "sdt",
+								// "exchange-listed": "sdt",
+								//现在，这两个字段都为某个交易所的略称。将被显示在图表的图例中，以表示此商品。目前此字段不用于其他目的。
+								"has_intraday": true,
+								"has_weekly_and_monthly": true,
+								"has_no_volume": false, //布尔表示商品是否拥有成交量数据。
+								'session': '24x7',
+								'supported_resolutions': ['1', '3', '5', '15', '30', '60', '120', '240', '360', '720', '1D',
+									'3D', '1W',
+									'1M'
+								]
+
+							});
+						})
+					};
+
+
+					//初始化数据
+					Datafeed.Container.prototype.getBars = function (symbolInfo, resolution, rangeStartDate, rangeEndDate,
+						onHistoryCallback, onErrorCallback) {
+						// if (rangeStartDate > 0 && (rangeStartDate + '').length > 10) {
+						//   throw new Error(['Got a JS time instead of Unix one.', rangeStartDate, rangeEndDate]);
+						// }
+
+						if (resolution.indexOf('D') == -1 && resolution.indexOf('W') == -1 && resolution.indexOf('M') == -1) {
+							resolution = resolution + 'min'
+						} else if (resolution.indexOf('W') != -1 || resolution.indexOf('M') != -1) {
+							resolution = resolution
+						}
+						$.ajax({
+							url: _API + 'currency/new_timeshar?' +
+								'from=' + rangeStartDate + '&to=' + rangeEndDate + '&symbol=' + symbolInfo.name + '&period=' +
+								resolution,
+							type: 'get',
+							success: function (res) {
+								if (res.code == 1 && res.data && res.data.length > 0) {
+									res.data.forEach((item, i) => {
+										item.open = Number(item.open)
+										item.close = Number(item.close)
+										item.high = Number(item.high)
+										item.low = Number(item.low)
+									})
+									onHistoryCallback(res.data, {
+										noData: false
+									})
+									onHistoryCallback([], {
+										noData: true
+									})
+
+								}
+								if (!res.data || res.code == -1) {
+									onHistoryCallback([], {
+										noData: true
+									})
+								}
+								if (res.data && res.data.length == 0) {
+									onHistoryCallback([], {
+										noData: true
+									})
+								}
+
+							}
+						})
+
+					};
+					//实时数据
+					Datafeed.Container.prototype.subscribeBars = function (symbolInfo, resolution, onRealtimeCallback,
+						listenerGUID,
+						onResetCacheNeededCallback) {
+							console.log(onRealtimeCallback)
+						this_vue.connect(onRealtimeCallback)
+
+						//this._barsPulseUpdater.subscribeDataListener(symbolInfo, resolution, onRealtimeCallback, listenerGUID, onResetCacheNeededCallback);
+					};
+
+					Datafeed.Container.prototype.unsubscribeBars = function (listenerGUID) {
+
+						this._barsPulseUpdater.unsubscribeDataListener(listenerGUID);
+
+					};
+
+					return new Datafeed.Container;
+				},
+
+				updateWidget(item) {
+					this.symbolInfo = {
+						name: item,
+						ticker: item,
+						description: "",
+						session: "24x7",
+						supported_resolutions: ['1', '5', '30', '60', '240', '1D', '3D', '1W', '1M'],
+						has_intraday: true,
+						has_daily: true,
+						has_weekly_and_monthly: true,
+						timezone: "UTC",
+					}
+
+					this.removeWidget();
+					this.createWidget();
+				},
+				removeWidget() {
+					if (this.widget) {
+						this.widget.remove();
+						this.widget = null;
+					}
+				},
+				overrides() {
+					let style = {
+						up: "#00c087",
+						down: "#ff3e60",
+						bg: "#131f30",
+						grid: "#152741",
+						cross: "#152741",
+						border: "#152741",
+						borders: '#4a77ae',
+						text: "#7d818a",
+						// areatop: "rgba(122, 152, 247, 1)",
+						// areadown: "rgba(122, 152, 247, 0.5)"
+						areatop: "#eff9fa",
+						areadown: "#e5ebf4"
+					};
+					return {
+						'volumePaneSize': "small", //large, medium, small, tiny
+						'paneProperties.topMargin': '20',
+						"scalesProperties.lineColor": style.bg,
+						"scalesProperties.textColor": style.text,
+						"paneProperties.background": style.bg, //改变背景色的重要代码
+						"paneProperties.vertGridProperties.color": style.grid,
+						"paneProperties.horzGridProperties.color": style.grid,
+						"paneProperties.crossHairProperties.color": style.cross,
+						"paneProperties.legendProperties.showLegend": true,
+						"paneProperties.legendProperties.showStudyArguments": true,
+						"paneProperties.legendProperties.showStudyTitles": true,
+						"paneProperties.legendProperties.showStudyValues": true,
+						"paneProperties.legendProperties.showSeriesTitle": true,
+						"paneProperties.legendProperties.showSeriesOHLC": true,
+						"mainSeriesProperties.candleStyle.upColor": style.up,
+						"mainSeriesProperties.candleStyle.downColor": style.down,
+						"mainSeriesProperties.candleStyle.drawWick": true,
+						"mainSeriesProperties.candleStyle.drawBorder": true,
+						"mainSeriesProperties.candleStyle.borderColor": style.border,
+						"mainSeriesProperties.candleStyle.borderUpColor": style.up,
+						"mainSeriesProperties.candleStyle.borderDownColor": style.down,
+						"mainSeriesProperties.candleStyle.wickUpColor": style.up,
+						"mainSeriesProperties.candleStyle.wickDownColor": style.down,
+						"mainSeriesProperties.candleStyle.barColorsOnPrevClose": false,
+						"mainSeriesProperties.hollowCandleStyle.upColor": style.up,
+						"mainSeriesProperties.hollowCandleStyle.downColor": style.down,
+
+						"mainSeriesProperties.hollowCandleStyle.drawWick": true,
+						"mainSeriesProperties.hollowCandleStyle.drawBorder": true,
+						"mainSeriesProperties.hollowCandleStyle.borderColor": style.border,
+						"mainSeriesProperties.hollowCandleStyle.borderUpColor": style.up,
+						"mainSeriesProperties.hollowCandleStyle.borderDownColor": style.down,
+						"mainSeriesProperties.hollowCandleStyle.wickColor": style.line,
+						"mainSeriesProperties.haStyle.upColor": style.up,
+						"mainSeriesProperties.haStyle.downColor": style.down,
+						"mainSeriesProperties.haStyle.drawWick": true,
+						"mainSeriesProperties.haStyle.drawBorder": true,
+						"mainSeriesProperties.haStyle.borderColor": style.border,
+						"mainSeriesProperties.haStyle.borderUpColor": style.up,
+						"mainSeriesProperties.haStyle.borderDownColor": style.down,
+						"mainSeriesProperties.haStyle.wickColor": style.border,
+						"mainSeriesProperties.haStyle.barColorsOnPrevClose": false,
+						"mainSeriesProperties.barStyle.upColor": style.up,
+						"mainSeriesProperties.barStyle.downColor": style.down,
+						"mainSeriesProperties.barStyle.barColorsOnPrevClose": false,
+						"mainSeriesProperties.barStyle.dontDrawOpen": false,
+						"mainSeriesProperties.lineStyle.color": style.border,
+						"mainSeriesProperties.lineStyle.linewidth": 1,
+						"mainSeriesProperties.lineStyle.priceSource": "close",
+						"mainSeriesProperties.areaStyle.color1": style.areatop,
+						"mainSeriesProperties.areaStyle.color2": style.areadown,
+						"mainSeriesProperties.areaStyle.linecolor": style.borders,
+						"mainSeriesProperties.areaStyle.linewidth": 1,
+						"mainSeriesProperties.areaStyle.priceSource": "close"
+					}
+				},
+
+
+				chose() {
+					this.widget.setLanguage('en') //设置语言
+				}
+			},
+		})
+	</script>
+</body>
+
+</html>

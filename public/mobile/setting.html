@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<title>设置</title>
+    <link rel="stylesheet" type="text/css" href="css/common.css" />
+	<link rel="stylesheet" type="text/css" href="fonts/iconfont.css" />
+	<link rel="stylesheet" type="text/css" href="font/iconfont.css" />
+	<link rel="stylesheet" type="text/css" href="css/footer.css">
+</head>
+<style>
+    .content-box-list:last-child{
+        border-bottom: 0;
+    }
+    .content-box{
+        background: #fff;
+        margin-bottom: 20px;
+    }
+    .content-box-list{
+        display: flex;
+        flex-direction: row;
+        justify-content:space-between;
+        border-bottom: 1px solid #ddd;
+        padding: 10px 3% 10px 0;
+        margin-left: 5%;
+    }
+    .content-box-list h1{
+        font-size: 16px;
+        font-weight: normal;
+    }
+    .content-box-list article span{
+        font-size: 14px;
+        color: #90a2b0;
+    }
+    .content-box-list article img{
+        width: 20px;
+        height: 20px;
+    }
+    .content-box-list article{
+        display: flex;
+        flex-direction: row;
+    }
+    .lang-fix{
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 4;
+    }
+    .lang-mask{
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        z-index: 5;
+        background: rgba(0,0,0,0.5);
+    }
+    .lang-box{
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        z-index: 99;
+        background: #fff;
+        text-align: center;
+    }
+    .lang-txt{
+        padding: 10px;
+        font-size: 16px;
+        border-bottom: 1px solid #eee;
+    }
+    .lang-line{
+        width: 100%;
+        height: 20px;
+        background: #ced1d4;
+    }
+    .lang-close{
+        padding: 10px;
+        font-size: 16px;
+        color: #588bf7;
+    }
+    .btns{
+        color:#fff;
+        background: #588bf7;
+        width: 70%;
+        margin: 0 auto;
+        padding: 15px 0;
+        font-size: 18px;
+        border-radius: 30px;
+        text-align: center;
+    }
+</style>
+
+<body>
+	<div id="app" v-cloak>
+	    <div class="lang-fix" v-show="langBool">
+	        <div class="lang-mask" @click="langmask()"></div>
+	        <div class="lang-box">
+	            <div class="lang-txt" @click="tabLang(item.lang)" v-for="(item,index) in langtxt" :class="index==langIndex?'active':''">{{item.txt}}</div>
+	            
+	        <div class="lang-line"></div>
+	        <div class="lang-close" @click="langmask()">关闭</div>
+	        </div>
+	    </div>
+	    <header class="header">
+			<a class="back mt5" href="javascript:history.go(-1)">
+
+			</a>
+			<h4 class="ft16" data-localize="zdy.setting">设置</h4>
+			<!-- <div class="right imgRight">
+					编辑
+				</div> -->
+		</header>
+		<div class="header-space"></div>
+		<div class="content-box">
+		    <div class="content-box-list">
+		        <h1>ID</h1>
+		        <article>
+		            <span>{{userid}}</span>
+		            <img src="images/myimg/jitou.png">
+		        </article>
+		    </div>
+		    <div class="content-box-list">
+		        <h1 data-localize="zdy.sjh">手机号</h1>
+		        <article>
+		            <span>{{phone}}</span>
+		            <img src="images/myimg/jitou.png">
+		        </article>
+		    </div>
+		    <div class="content-box-list" @click="window.location.href='forgetpass.html?type=1'">
+		        <h1 data-localize="safe.lgpwd">登录密码</h1>
+		        <article>
+		            <img src="images/myimg/jitou.png">
+		        </article>
+		    </div>
+		    <div class="content-box-list" @click="window.location.href='bindpass.html?type=1'">
+	        <h1 data-localize="transaction.pwd">交易密码</h1>
+	        <article>
+	            <img src="images/myimg/jitou.png">
+	        </article>
+	    </div>
+		<div class="content-box-list" @click="window.location.href='bindEmail.html?type=1'">
+	        <h1 data-localize="safe.lbindEmail">Email</h1>
+	        <article>
+	            <img src="images/myimg/jitou.png">
+	        </article>
+	    </div>
+		</div>
+		
+		<div class="content-box">
+		    <div class="content-box-list" @click="langmask()">
+		        <h1 data-localize="index.language">语言切换</h1>
+		        <article>
+		            <span>{{lang}}</span>
+		            <img src="images/myimg/jitou.png">
+		        </article>
+		    </div>
+		    <div class="content-box-list" @click="window.location.href='about.html'">
+		        <h1 data-localize="index.aboutus">关于我们</h1>
+		        <article>
+		            <img src="images/myimg/jitou.png">
+		        </article>
+		    </div>
+		</div>
+		<div class="btns" @click="logout()" data-localize="index.logout">退出登录</div>
+	</div>
+	<script type="text/javascript" src="lib/jquery-2.1.1.min.js"></script>
+	<script type="text/javascript" src="lib/layer_mobile/layer.js"></script>
+	<script type="text/javascript" src="javascripts/jquery.cookie.js"></script>
+	<script type="text/javascript" src="lib/jquery.localize.min.js"></script>
+	<script type="text/javascript" src="lib/language_cookie.js"></script>
+	<script type="text/javascript" src="javascripts/main.js"></script>
+	<script type="text/javascript" src="lib/vue.min.js"></script>
+	<script>
+	    new Vue({
+	        el:"#app",
+	        data:{
+	            userid:"",
+	            phone:"",
+	            code:'',
+	            lang:"",
+	            langtxt:[{"txt":'中文简体','lang':"zh"},{"txt":'中文繁体',"lang":"hk"},{"txt":'English',"lang":"en"}],
+	            langIndex:0,
+	            langBool:false,
+	        },
+	        mounted(){
+	            if(localStorage.getItem('language')=="zh"){
+	                this.lang="中文简体";
+	                this.langIndex=0;
+	            }
+	            if(localStorage.getItem('language')=="hk"){
+	                this.lang="中文繁体";
+	                this.langIndex=1;
+	            }
+	            if(localStorage.getItem('language')=="en"){
+	                this.lang="English";
+	                this.langIndex=2;
+	            }
+	            this.init();
+	        },
+	        methods:{
+	            logout(){
+	                localStorage.removeItem('token');
+    				localStorage.removeItem('userName');
+    				localStorage.removeItem('passwords');
+    				localStorage.removeItem('loginStute');  
+    				window.location.href="login.html";
+	            },
+	            tabLang(lang){
+	                setLocal('language', lang);
+    	            setLang(lang)
+    	            location.reload();
+	            },
+	            langmask(){
+	              this.langBool=!this.langBool  
+	            },
+	            init(){
+    	            let that = this;
+        			initDataTokens({
+        				url: 'user/info'
+        			}, function (res) {
+        			    that.userid=res.message.id;
+        			    that.phone=res.message.phone;
+        			})  
+	            },
+	        }
+	    })
+	</script>
+</body>
+
+</html>

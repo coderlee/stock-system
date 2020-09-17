@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport"
+        content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../lib/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../css/common.css" />
+    <style type="text/css">
+        /*忘记密码*/
+        #forgetpass .theme .form-control {
+            background-color: transparent;
+            border: solid 1px transparent;
+            box-shadow: none;
+            border-bottom: solid 1px #202833 !important;
+            border-radius: 0px;
+            padding: 6px 0;
+            font-size: 16px;
+        }
+
+        #forgetpass .theme input::-webkit-input-placeholder {
+            color: #c5cacd;
+            font-size: 16px;
+        }
+
+        #forgetpass .theme .btn-default {
+            display: block;
+            width: 100%;
+            height: 50px;
+            border-radius: 2px;
+            color: #fff;
+            background: #f0b90b;
+            /* background: linear-gradient(to right, #f0b90b, #f0b90b); */
+            text-align: center;
+            line-height: 50px;
+            font-size: 18px;
+            padding: 0;
+        }
+
+        /*弹出框*/
+        .modal {
+            top: auto;
+            font-family: "微软雅黑";
+        }
+
+        .modal-dialog {
+            margin: 0;
+        }
+
+        .modal-content {
+            border: none;
+            border-radius: 0;
+        }
+
+        .modal .modal-header h4 {
+            font-size: 15px;
+            color: #f0b90b;
+            font-weight: bold;
+        }
+
+        .modal-header .close {
+            margin-top: 3px;
+            font-weight: normal;
+            opacity: 0.5;
+            font-size: 14px;
+            text-shadow:0 0 0 rgba(0, 0, 0, 0);
+        }
+
+        .modal-header {
+            border-bottom: 1px solid #12151c;
+        }
+
+        .modal .modal-body .form-control {
+            background-color: transparent;
+            border: solid 1px transparent;
+            box-shadow: none;
+            border-bottom: 1px solid #12151c;
+            border-radius: 0px;
+            padding: 6px 0;
+            font-size: 16px;
+        }
+
+        .modal .modal-body label {
+            margin-top: 16px;
+            margin-bottom: 6px;
+            color: #323b40;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .modal .modal-body .form-group {
+            margin-bottom: 0;
+        }
+
+        .modal .modal-body input::-webkit-input-placeholder {
+            color: #666;
+        }
+
+        .modal .modal-body .verification {
+            position: relative;
+        }
+
+        #fbtain {
+            font-size: 14px;
+            border: none;
+            position: absolute;
+            bottom: 4px;
+            right: 0;
+            color: #728DAF;
+            background-color: rgba(0, 0, 0, 0);
+        }
+
+        .modal-footer {
+            border-top: none;
+        }
+
+        .modal .modal-footer .btn-primary {
+            background: #f0b90b;
+            width: 100%;
+            border-color: #588fe1;
+            font-size: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .selected img {
+            width: 15px;
+            height: 15px;
+            margin-left: 5px;
+            margin-right: 5px;
+            position: relative;
+            top: 3px;
+        }
+
+        .selected p {
+            min-width: 40px;
+            text-align: center;
+            font-size: 14px;
+
+        }
+
+        .area-code {
+            width: 100.0vw;
+            background-color: #12151c;
+            border: 1px solid #12151c;
+            position: absolute;
+            left: 0;
+            top: 40px;
+            border-radius: 2px;
+            height: calc(100.0vh - 40px);
+            overflow-y: scroll;
+            display: none;
+        }
+
+        .area-code li {
+            line-height: 40px;
+            text-align: center;
+            border-bottom: 1px solid #202833;
+            font-size: 14px !important;
+        }
+
+        .area-code li:last-child {
+            border: none;
+        }
+        .focu {
+            border: none !important;
+        }
+
+        .modal-content {
+            background-color: #202833
+        }
+        .emails {
+            display: none;
+        }
+        .active {
+            color: #f0b90b;
+        }
+    </style>
+</head>
+
+<body class="bgBalck">
+    <header class="header">
+        <a class="back mt5" href="javascript:history.go(-1)"></a>
+        <h4 class="ft16" data-localize="lg.ftpwds">忘记密码</h4>
+    </header>
+    <div class="header-space"></div>
+    <div id="forgetpass">
+        <div class="theme ml20 mr20 mt40">
+            <form>
+                    <div class="flex mb20 jucenter tabs">
+                            <p class="active" data-localize="td.mobile">手机</p>
+                            <p class="ml40" data-localize="lg.email">邮箱</p>
+                        </div>
+                <div class="form-group form-control mobiles">
+                    <div class="flex">
+                        <div class="flex selected">
+                            <p class="white"></p>
+                            <img width="15px" src="../images/downs.png" alt="">
+                        </div>
+                        <input type="text" class="logtxt focu ftw" id="name" data-localize="lg.paccount" placeholder="请输入手机号" name="tel" value="" />
+                    </div>
+                    <ul class="area-code">
+
+                    </ul>
+                </div>
+                <div class="form-group form-control emails">
+                        <input type="text" class="logtxt focu" id="email-account" data-localize="lg.pemail"
+                            placeholder="请输入邮箱" name="email" value="" />
+                    </div>
+                <a class="btn btn-default" data-toggle="modal" data-target="#next" data-localize="safe.next">下一步</a>
+                <!-- <p id="mes2" style="color:#cc704b;font-size: 12px;margin:5px 0 0 10px;"></p> -->
+            </form>
+        </div>
+    </div>
+    <div class="modal fade" tabindex="-1" role="dialog" id="next">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="close" data-dismiss="modal" aria-label="Close" aria-hidden="true"
+                            style="color:#728DAF" data-localize="transaction.cancel">取消</span>
+                    <h4 class="modal-title" data-localize="safe.stest">安全验证</h4>
+                </div>
+                <div class="modal-body">
+                    <form>
+
+                        <div class="form-group verification">
+                            <!-- <label id="txtname" data-localize="lg.scode">发送验证码</label> -->
+                            <input type="text" class="form-control ftw" id="verificate" data-localize="safe.pcode" placeholder="请输入验证码" name=""
+                                value="" />
+                            <input type="button" id="fbtain" data-localize="safe.send" value="发送" />
+                            <!-- <p id="mes" style="color:#cc704b;font-size:12px;margin:5px 0 0 10px;"></p> -->
+                        </div>
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+
+                    <a class="btn btn-primary forget-btns" data-localize="safe.sure">确认</a>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    <ul class="area-code">
+
+        </ul>
+    <script type="text/javascript" src="../lib/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="../lib/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../javascripts/jquery.cookie.js"></script>
+    <script type="text/javascript" src="../lib/layer_mobile/layer.js"></script>
+    <script type="text/javascript" src="../lib/jquery.localize.min.js"></script>
+	<script type="text/javascript" src="../lib/language_cookie.js"></script>
+    <script type="text/javascript" src="../javascripts/main.js"></script>
+    <script type="text/javascript">
+        var countdown = 60;
+        var generate_code = $("#fbtain");
+        var indexs = 0;
+        $(function () {
+            var areaCode = '';
+            $.ajax({
+                type: "post",
+                url: _API + "area_code",
+                dataType: "json",
+                success: function (data) {
+                    if (data.type == "ok") {
+                        var datas = data.message;
+                        if (datas.length > 0) {
+                            var htmls = '';
+                            for (var i = 0; i < datas.length; i++) {
+                                htmls += '<li class="flex between plr15" data-id="'+datas[i].id+'" data-code="'+datas[i].area_code+'">'
+                                htmls += '<p>' + datas[i].name + '</p>'
+                                htmls += '<p>+' + datas[i].area_code + '</p>'
+                                htmls += '</li>'
+                            }
+                            $('.area-code').append(htmls)
+                            $('.selected p').attr('data-id', datas[0].id);
+                            $('.selected p').attr('data-codes', datas[0].area_code);
+                            $('.selected p').text( '+'+datas[0].area_code);
+                            $('.selected').click(function(){
+                                $('.area-code').show();
+                            })
+                            $('.area-code li').click(function(){
+                                $('.area-code').hide();
+                                var ids = $(this).attr('data-id');
+                                var codes = $(this).attr('data-code');
+                                $('.selected p').attr('data-id', ids);
+                                $('.selected p').attr('data-codes', codes);
+                                $('.selected p').text( '+'+codes);
+                            })
+
+                        }
+
+
+                    } else {
+                        layer_msg(data.message);
+                    }
+                }
+            });
+            if (get_param('type') == 1) {
+                $('.header h4').text(getlg('changePassword'))
+            } else {
+                $('.header h4').text(getlg('forgetPassword'));
+            }
+
+            $(".focu").focus(function () {
+                $(this).css("border-bottom", "1px solid #5d7ace")
+            })
+            $(".focu").blur(function () {
+                $(this).css("border-bottom", "1px solid #3e536b")
+            })
+            //验证手机邮箱
+            $("#name").change(function () {
+                var reg = /^1[3456789]\d{9}$/;
+                var emreg =
+                    /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
+                if ($("#name").val() != '') {
+                    $("#mes1").html("");
+
+                } else {
+                    $("#mes1").html(getlg('pmobile'));
+                    return;
+                }
+
+            });
+           //获取手机邮箱验证码
+				$("#fbtain").click(function() {
+					var disabled = $("#fbtain").attr("disabled");
+					var name = '';
+					//					var reg = /^1[3456789]\d{9}$/;
+					var areaCodeId = $('.selected p').attr('data-id');
+					var areaCode = $('.selected p').attr('data-codes');
+					var reg = /^[0-9]\d*$/;
+					//					var emreg =
+					//						/^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
+					var verifi = $("#verificate").val();
+					if(disabled) {
+						return false;
+					}
+					if(indexs == 0) {
+						name = $("#name").val();
+						if(reg.test(name)) {
+							$.ajax({
+								type: "post",
+								url: _API + "sms_send",
+								data: {
+									user_string: name,
+									mobile_code: verifi,
+									type: 'forget',
+									area_code_id: areaCodeId,
+									area_code: areaCode
+								},
+								dataType: "json",
+								success: function(data) {
+									settime();
+									layer_msg(data.message);
+
+								}
+							});
+						} else {
+							layer_msg(getlg('pmobile'));
+						}
+					} else {
+						name = $("#email-account").val();
+						if(name.indexOf('@') != -1) {
+							$.ajax({
+								type: "post",
+								url: _API + "sms_mail",
+								data: {
+									user_string: name,
+									email_code: verifi,
+									type: 'forget'
+								},
+								dataType: "json",
+								success: function(data) {
+									settime();
+									layer_msg(data.message);
+
+								}
+							});
+
+						} else {
+							layer_msg(getlg('mnot'));
+						}
+					}
+
+				});
+				$('.forget-btns').click(function() {
+					var names = '';
+					var verify = $('#verificate').val();
+					var reg = /^1[3456789]\d{9}$/;
+					var emreg =
+						/^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
+					var areaCodeId = $('.selected p').attr('data-id');
+					var areaCode = $('.selected p').attr('data-codes');
+					if(indexs == 0) {
+						names = $("#name").val();
+						if(names) {
+							$.ajax({
+								type: "post",
+								url: _API + "user/check_mobile",
+								data: {
+									"mobile_code": verify
+								},
+								dataType: "json",
+								success: function(data) {
+									if(data.type == "ok") {
+										layer_msg(data.message);
+										window.location.href = "resetpass.html?user_string=" +
+											names + "&" + "code=" +
+											verify + "&areaCodeId=" + areaCodeId + '&areaCode=' +
+											areaCode;
+										// window.location.href = "resetpass.html?user_string=" +
+										// names + "&" + "code=" +
+										// verify;
+									} else {
+										layer_msg(data.message);
+									}
+								}
+							});
+						}
+					} else {
+						names = $("#email-account").val();
+						if(names.indexOf('@') != -1) {
+							$.ajax({
+								type: "post",
+								url: _API + "user/check_email",
+								data: {
+									"email_code": verify
+								},
+								dataType: "json",
+								success: function(data) {
+									if(data.type == "ok") {
+										layer_msg(data.message);
+										window.location.href = "resetpass.html?user_string=" +
+											names + "&" + "code=" +
+											verify;
+									} else {
+										layer_msg(data.message);
+									}
+								}
+							});
+						}
+					}
+
+				})
+            $('.tabs p').click(function () {
+                indexs = $('.tabs p').index(this);
+                $('.tabs p').removeClass('active');
+                $(this).addClass('active');
+                if (indexs == 0) {
+                    $('.mobiles').show();
+                    $('.emails').hide();
+                } else {
+                    $('.mobiles').hide();
+                    $('.emails').show();
+                }
+
+            })
+        })
+
+
+
+        function settime() {
+            if (countdown == 0) {
+                generate_code.attr("disabled", false);
+                generate_code.val(getlg('tsend'));
+                $("#fbtain").css('color', '#5890bd');
+                countdown = 60;
+                return false;
+            } else {
+                $("#fbtain").attr("disabled", true);
+                $("#fbtain").css('color', '#b6bfc4');
+                generate_code.val(getlg('resend')+ countdown);
+                countdown--;
+            }
+            setTimeout(function () {
+                settime();
+            }, 1000);
+        }
+        //
+        // function forgetpa() {
+
+        // }
+    </script>
+</body>
+
+</html>

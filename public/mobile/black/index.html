@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, viewport-fit=cover" />
+    <title>首页</title>
+    <link rel="stylesheet" href="../css/swiper.min.css" />
+    <!-- <link rel="stylesheet" href="lib/swipers.css" /> -->
+    <link rel="stylesheet" href="../lib/bootstrap.min.css" />
+    <link rel="stylesheet" href="../lib/bootstrap-theme.min.css" />
+    <link rel="stylesheet" href="../fonts/iconfont.css">
+    <link rel="stylesheet" href="../css/common.css">
+    <link rel="stylesheet" href="../css/index.css" />
+    <link rel="stylesheet" href="../css/footer.css" />
+</head>
+
+<body class="bgBalck">
+    <div id="home">
+        <!-- 头部 -->
+        <div class="header bgColor">
+            <!-- <div class="tl title ml15">
+                <img src="../images/logos.png" alt="">
+            </div> -->
+            <!-- 语言切换 -->
+            <div class="home-center">
+                <div class="langs">
+                    <img class="logos" src="../images/cn.png" alt="">
+                    <!-- <span class="texts">简体中文</span> -->
+                    <img src="../images/downs.png" alt="">
+                </div>
+                <ul class="lang-list">
+                        <li data-type="hk">
+                                <img class="logos" src="../images/hk.png" alt="">
+                                <span>中文繁体</span>
+                            </li>
+                    <li data-type="zh">
+                        <img class="logos" src="../images/cn.png" alt="">
+                        <span>简体中文</span>
+                    </li>
+                    <li data-type="en">
+                        <img class="logos" src="../images/en.png" alt="">
+                        <span>English</span>
+                    </li>
+                </ul>
+            </div>
+            <a class="right" href="login.html">
+                <span data-localize="lg.lgs">登录</span>
+                <img class="hide" src="../images/list3.png" alt="">
+            </a>
+        </div>
+        <div class="header-space"></div>
+        <div id="iSlider-effect-wrapper">
+            <div id="animation-effect" class="iSlider-effect"></div>
+        </div>
+        <div class="news">
+            <img src="../images/kb.png" />
+            <ul class="demos ft12" style="margin-bottom:0;">
+                <li class="news-item"></li>
+            </ul>
+        </div>
+        <div class="trade swiper-container">
+            <ul class="swiper-wrapper trade_list">
+            </ul>
+
+            <!-- <div class="swiper-pagination"></div> -->
+        </div>
+        <div class="bgBlackColor mainbox">
+            <p class="ft18" style="font-weight:bold;" data-localize="index.function">功能服务</p>
+            <div class="mt10">
+                <a href="journalism.html?id=13&type=1" class="flex bdbs ptb15">
+                    <img src="../images/account_order_manager_image.png" class="nextlogo" alt="">
+                    <div class="flex between alcenter flex1">
+                        <div>
+                            <p class="bold" data-localize="index.guidelines">Bitsign手机端合约交易指引</p>
+                            <p class="white_gray ft12" data-localize="index.guide">全方位新手指南</p>
+                        </div>
+                        <img src="../images/mores.png" class="mores" alt="">
+                    </div>
+                </a>
+                <a href="journalism.html?id=22&type=1" class="flex ptb15">
+                    <img src="../images/exchange.png" class="nextlogo" alt="">
+                    <div class="flex between alcenter flex1">
+                        <div>
+                            <p class="bold" data-localize="index.gold">法币及充币入金引导</p>
+                            <p class="white_gray ft12" data-localize="index.door">打开币圈市场大门</p>
+                        </div>
+                        <img src="../images/mores.png" class="mores" alt="">
+                    </div>
+                </a>
+                <!-- <a href="LeveragedDeals.html" class="flex bdbs2 ptb15">
+                    <img src="../images/i01.png" class="nextlogo" alt="">
+                    <div class="flex between alcenter flex1">
+                        <div>
+                            <p data-localize="footer.transaction">交易</p>
+                            <p class="white_gray ft12">数倍于原始资金的的投资</p>
+                        </div>
+                        <img src="../images/mores.png" class="mores" alt="">
+                    </div>
+                </a> -->
+                <!-- <a href="c2c/fiatrad.html" class="flex ptb15">
+                    <img src="../images/i02.png" class="nextlogo" alt="">
+                    <div class="flex between alcenter flex1">
+                        <div>
+                            <p>c2c交易</p>
+                            <p class="white_gray ft12">双向交易 套期保值</p>
+                        </div>
+                        <img src="../images/mores.png" class="mores" alt="">
+                    </div>
+                </a> -->
+            </div>
+        </div>
+        <div class="fiatde" style="margin-bottom:0">
+            <div class="deals hide">
+                <a href="fiatrad.html" class="flex between">
+                    <div class="fl-left">
+                        <b>资产交易</b>
+                        <span>多种资产交易，多种支付方式</span>
+                    </div>
+                    <img src="../images/fa.jpg" />
+                </a>
+            </div>
+        </div>
+        <div class="highlists mt10">
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active"><a href="#performer" aria-controls="home" role="tab"
+                        data-toggle="tab" style="font-weight:bold;" data-localize="index.increase">涨幅榜</a></li>
+            </ul>
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane fade in active">
+                    <ul class="flex ft12 between performer-classify">
+                        <li data-localize="index.name">名称</li>
+                        <li class="tc" data-localize="index.lastPrice">最新价</li>
+                        <li class="tr" data-localize="index.change">涨跌幅</li>
+                    </ul>
+                    <ul id="performer">
+
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <footer>
+        <a href="index.html" class="select">
+            <div>
+                <p class="img img0"></p>
+                <span data-localize="footer.home">首页</span>
+            </div>
+        </a>
+
+        <a href="assets.html">
+            <div>
+                <p class="img img1"></p>
+
+                <span data-localize="footer.assets">资产</span>
+            </div>
+        </a>
+        <a href="trades.html">
+            <div>
+                <p class="img img3"></p>
+                <span data-localize="footer.transaction">交易</span>
+            </div>
+        </a>
+
+        <a href="fiatrad.html">
+            <div>
+                <p class="img img2"></p>
+                <span data-localize="index.legal">法币交易</span>
+            </div>
+        </a>
+        <a href="personal.html">
+            <div>
+                <p class="img img4"></p>
+                <span data-localize="footer.personal">我的</span>
+            </div>
+        </a>
+    </footer>
+    <a href="https://api.pop800.com/web800/c.do?l=cn&type=0&n=635598&w=0" target="_blank" style="position: fixed;bottom: 160px;right: 10px; display: none;">
+        <img src="https://api.pop800.com/web800/pop.do?n=635598&s=2&w=0&t=0" border="0" title="点击这里给我发消息"
+            style="cursor:pointer" />
+    </a>
+    <div style="display:none;">
+        <a href="http://www.pop800.com">在线客服</a>
+    </div>
+    <script type="text/javascript" src="../lib/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="../javascripts/iSliders.js"></script>
+    <script type="text/javascript" src="../javascripts/islider_desktop.js"></script>
+    <script type="text/javascript" src="../lib/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../lib/jquery.bootstrap.newsbox.min.js"></script>
+    <script type="text/javascript" src="../javascripts/swiper.min.js"></script>
+    <script type="text/javascript" src="../javascripts/jquery.cookie.js"></script>
+    <script type="text/javascript" src="../lib/layer_mobile/layer.js"></script>
+    <script type="text/javascript" src="../lib/jquery.localize.min.js"></script>
+	<script type="text/javascript" src="../lib/language_cookie.js"></script>
+    <script type="text/javascript" src="../javascripts/main.js"></script>
+
+    <script>
+        if(getLocal('language')&&getLocal('language')=='en'){
+            $('.langs .logos').attr('src','../images/en.png');
+        }else if(getLocal('language')&&getLocal('language')=='hk'){
+            $('.langs .logos').attr('src','../images/hk.png');
+        }else{
+            $('.langs .logos').attr('src','../images/cn.png');
+        	
+        }
+        var picList = [];
+
+        $(".demos").bootstrapNews({
+            newsPerPage: 1,
+            autoplay: true,
+            pauseOnHover: true,
+            navigation: false,
+            direction: 'down',
+            newsTickerInterval: 2500,
+            onToDo: function () {}
+        });
+    </script>
+    <script type="text/javascript">
+        //===============公告列表======================
+        $.ajax({
+            type: 'post',
+            url: _API + 'news/list',
+            dataType: 'json',
+            data: {
+                c_id: 4
+            },
+            success: function (data) {
+                var html = '';
+                var title;
+                for (i = 0; i < data.message.list.length; i++) {
+
+                    html += "<li class='news-item'><a href='journalism.html?id=" + data.message.list[i].id +
+                        "'>" + data.message.list[i].title + "</a></li>";
+                };
+                $('.demos').html(html);
+            }
+        });
+        //======================新闻列表======================
+        $.ajax({
+            type: 'post',
+            url: _API + 'news/list',
+            dataType: 'json',
+            data: {
+                c_id: 5
+            },
+            success: function (data) {
+                var ban = data.message.list
+                var html = '';
+                //var title;
+                for (i = 0; i < ban.length; i++) {
+                    var ner = ban[i];
+                    var obj = {
+                        content: '<div class="banlide swiper-slide"><a href="javascript:;"><img src="' +
+                            ner.thumbnail + '"/></a></div>'
+                    }
+                    picList.push(obj);
+
+                };
+                // $('#ban').html(html);
+                init();
+            }
+        });
+
+        function init() {
+            setTimeout(function () {
+                var islider1 = new iSlider({
+                    data: picList,
+                    dom: document.getElementById("animation-effect"),
+                    duration: 3000,
+                    isAutoplay: true,
+                    isLooping: true,
+                });
+                // islider1.bindMouse();
+            }, 0);
+        }
+        var cny = 6.9641;
+        //===========我的资产==============   
+        var token = get_user();
+        var legalcny, legalusdt, dealcny, dealusdt, tradecny;
+        $('.onc').click(function () {
+            layer_msg(getlg('noOpen'))
+        })
+
+        function compare(prop) {
+            return function (obj1, obj2) {
+                var val1 = obj1[prop] - 0;
+                var val2 = obj2[prop] - 0;
+                if (val1 < val2) {
+                    return 1;
+                } else if (val1 > val2) {
+                    return -1;
+                } else {
+                    return 0;
+                }
+            }
+        }
+        $(function () {
+            intervalData(true);
+            setInterval(function () {
+                intervalData(false)
+            }, 6000)
+
+            function intervalData(isFisrt) {
+                $.ajax({
+                    url: _API + 'currency/quotation_new',
+                    type: 'get',
+                    dataType: 'json',
+                    beforeSend: function beforeSend(request) {
+                        request.setRequestHeader("Authorization", token);
+                    },
+                    success: function (res) {
+                        if (res.type == 'ok') {
+                            var data = res.message;
+                            var html = ''
+                            var usdtData = data.find((item) => item.name == 'USDT').quotation;
+                            for (var i in usdtData) {
+                                if (usdtData[i].is_display == 1) {
+                                    html +=
+                                        `<li class="swiper-slide">
+                                        <a href="dataMap.html?legal_id=${usdtData[i].legal_id}&currency_id=${usdtData[i].currency_id}&symbol=${usdtData[i].currency_name}/USDT">
+                                        <small class="usdt">${usdtData[i].currency_name}/USDT</small>
+                                        <h4 style="color:${usdtData[i].change<0?'#ff3e60':'#00c087'}">${iTofixed(usdtData[i].now_price,4) || '0.00'}<span>${usdtData[i].change || '0.00'}%</span></h4>
+                                        <small class="cny">≈${iTofixed((usdtData[i].now_price-0)*1,2) || '0.00'}$</small></a>
+                                    </li>`
+                                }
+
+                            }
+                            $('.trade_list').html(html)
+                            var swiper = new Swiper('.trade', {
+                                slidesPerView: 3,
+                                spaceBetween: 30,
+                                // pagination: {
+                                //     el: '.swiper-pagination',
+                                //     clickable: true,
+                                // },
+                            });
+                            var phHtml = ''
+                            var phData = [];
+                            for (var i = 0; i < data.length; i++) {
+                                var quotation = data[i].quotation;
+                                for (var j = 0; j < quotation.length; j++) {
+                                    var item = quotation[j];
+                                    item['legal_name'] = data[i].name;
+                                    // item['cny_price']=data[i].cny_price;
+                                    phData.push(item);
+                                }
+                            }
+                            data.find((item) => item.name == 'USDT').quotation;
+                            phData = phData.filter((item) => item.change != null)
+                            phData = phData.sort(compare('change'))
+                            let num = 0;
+                            for (var i in phData) {
+                                if (phData[i].is_display == 1) {
+                                    num++;
+                                    if (num >= 10) {
+                                        break;
+                                    }
+                                    // <small>${(num-0)}.</small>
+                                    phHtml +=
+                                        `
+                                    <li><a href="dataMap.html?legal_id=${phData[i].legal_id}&currency_id=${phData[i].currency_id}&symbol=${phData[i].currency_name}/${phData[i].legal_name}">
+                                       
+                                        <b>${phData[i].currency_name} <span>/${phData[i].legal_name}</span><br /><span>${getlg('voltxt')} ${iTofixed((phData[i].volume || 0),0)}</span></b>
+                                        <b class="tc">${iTofixed(phData[i].now_price * 1,4) || '0.00'}<br /><span>≈${iTofixed((phData[i].now_price -0) *(phData[i].rmb_relation -0),2)|| '0.00'}CNY</span></b>
+                                        <button class="btn btn-default" style="background:${(phData[i].change - 0) >= 0 ? '#00c087' : '#ff3e60'}">${phData[i].change || '0.00'}%</button>
+                                        </a>
+                                    </li>
+                                `
+                                }
+                            }
+                            $('#performer').html(phHtml)
+                        }
+                    }
+                })
+
+            }
+        })
+
+        var token = get_user();
+        if (token != 0) {
+            initDataTokens({
+                url: 'user/info'
+            }, function (res) {
+                if (res.type == 'ok') {
+                    $('.right span').text(res.message.account);
+                    $('.right').attr('href', 'personal.html');
+                    $('.right img').removeClass('hide');
+                }
+
+            })
+        }
+        $('.langs').click(function(){
+            $('.lang-list').toggle();
+        })
+        $('.lang-list li').click(function(){
+            $('.langs .logos').attr('src',$(this).find('.logos').attr('src'));
+            $('.langs span').text($(this).find('span').text());
+            $('.lang-list').hide();
+            var texts = $(this).attr('data-type');
+            setLocal('language', texts);
+            location.reload();
+            setLang(texts)
+        })
+    </script>
+
+</body>
+
+</html>

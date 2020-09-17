@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
+    <title data-localize=“zdy.cztd”>充值通道</title>
+    <link rel="stylesheet" type="text/css" href="css/common.css"/>
+    <link rel="stylesheet" type="text/css" href="fonts/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="font/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="css/footer.css">
+</head>
+<style>
+    body {
+        background: url('images/chongbi/Lark20200702-191741.png') no-repeat;
+        background-size: cover;
+        overflow: hidden;
+    }
+
+    .box {
+        border-radius: 10px;
+        margin: 70% 3% 20px;
+        background: #fff;
+    }
+
+    .box-title {
+        padding: 15px 5%;
+        font-size: 16px;
+        font-weight: bold;
+        color: #1f3f59;
+        border-bottom: 1px solid #eee;
+    }
+
+    .box-left {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .box-left img {
+        margin-right: 20px;
+        width: 30px;
+        height: 30px;
+    }
+
+    .box-right img {
+        width: 15px;
+        height: 15px;
+    }
+
+    .box-list:last-child {
+        border-bottom: 0;
+    }
+
+    .box-list {
+        border-bottom: 1px solid #eee;
+        padding: 15px 5%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .otc {
+        margin-bottom: 100px;
+    }
+
+    .otc a img {
+        display: block;
+        margin: 10px auto 0;
+        width: 50%;
+    }
+
+    .header-box {
+        position: absolute;
+        top: 0;
+        width: 100%;
+        padding: 0 3%;
+    }
+
+    .header-box h1 {
+        position: absolute;
+        top: 15px;
+        width: 100%;
+        font-size: 16px;
+        color: #fff;
+        text-align: center;
+    }
+
+    .header-box img {
+        position: relative;
+        z-index: 5;
+        width: 25px;
+        height: 25px;
+        top: 10px;
+    }
+</style>
+
+<body>
+<div id="app" v-cloak>
+    <div class="header-box">
+        <img src="images/return.png" @click="window.history.go(-1)">
+        <h1 data-localize="zdy.cztd"> 充值通道</h1>
+    </div>
+    <div class="box">
+        <div class="box-title" data-localize="zdy.chongzhitongdan">请选择充值通道</div>
+        <div class="box-list" @click="usdt()">
+            <div class="box-left">
+                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADwAAAA8CAMAAAANIilAAAABHVBMVEUAAAADsZEDsZEAsJEArZAAs48DspECsJECsZACsZEDsZADsZEDsJEDsZECsZECsZEAsZEAkpICsJEAsI0DsZADsZEDsZIArosArZAAspMDsZADsY8CsZADsZH////6/v3+//646uAStZcRspUWt5mr4dcHspIVtZiK2MoNs5URtJb1+/qe39QdtJgwvKHD6uNQxK4jt5sUs5ac39JYxrILspTS7+q86OC4596X3dAnuJ0ct5oZtZj2/Pul4dZmy7hBv6g2u6IsuZ7p+PXP7uiH2MmG1MZzz75JwqxHv6k7vaX0+/nX8OzG6uTA6OGh4NSC1cZfybRNwq3y+vnj9fLI7ue05Nut4tiX2s6R2c1908N6z8Cx4tqb2s9rzrrU1QoXAAAAHXRSTlMA/MlEERv08OPRxMG1rpt8SAd0HainWxYPQlxbc9NuumAAAAMKSURBVEjHpZfnWupAEEBDFESkid17BzREAlFKQuhIE2kXpdjr+z/GBdmwG0gzOf+A77BldmZnKXU2g4ED2u1yOFxu+iAQ3KRM4/zrcYAChye0Z0rd8GKT9L0bxioNmtD6utMHuvic2u6fLTBg61BD3fWDCfy7qtHZAVPsqMTtaBtMsn20Ni52je2VsXfRnM2xo1y3H36FXxEjQHBv6XNt0lkBFhARcy7jm7yL6JFPyfHGp8UHWA6faRMeyjL4ZPcEsHwfxpyFV5mPjDhBMq2UMXoyjRIJCDltVoZFinlJ+Wl9rvPFIoaE7J27e2Tui++fLxeIYWThPn7K37y8lYnqMK8tISDJRWXEzvVCvkpGl8QAE5rJHlAn9/HvR468JkAVD0UdOzRkvvOwkLMcqOI4poKgQRRNO1LiQZ0gFYAVYgmeEavVZOsLrfmiValyUYZJxEBJgDpQiDwnpBqZGb1GY4RGLk77vUwvk2mkkiJP/sE+RROq2JSkzCAlJDmGT3BjtGFXldlc+KrQGvQkqclhnabceHsbH/WmyOfQr/x4ZcNiOZ5LTT76UVlwU66l3L2TWGJWzK08MktOrn/fAYSLwpE6v6lXSDmO1lwjZGAyj0/LWBHy4KJdmgq8vKmJerrdbufz7TEjh4GtNOJPxSmWXURWTEb3hWy3N2hVOJbjRaFcbpXnuzf7VCk3+/VsMf3yLcTwtN3kiRRTk6/nQqFQrJXi798TSZL6ZbHVjZdqxUKx+PxaH1SJs+pGocI+VxWa0+5tqTQa3sx4zBeea9lSvJtplqvRHJDQ+JAoDhnDspW3yE/dOqsJLIuPl+KQBECDxPhaP6sgoJ0YzO2lflZBUDslmTiSr1jNlKQ8VmUPKkOW5BAugOZlsgBSXmuyFxV9SzLqq2grMi1fdFbkDXzF6slZNdmncrmDQSUB8nJHHOodz5GKfGrQ0DCdh8icy9q67DdqpRL1wl16zjuz3krZaeJstY/2G1f7LTPm0LhZP7XzTLDxQLH3NDJmL2TxUYafg/vyc3Bf8zn4H/fUaZV+5ow4AAAAAElFTkSuQmCC">
+                <span>USDT<span data-localize="zdy.chongzhi"></span></span>
+            </div>
+            <div class="box-right">
+                <img src="images/myimg/jitou.png">
+            </div>
+        </div>
+        <div class="box-list" @click="eth()">
+            <div class="box-left">
+                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADwAAAA8CAMAAAANIilAAAABI1BMVEUAAADt7e3s7Ozt7e3r6+vs7Ozs7Ozs7Ozs7Ozt7e3s7Ozs7Ozs7Ozt7e3x8fHs7Ozb29vs7Ozr6+vs7Ozr6+vt7e3r6+vt7e3o6Ojt7e3t7e3s7OwwMDCBgYESEhLq6uo0NDQsLCwuLi6EhIR9fX16enp/f38oKChEREQqKioyMjLg4ODd3d3k5OQQEBAbGxvp6enJycna2trNzc28vLyvr6+KiorX19fV1dXT09OTk5NAQEAkJCQJCQnFxcWnp6efn59QUFA5OTnm5uacnJyXl5eHh4dkZGRLS0sZGRkUFBQNDQ3Dw8O5ubmjo6N3d3dzc3NcXFyysrKqqqpnZ2c9PT0gICDi4uK2traQkJBsbGxhYWFWVlZISEg7Ozs2Nja+vr7uubYTAAAAG3RSTlMA/MlDHPTw0bWufHRbSBEQB+PEwZvCqKcWmuIQRxu6AAADwElEQVRIx6WXaVviMBDH2664IOuB57q0lrZpStqC5ZJTQURERBRvXY/9/p9iU2BXm0nV53Fepvk9M/1nMjMR+LY4P7ch/YqIYuSXtDE3vyh82mbia2IyYOJyfOZT6LfolGT46LePUSkZatL7+Ews+a7F3gn+x2zyA5v9EYIubbJbVafqsWubSzx2YQ348UqoChbXFiD78zvYpua76cMMWP7+E/iFbDJTOnt+GqiQZnwvrUBWze2c1S3kwC8rwf/eTEJzWthMN+p3Kvy0GjgjDusVDQoT63eF8/HNic3McoIu15BhpjXL7mQ45/2aLbEkTy2MfViz9vc4gcf+53OSqxZSfFjXiOlyNvzLc4mrFsITWLauLziupXDHB0UDKVNYs44qoa6jnKCr95SdwjKRDzmaRcdSixy1LjF+hXWuZqIveDxErVdY1jSeZnEKL8Nlt4PwW1i32iXoepnWSZGTWwpSxjCawL5mVUCLi8I8DLpSm7JdM637sK/Z/S3YOC/MhaplGOZIa0xg3epBzeaEDa5aFFXOR2n7uL9tjXFCENBsHaSX6rbQGH2s27Z+nM32jxsapa32pQeSLMHm1qlBhXrYv7ZlOSVvZ7NTXId3MyFEmJVKDZtXvbYs23aKwlsTO77RSIrNs4ggMsW2eT56epmgb+AsxW/SxaBmIgsPfrdpvD4ZgH1+d+vMYeBIEC6ct4lGWQCf7GavWxkm7EQQzpQvj1Kabgdh6vZERznXYwSTmDpfcCu1nq7Jb+Hsye726E/5TzHDHNVGEL69G+acPVwnuj2F/Yi3esNyAT8wSbbOpqea7xgXrls6eqGxU3gcsW1Uy8Pec/OASU9wMdTCjlkruuXWo67Z8jaN+OZhkD+9ki3DARdjUYQX0lSGBSenpHXS3+3vN/MFo95oXFXhlYTFwGkihLqlvHt3ZfflnWq5tU+sxlNRhcVAiMP7fIgwwrWiU+7gQf7iKGUR6wXWwDi3AHp7XaRgpLRyjpvDzxbRCTnLcwugEOW2GkVBaKd539MszS+fOZVbeoVvYRUQK2aduqXsddML6zc0yeB5TYp+fVz0ta7Dbzd81wengXZTVaHjd1qsM/zX6HQrfQrZGNPcQf3FY5jYtQy/uYePFd6gi3yYkPM8d6x4tVX4/bakKHQm4Ta51Y9GKdXt+NNQu3nAH6XgEAfnMOzyhjg4PsLzMtujgsofHxnfMHLn8BGOIysL3JF5FSZayQFaLX12WFc9FQzrX34mfP2B8vWn0dcfZfA5uC4l/OdgQloPfQ7+BZU3ZU+Xlq0VAAAAAElFTkSuQmCC">
+                <span>ETH<span data-localize="zdy.chongzhi"></span></span>
+            </div>
+            <div class="box-right">
+                <img src="images/myimg/jitou.png">
+            </div>
+        </div>
+        <div class="box-list" @click="btc()">
+            <div class="box-left">
+                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADwAAAA8CAMAAAANIilAAAAA9lBMVEUAAAD/oBL/oBP/oBL/oBL/nQ//oBP/oRP/oBL/oBL/oBL/nxL/oBL/oBL/oBP/nxL/nxL/kgD/oBH/oBL/ogz/oRL/nhP/nhP/oBP/oBP////9////ohj9/vz//fr/oxz/piL/pR/+/Pf/qCf++/X99OX//vz91Zf+vmD/qiz++vH+8uH97dP94bb+rDH++e/+xG3+wWf+tkv++Oz98Nn958X9zof+u1n+skP9687+1pv+sT/+rzr+rTX+8d3+5cH+2KD+0pH+uVP+9un92qb+yn795Lv9z4r9yXr+tUn93a393Kj+uE/96cr937H9zYP+xnT97tSrCd7aAAAAGXRSTlMA/PLDHBDJ/kTj0bWuqHx0SAdbmxaaQlzL7wlg5wAABDxJREFUSMelV9lW2zAQTYASKHuhtLLk3Y73NY7t7HtI2Pn/n6klkmIFQXPKfSAHZ25mNDN3PKqw8e389GT/cKda3TncPzk9/1bZGntnu1VAobp7trcV9eBozaT5Rwf/pu6DD7H/OX3vGHyK40+C/7ED/oGdHx9QL36CLfDzglmdXbAVdhl1u/rOMOy0R5mKAI3vV+/8srjA7OtejACyJIRK7A3fF8yY0UyD+j0CfpqaXVSKnD43navaylA1BOj6QDYdTb+RSwaXVI1oj2pPVSUEQNerC0MZWE9Bvf8sli1KFduj6yuFTc8IO7JoJpweImDdCsLtElH1fuuWYzro7lSAgesZNwONa2US6rnQTtWNXltzr2t0msyWwHFcXVB4jnOMMH6ewMkYbOB6Rd7QAspndy0FchDC4ifsZJAIRc7fqWQlpM3nNdE3bxvcCnW++KMZHVWkrV4ldsSosNy5EzAT8quP4GWayZTJEUk1U/vySClIvOPNnUDj8QH4VtorZ7yKE34GWLCG2KXWzu+zaNRSiHt72C2n9qwgs8UUt7B9IxIRQlY01DEZam2/LK9CEcyo0SLAZGdMAhWtpwbE/ydP5bi/Vc6ZjqU7kulBZ3VKf0git5tlo/PKKdNxr4k9aSNr/SC0ceCKU7Y6rZwwc529FGTYMP+ml0U+qTBHrZpOsK0e/33QFt6H/btyyCQ/Cji7jUgSJVkURTnUSQ76N2Wrwwpz2vouxGS+/zhamHFsjhIe4k69zSldVliVQksd28ICSv9hMHAVohHNNakOrTLJUkhkwSsKX4dcvU5CFhIjUwFFZobttxWSr5uF4bkChISsTf3axuuDmbDuA4naU2tSJzKaE0LX7vAApRLGLFVMjhykIgBIlv1FwuNDBM0xzd5nNQkySSe7mbhKwXKAY4ew2aHsTljtKc1snGrPWp8RjVuvkT+JdHueb0yg4uvuI4+Hh/FmKbZ5kv6pTwuDlqQ6ji1rRqKehOjtIKlAqnXboSVJDwPTTZpN0oqwmYOyZ4jJ0y41DOgxZA15WICEOM8BWvtetkjthLZKjSF6AIYJz6/JfcNc5l1VktXe2FMIWZshagDSo3ec3g0cYTWutYYzHy2i6Hmqk3RB6Mb06KWHPhKt+0V73ieCJFoIGpMAy4KMglR+N/TpJhMLCUcO5ARbwxRMWn++5FR7veIabCBPoDJPDVcpiPVXUfGC3aK684B6xdK9PTHVXtaCMHhw9cC2A8ebdcrc449e7ihqwKQHkO9BxYvC1BgOjdm9hDZe7uy1wrrR+LkPxMyF/WdJlKUCMi2oX5USLsuOY4/XjB6QRzb/mCPAwOWHqxRaTnUnkoH1ABVqB9pYpdhLnJpnpgpquQPtkJ489BLHXh8RKji1ntEcxCzu1TaLq5VF/jaLKzn3JdgClxf/v6z/+so14asXlK9fjb5+KfvSdfAPvlxFmZ8QbEcAAAAASUVORK5CYII=">
+                <span>BTC<span data-localize="zdy.chongzhi"></span></span>
+            </div>
+            <div class="box-right">
+                <img src="images/myimg/jitou.png">
+            </div>
+        </div>
+    </div>
+    <!--<div class="otc">-->
+    <!--    <a href="https://otc.huobi.com/zh-cn/trade/buy-btc" target="_blank"><img src="data:image/png;base64,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"></a>-->
+    <!--    <a href="http://www.binance.org.cn/" target="_blank"><img src="images/chongbi/Lark20200702-191745.png"></a>-->
+    <!--    <a href="http://www.zbexs.com/" target="_blank"><img src="images/chongbi/Lark20200702-191748.png"></a>-->
+    <!--    <a href="https://www.coincola.info/" target="_blank"><img src="images/chongbi/Lark20200702-191750.png"></a>-->
+    <!--</div>-->
+    <div class="otc">
+        <a href="https://payments.coinswitch.co/" target="_blank">
+            <img src="images/chongbi/Lark20200702-191748.jpg"></a>
+        <a href="https://otc.huobi.com/zh-cn/trade/buy-btc" target="_blank">
+            <img src="images/chongbi/qq4.png">
+        </a>
+    </div>
+</div>
+<script type="text/javascript" src="lib/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="lib/layer_mobile/layer.js"></script>
+<script type="text/javascript" src="javascripts/jquery.cookie.js"></script>
+<script type="text/javascript" src="lib/jquery.localize.min.js"></script>
+<script type="text/javascript" src="lib/language_cookie.js"></script>
+<script type="text/javascript" src="javascripts/main.js"></script>
+<script type="text/javascript" src="lib/vue.min.js"></script>
+<script>
+    new Vue({
+        el: "#app",
+        data: {},
+        mounted() {
+        },
+        methods: {
+            usdt() {
+                window.location.href = "chargeMoney.html?id=3&name=USDT"
+            },
+            eth() {
+                window.location.href = "chargeMoney.html?id=2&name=ETH"
+            },
+            btc() {
+                window.location.href = "chargeMoney.html?id=1&name=BTC"
+            }
+        }
+    })
+</script>
+</body>
+
+</html>

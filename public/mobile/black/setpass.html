@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<title></title>
+
+		<link rel="stylesheet" type="text/css" href="../lib/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="../css/common.css">
+		<link rel="stylesheet" type="text/css" href="../css/style.css" />
+		
+		<style>
+			.theme .form-group{
+				border-bottom:1px solid #202833;
+
+			}
+		</style>
+	</head>
+	<body class="bgBalck">
+		<header class="header">
+			<a class="back mt5" href="javascript:history.go(-1)">
+			
+			</a>
+			<h4 class="ft16" data-localize="contract.setPassword">设置密码</h4>
+		</header>
+		<div class="header-space"></div>
+		<div id="setpass">
+			
+			<div class="theme">
+				<form>
+					<div class="form-group">
+						<input type="text" style="display:none;" id="name" value="" />
+						<input type="text" style="display:none;" id="verificate" value="" />
+						<input type="password" class="form-control focu ftw" id="setpassword" data-localize="safe.ppwd" placeholder="请输入密码" name="password" value="" />
+					</div>
+					<div class="form-group groups">
+						<input type="password" class="form-control focu ftw" id="verifypassword" data-localize="safe.reppwd" placeholder="请再次输入密码" name="password" value="" />
+					</div>
+					<div class="form-group">
+						<input type="text" class="form-control focu ftw" id="invite" data-localize="safe.invitationCode" placeholder="邀请码(必填)" name="invite" value="" />
+					</div>
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" checked id="agree" /> <span data-localize="contract.agree">我同意</span> 
+							<a href="policy.html" data-localize="contract.privacyPolicy">《用户协议及隐私政策》</a>
+						</label>
+					</div>
+					<a class="btn btn-default" id="sendSet" data-localize="lg.register">注册</a>
+					<p id="mes" style="color:#cc704b;font-size: 12px;margin:5px 0 0 10px;"></p>
+
+				</form>
+			</div>
+		</div>
+		<script type="text/javascript" src="../lib/jquery-2.1.1.min.js"></script>
+		<script type="text/javascript" src="../lib/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../javascripts/jquery.cookie.js"></script>
+		<script type="text/javascript" src="../lib/layer_mobile/layer.js"></script>
+		<script type="text/javascript" src="../lib/jquery.localize.min.js"></script>
+		<script type="text/javascript" src="../lib/language_cookie.js"></script>
+		<script type="text/javascript" src="../javascripts/main.js"></script>
+		<script type="text/javascript">
+			$(function() {
+				// FastClick.attach(document.body);
+				if(get_param('cod') && get_param('cod') != 'null') {
+					$('#invite').val(get_param('cod'));
+          			$('#invite').attr("disabled",true);
+				}
+			})
+			$("#agree").click(function() {
+				$("#sendSet").toggleClass("agree");
+				var st = $("#sendSet").attr("disabled");
+				if (st == "disabled") {
+					$("#sendSet").removeAttr("disabled");
+				} else {
+					$("#sendSet").attr({
+						"disabled": "disabled"
+					});
+				}
+			})
+			$(".focu").focus(function() {
+				$(this).css("border-bottom", "1px solid #5d7ace");
+				
+			})
+			$(".focu").blur(function() {
+				$(this).css("border-bottom", "1px solid #ccc")
+			})
+			//注册验证密码
+			$("#setpassword").change(function() {
+				var pass = $("#setpassword").val();
+				if (pass.length < 6 || pass.length > 16) {
+					$("#mes1").html(getlg('plength'));
+					//layer_msg(getlg('plength'));
+
+				} else {
+					$("#mes1").html("");
+				}
+			})
+			$("#verifypassword").change(function() {
+				if ($("#mes2").html() == getlg('plength')) {
+					return;
+				}
+				if ($("#setpassword").val() != $("#verifypassword").val()) {
+					$("#mes2").html(getlg('twonot'));
+					//layer_msg(getlg('twonot'));
+				} else {
+					$("#mes2").html("");
+				}
+
+			})
+			//注册
+			var registerStatus = true; 
+			$('#sendSet').click(function() {
+				var s = function() {
+
+					var ps = /^[a-zA-Z0-9]{6,16}$/;
+					if (!ps.test($('#setpassword').val())) {
+						layer_msg(getlg('plength'));
+					} else {
+						return true;
+					}
+				}
+
+				var ss = function() {
+					if ($('#verifypassword').val() == $('#setpassword').val()) {
+						return true;
+					} else {
+						layer_msg(getlg('twonot'));
+					}
+				}
+				var areaCode = get_param('areaCode');
+				var areaCodeId = get_param('areaCodeId');
+				var name = $('#name').val();
+				var verify = $("#verificate").val();
+				var pass = $('#setpassword').val();
+				var repass = $("#verifypassword").val();
+				var extensionCode = $("#invite").val();
+				var reg = /^1[3456789]\d{9}$/;
+				var emreg = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
+				if (!extensionCode) {
+					layer_msg(getlg('inviteCode'));
+					return false;
+				} 
+				if (s() == true && ss() == true) {
+					if (reg.test(name)) {
+						if(registerStatus){
+							registerStatus = false;
+							$('#sendSet').css('background-color',"#7d818a");
+							layer_loading();
+							$.ajax({
+							type: "post",
+							url: _API + "user/register",
+							data: {
+								"user_string": name,
+								"password": pass,
+								"extension_code": extensionCode,
+								"re_password": repass,
+								"type": "mobile",
+								"code": verify,
+								"area_code":areaCode,
+								"area_code_id":areaCodeId,
+							},
+							datatype: "json",
+							success: function(data) {
+								registerStatus = true;
+								layer_close();
+								$('#sendSet').css('background-color',"#f0b90b");
+								if (data.type == "ok") {
+									layer_msg(data.message);
+
+									$("#sendSet").attr("disabled", "true");
+									setTimeout(function() {
+										$("#sendSet").removeAttr("disabled");
+										if(get_param('cod') && get_param('cod') != 'null') {
+											window.location.href = "https://mr.baidu.com/r/95oQ5FIb9m";
+										} else {
+											window.location.href = "login.html";
+										}
+									}, 3000);
+								}else{
+									layer_msg(data.message);
+								}
+							}
+						});
+						}
+						
+					} else if (emreg.test(name)) {
+						
+						if(registerStatus){
+							registerStatus = false;
+							$.ajax({
+							type: "post",
+							url: _API + "user/register",
+							data: {
+								"user_string": name,
+								"password": pass,
+								"extension_code": extensionCode,
+								"re_password": repass,
+								"type": "email",
+								"code": verify
+							},
+							datatype: "json",
+							success: function(data) {
+								registerStatus = true;
+								if (data.type == "ok") {
+									layer_msg(data.message);
+									$("#sendSet").attr("disabled", "true");
+									setTimeout(function() {
+										$("#sendSet").removeAttr("disabled");
+										if(get_param('cod') && get_param('cod') != 'null') {
+											window.location.href = "https://mr.baidu.com/r/95oQ5FIb9m";
+										} else {
+											window.location.href = "login.html";
+										}
+									}, 3000);
+								}
+							}
+						});
+						}
+						
+					}
+
+				} else {
+					layer_msg(getlg('information'))
+				}
+			});
+			//
+			function maVals() {
+				var url = window.location.search;
+				var theRequest = new Object();
+				if (url.indexOf("?") != -1) {
+					var str = url.substr(1);
+					strs = str.split("&");
+					for (i = 0; i < strs.length; i++) {
+						theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+					}
+				}
+				return theRequest;
+			}
+			var v = maVals();
+			$("#name").attr("value", v['user_string']);
+			$("#verificate").attr("value", v['code']);
+		</script>
+	</body>
+</html>

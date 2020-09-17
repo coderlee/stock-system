@@ -1,0 +1,455 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
+  <meta name="format-detection" content="telephone=no">
+  <title>资产</title>
+  <link rel="stylesheet" type="text/css" href="css/swiper.min.css">
+  <link rel="stylesheet" type="text/css" href="css/common.css" />
+  <link rel="stylesheet" type="text/css" href="css/global.css">
+  <link rel="stylesheet" href="css/footer.css">
+  <style>
+    body{
+        background: #fff;
+    }
+    /* section li a>div{padding: 10px 0;} */
+    .swiper-container {
+      width: 100%;
+    }
+
+    .header {
+      border-bottom: none;
+    }
+
+    .header-scroll {
+      box-shadow: 0 2px 2px #7d818a
+    }
+    .line{
+        width: 100%;
+        height: 10px;
+        background: #f4f8fb;
+    }
+    header img {
+      width: 24px;
+      height: 24px;
+      float: left;
+      margin-left: 10px;
+      margin-top: 5px;
+    }
+
+    header a {
+      position: absolute;
+    }
+
+    header span {
+      line-height: 35px;
+      margin: 0 5px;
+      color: #758a8f;
+      padding-bottom: 4px;
+    }
+
+    header .active {
+      color: #fff;
+    }
+
+    li a {
+      color: inherit;
+      display: block;
+      border: 1px solid #f1f1f1;
+      padding: 10px;
+      background: #fff;
+      border-radius: 2px;
+    }
+
+    li a .flex1>p {
+      font-size: 14px;
+    }
+
+    .swiper-slide {
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .agent_level {
+      width: 100%;
+    }
+
+    .mr5 {
+      margin-right: 5px;
+    }
+
+
+    .back {
+      background: url(images/return2.png)no-repeat;
+      background-size: 30px 24px;
+    }
+    .bgfff{
+        background: #fff;
+    }
+    .header-title{
+        padding: 10px 0;
+        text-align: center;
+        font-size: 18px;
+        font-weight: bold;
+    }
+    .header-bg{
+        position: relative;
+    }
+    .header-bg img{
+        width: 100%;
+        height: 148px;
+    }
+    .header-zichan-box{
+        position: absolute;
+        top: 20px;
+        margin: 0 8%;
+    }
+    .header-zichan-title{
+        color: #b0c9fe;
+        font-size: 16px;
+    }
+    .header-zichan-ftitle{
+        line-height: 60px;
+    font-size: 30px;
+    color: #fff;
+    font-weight: bold;
+    }
+    .menu{
+        display: flex;
+        flex-direction: row;
+        padding-bottom: 30px;
+    }
+    .menu a{
+        text-align: center;
+        width: 25%;
+    }
+    .menu a img{
+        width: 30px;
+        height: 30px;
+    }
+    .account{
+        display: flex;
+        flex-direction: row;
+    }
+    .account span{
+        width: 33.33%;
+        text-align: center;
+        padding: 15px 0;
+        color: #90a2b0;
+    }
+    .active{
+        color: #588bf7 !important;
+        border-bottom: 2px solid #588bf7;
+    }
+  </style>
+</head>
+
+<body id="body">
+  <div id="top" style="position:fixed;top:0;width:100%;z-index:9;background:#fff;"></div>
+  <div id="app" v-cloak>
+    <div class="bgfff">
+    <div class="header-title" data-localize="assets.a02">资产</div>
+    <div class="header-bg">
+        <div class="header-zichan-box">
+            <div class="header-zichan-title" data-localize="assets.total">总资产</div>
+            <div class="header-zichan-ftitle">{{totalCount | toFixedfour}}</div>
+        </div>
+        <img src="images/qianbao/beij.png">
+    </div>
+    <div class="menu">
+        <!--<a href="chargeMoney.html?id=3&name=USDT">-->
+        <a href="chongbi.html">
+            <img src="images/qianbao/chongzhi.png">
+			<!--<img src="data:image/png;base64,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" alt="">-->
+			<p class="mt5" data-localize="assets.cmoney">充币</p>
+		</a>
+		<a href="mentionMoney.html?id=3&type=legal">
+		    <img src="images/qianbao/tibi.png">
+			<!--<img src="data:image/png;base64,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" alt="">-->
+			<p class="mt5" data-localize="assets.tmoney">提币</p>
+		</a>
+		<a href="coinCurrencyFlash.html">
+		    <img src="images/qianbao/duihuan.png">
+			<!--<img src="data:image/png;base64,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" alt="">-->
+			<p class="mt5 " data-localize="zdy.duihuan">兑换</p>
+		</a>
+		<a  href="transferredLegal.html">
+		    <img src="images/qianbao/huazhuan.png">
+			<!--<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADwAAAA8CAYAAAA6/NlyAAAKrElEQVRoQ+1bfXBU1RX/nbef+diEEMQETAJYpgijlBGr1Y4KagtoAi0zUoQ/2lE6ztTAtCNOndoZnLajLYxTCY6M4B9OYRiYFiEMWFAL1UoFQYEKgiiQLJTYEsJmk81mP97pnLf7Nm/fvt19m2wkf/TOZJJ9995zzu+ez3vehjBM43wXj3K6cBfHMRMKpoExiQi1YFSB4NXYMsIgdDHjMgjnoOIkOXAkFsWHE6vo2nCIRsUkejHEN6kxLAKwgAh3McM5SPpxAB+qwI5YFFu/UU3+QdLJ2FYUwJd6+CFVxQoG5gBwFEu4JJ04A3udCv44vpzeHirtIQFu6+EHSMXvANw5VEFs7j/ECn7VUE7v2lxfHA37QzwecbzMjIWDZTyUfUT4CxxYUVdKlwqlU7CG/QFewoRXAFQWyqzI6wPE+FldJW0uhK5twGfPssdbgxZmLCuEwXCvJcKGcAeaJ0+mfju8bAFuu8ZV5MAOMO61Q/RrX0N4j+NY0DCKuvLxzgu4I8hjIwyJjrflI1bkeQaQVz4DzxNuwkM1PvpPLjlyEvQHeDQT9l8HsIM6OyKcgIpZdZV0NRuBrIDFZz03Yi+A+wbFXSukgFicEVGBWPJH5cRzGcJcIcCpJH7c8ttBBanVQra/93+F72fz6ayA/UF+bbABSiqFvigjHAcEYCFDAeB1AiUugqMQgzYwYWBjQwVZBldLksnUs6kQQWWtgOuNMvpihe60Xl/iBMpcpFlBoYMYS61SVgYpKSo4hpOF5tlwjBGMDJhrAQLmDE4ioM8tWi8YdYCcmGYuTjKotHfzdgA/sCswM9BTRK1m4yvaLncRqDDcb9ZX0A+NNNO2XwzybJXxjt10IGAD/YmgZB4HP43gzwf6UOUj/GKRD2XewiS1Ai5BrdJTGGiF8MBNPvqbTi9NivZu/tDuRUADG2FE5CJnGvs/7sef9oZS0fiJR0pxz60eu0aTc12hoAk4VFdBd2UAvtTDD8ZVrcCwNYIR6+C073AYW97tS9Eo8RBW/cSHsVXFuzVKFK9w27cYh4KHxpeTWO5AymsL8G4izLODVgJUdyRz5e5/hjUzTp0mAYtml2DSuMH2AQBfKaFmdOZhVRQQyJixp6GSHk4B/qKT69wunLdzeZfU09nHKXPVwe37KIwt7wyAtXNwdtfIoc25M9EVMppmdYntlBWPRDFROieaXbR389MAVtsRIJspv7ApiM/9RUrAJkGmNjix8jFfhngSuX32TXtlfQWt0QH/A8A9+QBLBSXatRoHP+3HG2+FECky5vISwrLGMtx2s8uSr2jZZkX2QX0FfZe+vMqVbieuMPI33HoijFCRAeU75HzzpZKfbWiZgFjEhzHkD/AcJrxlQTitApIPot1Ca+N8Ag91Xmrv6lJ7Fw5izKX2ID8Hxm/yMY7GGV22egr5KBV/vsoDuOzYNeHXAngLGD/KJ4ZcCnqj2VdFooz3T0QQDKWXXS5n7tN35cpYBJR6CDOnuOFxZc+7Za7EJSPvIGyl9gAfAuGOfIsD/UC/RC3rQRKwDhwbHhO451Y3nnikTDhbCuBxECrtFXJHqL2bzwGos8Ihd3VKFifiv0m85tuNuJGybnsPjp7JYQL5TjTHvETonz9argPOKGbFmiVaG4dR9uRGwXJRAF8BoQScu9Hw31BmsZFkIEbp6gyoePO9PvSEC7zxG6RUVcan52OQOl0fcvl45jGfXm3JiWp5gqFdnLSVAvWG0gyTlgdpwhAQEsDS/1GEQHKz8MvY/ckFdh45Td5wBKLRtHHfDEZt9RBUCCCuMtbv7MWR0wNWMqZSwcrF5Vodfi0I7DtMGVnC64Y6cwqHZ0ygVMJMHgSZj56AOLV1cwdBA5HT61/7K0ZbgdVhNtQwaqoBT4Fls9cDjK4ADn8Wwas7elOndmOVolVX1RUKrlwD3j9B6Leo32WD1wX1p3ORtXGXJCr4VdHwWe315YBJZ5iCHMbaVowbmg6td48bw7j3W8AZfwwvbgpqi8ZVJ8COKldwuRM4+C9CNE/Bs7wJxtcuRgyJvwnik2HR8AcE1CQ1nLXdsrYVE4cDsKSled9hlHiA021RXL6q4tu3uLWGgf8r4NApQszizm2WZXmTdvkxxa00qxVX7RDA2wiYxgmzTsaD1D79pKilFVOGA7DQrPIltCyg9fHFReDjzwmqRTfFSo7mJpwW303GnwzFUaLHeJL83fyiyvheLh8m0kx6+nABFrqi6bFVDK8b6OwmLUgVMpobcUw0ZjwfkZuTyYUUqMx4W3z4xwwsSwaurDzWtiLVJilEkK9r7fImSHvKONJiEUvAAjZQey/fwXG8aAasvyCQwkP+bmnFrK9L+MHwWd6EA+ZiI+mfWvHEjDg58Sz9m7k0FsQWsSoLsza+FeFgP1MopiXzlG+bkrue2owp0LhWjxHmKKpjNPteGn+LwMplcj30pDKqVYbRace6QlicaAAE+Lcg3JLlZFMg4iroSh+z7htGHzHvlTnjM/GlNJ8yzKf8zOhzyXl9Tqel09XpVXuJHUpKAbLM+oAZp+or6TlNqAsBfpgULE4RVRPCsjJQmpEKks/BfpXC2XNirroyMzcmGBoPxmwZVjpIWZjXAfJ5FRbZjPIaP+tys4otEyppt7ZQXouC8AIDDrPvmjmyaDmsxUItBRhSgXBNPUvabqpcNX5Ookw7HGNpm8+HZa0D4NFeBaRoJ6bFGf13kr72TP5WJHgznpXXqKnTbb/GTzJhajZmLbvQnE+Q6zm/vBHr9CCV4V5izqNofZo5+QM8WSU8ns0HWlrxzPUElI93cxP+kG2NwthYV0lnzf6Dtm5eBk7VzGmRuGUXVuVjej3nmxvxvFXGYMLFCRW0MRWfjEKe6+IGh0P76qBxaMBbWvF7/eHdtRtDs+tXR8VB8t1+Xz1+wNkVrtXaFcM5mpvwSytx4nFsnVRFbZaA5aE/wPNU4GazcC27sFZ/Nuum1bEH65+3dRF86dip7s5QfcVwghXazY1YbubBwJcTKmmPWXtp6453cNmoEixkglsmJBrGAVrXig0pwHWrow/WPW/dGTdxfenYye7OUMOwA17RhCdETl1eJ6Pf2YftNTU0cMnOdmG43McTYhHcLQR0+dftQuorENNv2NFzR80b/alZk10bP247s8EbjIwZdpNe0YglxrN2unGwtoQumLWetctxqZdnqHFMiBPIweCXWyHfDBix46n5WChyioCKAxfGl9EnVsJmBbyKWXm8DzMRxWjNpHchzRdGGvIVjZirmbQLV18vwUeriCxv0jn7WMzs9IcwI66i7JWd2hfURux4aj5mKwqCdaU4RjTQ0LNt0vrCI0fYdeMk3PLyHhwfsWgBrFiA6V+dxmczZ1LO5nhODesAmdmxcnOiHzxSx+olcBJR3u6XLcAC8ulNxvb4yIO9Zqm9LzT9H3A23T29iS8j0c4diaNjzVKqtSOYfQ1v5vlQsR40wkAzOqDgyTVLaGdRAecitp/Z+c3LcLtccFxTQKNUsPy22mM1l299NIr4mVpEZuVIN3bAyhrbGrZDkJnpAOC4H8DRo9a0b78dbJ6zeib8greD75cXYJTxXsyOOJZrigo4mxTbmB1TT8JRNg2KU6oh+cc7eWNYC45dAPf2Qj01DfFHbaSVQSNNbvwflJkG8GvCuu4AAAAASUVORK5CYII=" alt="">-->
+			<p class="mt5 " data-localize="assets.transfer">划转</p>
+		</a>
+    </div>
+    </div>
+    <div class="line"></div>
+    <div class="bgfff">
+        <div class="account">
+            <span :class="[{'active': type== 'lever'}]" @click="tabClick('lever')" data-localize="assets.contractAccount">合约账户</span>
+            <span :class="[{'active': type== 'micro'}]" @click="tabClick('micro')" data-localize="assets.secondContractAccount">秒合约账户</span>
+            <span :class="[{'active': type== 'match'}]" @click="tabClick('match')" data-localize="assets.curAccount">币币账户</span>
+            <span :class="[{'active': type== 'legal'}]" @click="tabClick('legal')" data-localize="assets.legalAccount">法币账户</span>
+        </div>
+    </div>
+    <!--<header class="header" :class="[{'level01':type== 'lever','level02':type== 'micro','level03':type== 'match','level04':type== 'legal'}]">-->
+    <!--   <a class="back" href="personal.html"></a> -->
+    <!--  <div class="top-tab tc">-->
+    <!--    <span :class="[{'active': type== 'lever'}]" @click="tabClick('lever')" data-localize="assets.contractAccount">合约账户</span>-->
+    <!--    <span :class="[{'active': type== 'micro'}]" @click="tabClick('micro')" data-localize="assets.secondContractAccount">秒合约账户</span>-->
+    <!--    <span :class="[{'active': type== 'match'}]" @click="tabClick('match')" data-localize="assets.curAccount">币币账户</span>-->
+    <!--    <span :class="[{'active': type== 'legal'}]" @click="tabClick('legal')" data-localize="assets.legalAccount">法币账户</span>-->
+    <!--  </div>-->
+
+    <!--</header>-->
+
+    <!--切换-->
+
+    <!--<section class="swiper-container mycontainer mt40">-->
+    <!--  <section class="swiper-wrapper">-->
+    <!--    <section class="swiper-slide">-->
+    <!--      <section class="agent_level">-->
+    <!--        <section class="levelbox level01">-->
+    <!--          <div class="white flex between alcenter">-->
+    <!--            <div>-->
+    <!--              <span data-localize="assets.contractAccount">合约账户</span>-->
+    <!--              <span class="ft12"  data-localize="assets.total">总资产折合（$）</span>-->
+    <!--            </div>-->
+    <!--            <img :src="show==true?'images/shows.png':'images/hides.png'" alt="" @click='hide'>-->
+    <!--          </div>-->
+    <!--          <p class="mt20 legal_total">{{show?leverCount:hideit}}</p>-->
+    <!--        </section>-->
+    <!--      </section>-->
+    <!--    </section>-->
+    <!--    <section class="swiper-slide">-->
+    <!--      <section class="agent_level">-->
+    <!--        <section class="levelbox level02">-->
+    <!--          <div class="white flex between alcenter">-->
+    <!--            <div class="ft16">-->
+    <!--              <span data-localize="assets.secondContractAccount">秒合约账户</span>-->
+    <!--              <span class="ft12" data-localize="assets.total">总资产折合（$）</span>-->
+    <!--            </div>-->
+    <!--            <img :src="show==true?'images/shows.png':'images/hides.png'" alt="" @click='hide'>-->
+    <!--          </div>-->
+    <!--          <p class="mt20 deal_total bold">{{show?microCount:hideit}}</p>-->
+    <!--        </section>-->
+    <!--      </section>-->
+    <!--    </section>-->
+    <!--    <section class="swiper-slide">-->
+    <!--      <section class="agent_level">-->
+    <!--        <section class="levelbox level03">-->
+    <!--          <div class="white flex between alcenter">-->
+    <!--            <div>-->
+    <!--              <span data-localize="assets.curAccount">币币账户</span>-->
+    <!--              <span class="ft12" data-localize="assets.total">总资产折合（$）</span>-->
+    <!--            </div>-->
+    <!--            <img :src="show==true?'images/shows.png':'images/hides.png'" alt="" @click='hide'>-->
+    <!--          </div>-->
+    <!--          <p class="mt20 legal_total">{{show?changeCount:hideit}}</p>-->
+    <!--        </section>-->
+    <!--      </section>-->
+    <!--    </section>-->
+    <!--    <section class="swiper-slide">-->
+    <!--      <section class="agent_level">-->
+    <!--        <section class="levelbox level04">-->
+    <!--          <div class="white flex between alcenter">-->
+    <!--            <div>-->
+    <!--              <span data-localize="assets.legalAccount">法币账户</span>-->
+    <!--              <span class="ft12" data-localize="assets.total">总资产折合（$）</span>-->
+    <!--            </div>-->
+    <!--            <img :src="show==true?'images/shows.png':'images/hides.png'" alt="" @click='hide'>-->
+    <!--          </div>-->
+    <!--          <p class="mt20 legal_total">{{show?legalCount:hideit}}</p>-->
+    <!--        </section>-->
+    <!--      </section>-->
+    <!--    </section>-->
+    <!--  </section>-->
+    <!--</section>-->
+
+    <!-- <div class="soso flex alcenter bdb">
+      <img class="search" src="images/searchs.png" alt="" style="width:14px; margin-right:10px" @click="search">
+      <input class="search_text" type="text" style="background:transparent;" placeholder="搜索币种" @keyup="search" />
+    </div> -->
+
+    <!-- ================交易=============== -->
+    <section id="level_con" class="level_con">
+      <section>
+        <!-- 合约账户 -->
+        <ul class="deal_lists" v-show="type == 'lever'">
+          <li v-for="item in Lists" :key="item.id" v-if="item.is_lever == 1">
+            <a href="javascript:;" @click="links(item.currency)">
+              <p class="flex between">
+                <span class="f16">{{item.currency_name}}</span>
+                <img src="images/arrrowr.png" alt="" style="width:12px;height:12px;">
+              </p>
+              <div class="flex">
+                <div class="flex1 mr5">
+                  <span class="ft12 blue2" data-localize="assets.avaiable">{{getlg('canuse')}}</span>
+                  <p>{{show ? item.lever_balance || '0.00' : hideit}}</p>
+                </div>
+                <div class="flex1 mr5">
+                  <span class="ft12 blue2" data-localize="assets.lock">{{getlg('frezz')}}</span>
+                  <p>{{show ? item.lock_lever_balance || '0.00' : hideit}}</p>
+
+                </div>
+                <div class="flex1 tr">
+                  <span class="ft12 blue2" data-localize="assets.conversion">{{getlg('conversion')}}($)</span>
+                  <!-- <p class="white_gray">{{show ? iTofixed((item.cny_price * item.lever_balance),4) || '0.00' : hideit}}
+                  </p> -->
+                  <p class="white_gray">{{show ? iTofixed((item.hq_huilv * item.lever_balance==0?item.lock_lever_balance*1+item.lever_balance*1:item.hq_huilv * item.lever_balance),4) || '0.00' : hideit}}
+                  </p>
+                </div>
+              </div>
+            </a>
+          </li>
+        </ul>
+        <!-- 秒合约账户 -->
+        <ul class="deal_lists" v-show="type == 'micro'">
+          <li v-for="item in Lists" :key="item.id" v-if="item.is_micro == 1">
+            <a href="javascript:;" @click="links(item.currency)">
+              <p class="flex between">
+                <span class="f16">{{item.currency_name}}</span>
+                <img src="images/arrrowr.png" alt="" style="width:12px;height:12px;">
+              </p>
+              <div class="flex">
+                <div class="flex1 mr5">
+                  <span class="ft12 blue2" data-localize="assets.avaiable">{{getlg('canuse')}}</span>
+                  <p>{{show ? item.micro_balance || '0.00' : hideit}}</p>
+                </div>
+                <div class="flex1 mr5">
+                  <span class="ft12 blue2" data-localize="assets.lock">{{getlg('frezz')}}</span>
+                  <p>{{show ? item.lock_micro_balance || '0.00' : hideit}}</p>
+                </div>
+                <div class="flex1 tr">
+                  <span class="ft12 blue2" data-localize="assets.conversion">{{getlg('conversion')}}($)</span>
+                  <p class="white_gray">{{show ? iTofixed((item.hq_huilv * item.micro_balance==0?item.lock_micro_balance*1+item.micro_balance*1:item.hq_huilv * item.micro_balance),4) || '0.00' : hideit}}
+                  </p>
+                </div>
+              </div>
+            </a>
+          </li>
+        </ul>
+        <!-- 币币账户 -->
+        <ul class="deal_lists" v-show="type == 'match'">
+          <li v-for="item in Lists" :key="item.id" v-if="item.is_match == 1">
+            <a href="javascript:;" @click="links(item.currency)">
+              <p class="flex between">
+                <span class="f16">{{item.currency_name}}</span>
+                <img src="images/arrrowr.png" alt="" style="width:12px;height:12px;">
+              </p>
+              <div class="flex">
+                <div class="flex1 mr5">
+                  <span class="ft12 blue2" data-localize="assets.avaiable">{{getlg('canuse')}}</span>
+                  <p>{{show ? item.change_balance || '0.00' : hideit}}</p>
+                </div>
+                <div class="flex1 mr5">
+                  <span class="ft12 blue2" data-localize="assets.lock">{{getlg('frezz')}}</span>
+                  <p>{{show ? item.lock_change_balance || '0.00' : hideit}}</p>
+                </div>
+                <div class="flex1 tr">
+                  <span class="ft12 blue2" data-localize="assets.conversion">{{getlg('conversion')}}($)</span>
+                  <p class="white_gray">{{show ? iTofixed((item.hq_huilv * item.change_balance==0?item.lock_change_balance*1+item.change_balance*1:item.hq_huilv * item.change_balance),4) || '0.00' : hideit}}
+                  </p>
+                </div>
+              </div>
+            </a>
+          </li>
+        </ul>
+        <ul class="deal_lists" v-show="type == 'legal'">
+          <li v-for="item in Lists" :key="item.id" v-if="item.is_legal == 1">
+            <a href="javascript:;" @click="links(item.currency)">
+              <p class="flex between">
+                <span class="f16">{{item.currency_name}}</span>
+                <img src="images/arrrowr.png" alt="" style="width:12px;height:12px;">
+              </p>
+              <div class="flex">
+                <div class="flex1 mr5">
+                  <span class="ft12 blue2" data-localize="assets.avaiable">{{getlg('canuse')}}</span>
+                  <p>{{show ? item.legal_balance || '0.00' : hideit}}</p>
+                </div>
+                <div class="flex1 mr5">
+                  <span class="ft12 blue2" data-localize="assets.lock">{{getlg('frezz')}}</span>
+                  <p>{{show ? item.lock_legal_balance || '0.00' : hideit}}</p>
+                </div>
+                <div class="flex1 tr">
+                  <span class="ft12 blue2" data-localize="assets.conversion">{{getlg('conversion')}}($)</span>
+                  <p class="white_gray">{{show ? iTofixed((item.hq_huilv * item.legal_balance==0?item.lock_legal_balance*1+item.legal_balance*1:item.hq_huilv * item.legal_balance),4) || '0.00' : hideit}}
+                  </p>
+                </div>
+              </div>
+            </a>
+          </li>
+        </ul>
+      </section>
+    </section>
+    <div style="height: 40px;"></div>
+     <footer id="footer">
+            <a href="index.html">
+                <div>
+                    <p class="img img0"></p>
+                    <span data-localize="footer.home">首页</span>
+                </div>
+            </a>
+            
+            <a href="trades.html">
+                <div>
+                    <p class="img img1"></p>
+                    <span data-localize="footer.quotation">行情</span>
+                </div>
+            </a>
+             <a href="dataMap.html?heyueId=2&legal_id=3&currency_id=1&symbol=BTC/USDT" class>
+                <div>
+                    <p class="img img2"></p>
+                    <span data-localize="footer.transaction">交易</span>
+                </div>
+            </a>
+            <a href="assets.html"  class="select">
+                <div>
+                    <p class="img img3"></p>
+                    <span data-localize="footer.assets">资产</span>
+                </div>
+            </a>
+            <a href="fiatrad.html">
+	<div>
+		<p class="img img5"></p>
+		<span data-localize="index.legal">法币交易</span>
+	</div>
+</a>
+<a href="personal.html">
+
+
+                <div>
+                    <p class="img img4"></p>
+                    <span data-localize="footer.personal">我的</span>
+                </div>
+            </a>
+        </footer>
+  </div>
+  <script type="text/javascript" src="lib/jquery-1.8.3.min.js"></script>
+  <script type="text/javascript" src="lib/swiper.min.js"></script>
+  <script type="text/javascript" src="javascripts/jquery.cookie.js"></script>
+  <script type="text/javascript" src="lib/layer_mobile/layer.js"></script>
+  <script type="text/javascript" src="lib/vue.min.js"></script>
+  <script type="text/javascript" src="lib/jquery.localize.min.js"></script>
+	<script type="text/javascript" src="lib/language_cookie.js"></script>
+  <script type="text/javascript" src="javascripts/main.js"></script>
+  <script type="text/javascript" src="javascripts/assets.js"></script>
+
+    <script type="text/javascript">
+        if(navigator.userAgent.toLowerCase().indexOf('iphone') > -1){
+            if(window.screen.height >= 812){
+                document.getElementById('body').style.marginTop="44px";
+                document.getElementById('top').style.height="45px";
+                document.getElementById('level_con').style.height=(window.screen.height-420)+'px';
+                document.getElementById('footer').style.top=(window.screen.height-85)+'px';
+            }
+            else{
+                document.getElementById('body').style.marginTop="22px";
+                document.getElementById('top').style.height="23px";
+                document.getElementById('level_con').style.height=(window.screen.height-398)+'px';
+                document.getElementById('footer').style.top=(window.screen.height-51)+'px';
+            }
+        }
+    </script>
+</body>
+
+</html>

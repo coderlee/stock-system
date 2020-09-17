@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<title>商家申请</title>
+	<link rel="stylesheet" type="text/css" href="../css/common.css" />
+	<link rel="stylesheet" type="text/css" href="../css/style.css" />
+	<style>
+		.list {
+			margin: 13px;
+		}
+
+		.list li {
+			line-height: 40px;
+			margin-bottom: 10px;
+		}
+
+		.list span {
+			width: 78px;
+			text-align: right;
+			display: block;
+		}
+
+		.list input,
+		.list select {
+			width: calc(100.0vw - 114px);
+			line-height: 40px;
+			background-color: #fff;
+			border-radius: 2px;
+			padding: 0 6px;
+			color: #333;
+			border: 1px solid #12151c;
+		}
+	</style>
+</head>
+
+<body class="bgBalck">
+	<div id="app" v-cloak>
+		<header class="header">
+			<a class="back mt5" href="javascript:history.go(-1)">
+
+			</a>
+			<h4 class="ft16">商家申请</h4>
+		</header>
+		<div class="header-space"></div>
+		<ul class="list">
+			<li class="flex between">
+				<span data-localize="assets.contractAccount">合约账户</span>
+				<input v-model="application.account" type="text">
+			</li>
+			<li class="flex between">
+				<span data-localize="index.name">名称</span>
+				<input v-model="application.name" type="text">
+			</li>
+			<li class="flex between">
+				<span>商家电话</span>
+				<input v-model="application.phone" type="text">
+			</li>
+			<li class="flex between">
+				<span>选择资产</span>
+				<select id="currency">
+					<option v-for="item in currencyList" :key="item.id" :value="item.id">{{item.name}}</option>
+				</select>
+			</li>
+			<!-- <li class="flex between">
+				<span>商家余额</span>
+				<input v-model="application.balance" type="text">
+			</li> -->
+			<li class="flex between">
+				<span data-localize="met.wename">微信昵称</span>
+				<input v-model="application.wechatNick" type="text">
+			</li>
+			<li class="flex between">
+				<span data-localize="met.wechat">微信账号</span>
+				<input v-model="application.wechatAccount" type="text">
+			</li>
+			<li class="flex between">
+				<span>支付宝昵称</span>
+				<input v-model="application.alipayNick" type="text">
+			</li>
+			<li class="flex between">
+				<span data-localize="met.alipay">支付宝账号</span>
+				<input v-model="application.alipayAccount" type="text">
+			</li>
+			<li class="flex between">
+				<span>选择银行</span>
+				<select id="bank">
+					<option v-for="item in bankList" :key="item.id" :value="item.id">{{item.name}}</option>
+				</select>
+
+			</li>
+			<li class="flex between">
+				<span data-localize="met.bank">银行账号</span>
+				<input v-model="application.bankAccount" type="text">
+			</li>
+			<li class="flex between">
+				<span>开户行</span>
+				<input v-model="application.bankName" type="text">
+			</li>
+		</ul>
+		<div class="uploads flex ml15 mr10">
+			<div class="uploads-list tc">
+				<p class="title ft16" data-localize="contract.alipayCode">支付宝付款码</p>
+				<div>
+					<img class="alipay-img" src="../images/myimg/688660269851391423.png" alt="">
+					<input type="file" id="alipay" @change="uploads(1)">
+				</div>
+			</div>
+			<div class="uploads-list tc">
+				<p class="title ft16" data-localize="met.wechatCode">微信收款码</p>
+				<div>
+					<img class="wechat-img" src="../images/myimg/688660269851391423.png" alt="">
+					<input type="file" name="" id="wechat" @change="uploads(2)">
+				</div>
+			</div>
+		</div>
+		<!-- 保存按钮 -->
+		<div class="save ft15 ftw">
+			<button class="ftw" type="button" @click="sumbitApply()">提交申请</button>
+		</div>
+	</div>
+	<script type="text/javascript" src="../lib/jquery-2.1.1.min.js"></script>
+	<script type="text/javascript" src="../javascripts/jquery.cookie.js"></script>
+	<script type="text/javascript" src="../lib/vue.min.js"></script>
+	<script type="text/javascript" src="../lib/layer_mobile/layer.js"></script>
+	<script type="text/javascript" src="../lib/jquery.localize.min.js"></script>
+	<script type="text/javascript" src="../lib/language_cookie.js"></script>
+	<script type="text/javascript" src="../javascripts/main.js"></script>
+	<script>
+		var vue = new Vue({
+			el: '#app',
+			data: {
+				bankList: '',
+				checkboxValue: false,
+				currencyList: [],
+				bankName: '选择银行',
+				currencyName: '选择资产',
+				application: {
+					account: '',
+					name: '',
+					phone: '',
+					balance: '',
+					wechatNick: '',
+					wechatAccount: '',
+					alipayNick: '',
+					alipayAccount: '',
+					bankAccount: '',
+					bankName: '',
+				}
+			},
+			mounted: function () {
+				var that = this;
+				// FastClick.attach(document.body);
+				var token = get_user_login();
+				$.ajax({
+					url: _API + "seller/show_news",
+					type: "GET",
+					dataType: "json",
+					async: true,
+					beforeSend: function beforeSend(request) {
+						request.setRequestHeader("Authorization", token);
+					},
+					success: function success(data) {
+						if (data.type == 'ok') {
+							that.bankList = data.message.banks;
+							that.currencyList = data.message.currencies;
+						} else if (data.type == '999') {
+							window.location = 'login.html';
+						}
+					}
+				});
+			},
+			methods: {
+				sumbitApply() {
+					let that = this;
+					let alipayImg = '';
+					let wechatImg = '';
+					let currencyId = $('#currency option:selected').val();
+					let bankId = $('#bank option:selected').val();
+					// if(!that.application.account){
+					// 	layer_msg('请输入合约账户');
+					// 	return false;
+					// }
+					// if(!that.application.name){
+					// 	layer_msg('请输入名称');
+					// 	return false;
+					// }
+					// if(!that.application.phone){
+					// 	layer_msg('请输入商家电话');
+					// 	return false;
+					// }
+					// if(!currencyId){
+					// 	layer_msg('请选择资产');
+					// 	return false;
+					// }
+					// if(!that.application.balance){
+					// 	layer_msg('请输入商家余额');
+					// 	return false;
+					// }
+					// if(!that.application.wechatNick){
+					// 	layer_msg('请输入微信昵称');
+					// 	return false;
+					// }
+					// if(!that.application.wechatAccount){
+					// 	layer_msg('请输入微信账户');
+					// 	return false;
+					// }
+					// if(!that.application.alipayNick){
+					// 	layer_msg('请输入支付宝昵称');
+					// 	return false;
+					// }
+					// if(!that.application.alipayAccount){
+					// 	layer_msg('请输入支付宝账户');
+					// 	return false;
+					// }
+					// if(!bankId){
+					// 	layer_msg('请选择银行');
+					// 	return false;
+					// }
+					// if(!that.application.bankAccount){
+					// 	layer_msg('请输入银行账户');
+					// 	return false;
+					// }
+					// if(!that.application.bankName){
+					// 	layer_msg('请输入开户行');
+					// 	return false;
+					// }
+					// if(alipayImg == '../images/myimg/688660269851391423.png'){
+					// 	layer_msg('请上传支付宝付款码');
+					// 	return false;
+					// }
+					// if(wechatImg == '../images/myimg/688660269851391423.png'){
+					// 	layer_msg('请上传微信付款码');
+					// 	return false;
+					// }
+					if ($(".alipay-img").attr('src') == '../images/myimg/688660269851391423.png') {
+						alipayImg = ''
+					} else {
+						alipayImg = $(".alipay-img").attr('src');
+					}
+					if ($(".wechat-img").attr('src') == '../images/myimg/688660269851391423.png') {
+						wechatImg = "";
+					} else {
+						wechatImg = $(".wechat-img").attr('src');
+					}
+					let data = {
+						account_number: that.application.account,
+						name: that.application.name,
+						mobile: that.application.phone,
+						currency_id: currencyId,
+						// seller_balance:that.application.balance,
+						wechat_nickname: that.application.wechatNick,
+						wechat_account: that.application.wechatAccount,
+						ali_nickname: that.application.alipayNick,
+						ali_account: that.application.alipayAccount,
+						bank_id: bankId,
+						bank_account: that.application.bankAccount,
+						bank_address: that.application.bankName,
+						alipay_qr_code: alipayImg,
+						wechat_qr_code: wechatImg
+					}
+					initDataTokens({
+						url: 'seller/seller_add',
+						data: data,
+						type: 'post'
+					}, function (res) {
+						layer_msg(res.message)
+						if (res.type == 'ok') {
+							setTimeout(function () {
+								window.location.href = "fiatrad.html";
+							}, 1000)
+
+						}
+
+					})
+				},
+				// 上传图片
+				uploads(type) {
+					var formData = new FormData();
+					if (type == 1) {
+						formData.append("file", $("#alipay")[0].files[0]);
+					} else {
+						formData.append("file", $("#wechat")[0].files[0]);
+					}
+					var i = layer_loading()
+					$.ajax({
+						url: _API + 'upload',
+						type: 'post',
+						data: formData,
+						processData: false,
+						contentType: false,
+						success: function (msg) {
+							if (msg.type == 'ok') {
+								setTimeout(function () {
+									layer_close(i);
+								}, 3000)
+								if (type == 1) {
+									$(".alipay-img").attr("src", msg.message);
+								} else {
+									$(".wechat-img").attr("src", msg.message);
+								}
+							} else {
+								if (type == 1) {
+									$(".alipay-img").attr("src", '../images/myimg/688660269851391423.png');
+								} else {
+									$(".wechat-img").attr("src", '../images/myimg/688660269851391423.png');
+								}
+								layer_msg(msg.message)
+							}
+						}
+					});
+				}
+			}
+		});
+	</script>
+</body>
+
+</html>

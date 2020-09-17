@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, minimal-ui" />
+	<title>币币交易</title>
+	<link rel="stylesheet" type="text/css" href="../element-ui/lib/theme-chalk/index.css" />
+	<link rel="stylesheet" type="text/css" href="../css/common.css" />
+	<style>
+		.content {
+			margin: 0 20px;
+		}
+
+		.content span {
+			display: block;
+			width: 60px;
+		}
+
+		.content input {
+			margin-top: 20px;
+			width: 44%;
+			border: 1px solid #12151c;
+			line-height: 30px;
+			padding: 0 10px;
+			color: #fff;
+		}
+
+		.password {
+			line-height: 40px;
+		}
+
+		.password input {
+			padding-left: 4px;
+		}
+
+		.btns {
+			height: 40px;
+			line-height: 40px;
+			border-radius: 2px;
+			background-color: #f0b90b;
+			margin-top: 40px;
+		}
+
+		.btns button {
+			width: 100%;
+			background-color: rgba(0, 0, 0, 0);
+			border: none;
+			outline: none;
+		}
+
+		#currency {
+			padding: 0 10px;
+			border: 1px solid #12151c;
+			width: 120px;
+			line-height: 30px;
+			height: 30px;
+
+		}
+
+		.logos {
+			width: 20px;
+			height: 20px;
+			position: relative;
+			top: 5px;
+			margin-right: 6px;
+		}
+
+		.tab-logo {
+			width: 30px;
+			height: 30px;
+			margin-top: 5px;
+		}
+
+		.coin-currency-flash {
+			padding-bottom: 20px;
+		}
+
+		.width1 {
+			width: 23%;
+		}
+
+		.width2 {
+			width: 15%;
+		}
+
+		.width3 {
+			width: 26.5%;
+		}
+
+		.order-list {
+			width: 100%;
+			margin-top: 10px;
+		}
+
+		.order-list ul {
+			width: 100%;
+			background-color: #202833;
+			margin-top: 10px;
+		}
+
+		.order-list ul li {
+			border-bottom: 1px solid #12151c;
+			padding: 10px 0;
+		}
+
+		.bg {
+			background-color: #202833;
+			padding-bottom: 10px;
+			padding-top: 10px;
+		}
+
+		.order-list-text {
+			width: 100%;
+			line-height: 40px;
+			background-color: #202833;
+			padding-left: 10px;
+		}
+		.el-dropdown{
+			color: #fff;
+		}
+	</style>
+</head>
+
+<body class="bgBalck">
+	<div id="app" v-cloak>
+		<header class="header">
+			<a class="back mt5" href="javascript:history.go(-1)"></a>
+			<h4 class="ft16" data-localize="footer.currency">币币交易</h4>
+			<!-- <p class="right" @click="links">
+				<img class="recordList mt10" src="images/record1.png" alt="">
+			</p> -->
+		</header>
+		<div class="header-space"></div>
+		<div class="bg bgBlackColor">
+			<div class="coin-currency-flash flex ml15">
+				<p class="tc" data-localize="contract.realPrice">实时价格:</p>
+				<p class="">{{prices || '0.00'}}</p>
+			</div>
+			<!-- <div class="coin-currency-flash flex ml15">
+					<p class="tc">
+							{{getlg('text10')}}:{{pbPrice}}
+						</p>
+				</div> -->
+			<div class="convertibility-header flex between ml10 mr10">
+				<div class="tl">
+					<p data-localize="contract.currencyExchange">兑出币种</p>
+					<el-dropdown trigger="click" @command="selectedOne">
+						<!-- <img class="logos" :src="leftLogo" alt=""> -->
+						<span class="el-dropdown-link">
+							<!-- <img class="logos" :src="leftLogo" alt=""> -->
+							{{value1}}<i class="el-icon-arrow-down el-icon--right"></i>
+						</span>
+						<el-dropdown-menu slot="dropdown">
+							<el-dropdown-item
+								:command="{id:item.id,name:item.name,logos:item.logo,minNUm:item.min_number,maxNUm:item.max_number,prices:item.price,balances:item.balance,pbPrice:item.to_pb_price}"
+								v-for="item in leftList" :key="item.id">
+								{{item.name}}</el-dropdown-item>
+						</el-dropdown-menu>
+
+						</el-dropdown-menu>
+					</el-dropdown>
+				</div>
+				<img class="tab-logo" src="../images/transer.png" alt="" @click="coinTab">
+				<div class="tl">
+					<p data-localize="contract.currencyExchangeIn">兑入币种</p>
+					<el-dropdown trigger="click" @command="selectedTwo">
+						<!-- <img class="logos" :src="rightLogo" alt=""> -->
+						<span class="el-dropdown-link">
+							<!-- <img class="logos" :src="rightLogo" alt=""> -->
+							{{value2}}<i class="el-icon-arrow-down el-icon--right"></i>
+						</span>
+						<el-dropdown-menu slot="dropdown">
+							<el-dropdown-item
+								:command="{id:item.id,name:item.name,logos:item.logo,minNUm:item.min_number,maxNUm:item.max_number,prices:item.price,balances:item.balance}"
+								v-for="item in rightList" :key="item.id">{{item.name}}
+							</el-dropdown-item>
+
+
+						</el-dropdown-menu>
+					</el-dropdown>
+				</div>
+			</div>
+			<div class="content ml12 flex between">
+				<!-- <span data-localize="transaction.price">价格</span> -->
+				<input type="number" v-model="inputPrice" data-localize="deals.inputprice" placeholder="请输入价格">
+				<!-- <span data-localize="assets.num">数量</span> -->
+				<input type="number" v-model="inputNUm" data-localize="td.pnum" placeholder="请输入数量">
+			</div>
+			<div class="ml20 mr20">
+				<p class="mt10"><span data-localize="contract.cashableBalance">可兑出余额：</span> {{balance}}</p>
+				<!-- <p class="mt10"><span data-localize="contract.minimumCashable">最小可兑出：</span>{{minNumber}}</p>
+				<p class="mt10"><span data-localize="contract.maximumCashable">最大可兑出：</span>{{maxNumber}}</p> -->
+			</div>
+			<div class="btns ml12">
+				<button type="button" class="white" @click="sumbit()" data-localize="jc.exnow">立即兑换</button>
+			</div>
+			<div class="tc mt10" style="color:#f0b90b;" data-localize="contract.automatically">点击兑换之后将自动完成，不能返回</div>
+		</div>
+
+		<!-- 兑换记录 -->
+		<div class="order-list">
+			<p class="order-list-text" data-localize="jc.record">兑换记录</p>
+			<ul>
+				<li class="flex between ft10 tc alcenter">
+					<p class="width1" data-localize="deals.type">类型</p>
+					<p class="width2" data-localize="assets.num">数量</p>
+					<p class="width3" data-localize="transaction.price">价格</p>
+					<p class="width3" data-localize="assets.time">时间</p>
+					<p class="width2" data-localize="contract.state">状态</p>
+				</li>
+				<li class="flex between ft10 tc alcenter" v-for="item in orderList" :key="item.id">
+					<p class="width1">{{item.l_currency}} {{getlg('match')}} {{item.r_currency}}</p>
+					<p class="width2">{{item.num}}</p>
+					<p class="width3">{{item.price}}</p>
+					<p class="width3">{{item.review_time}}</p>
+					<p class="width2">{{item.status_name}}</p>
+				</li>
+			</ul>
+		</div>
+	</div>
+</body>
+
+</html>
+<script type="text/javascript" src="../lib/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="../lib/vue.min.js"></script>
+<script type="text/javascript" src="../element-ui/lib/index.js"></script>
+<script type="text/javascript" src="../lib/layer_mobile/layer.js"></script>
+<script type="text/javascript" src="../javascripts/jquery.cookie.js"></script>
+<script type="text/javascript" src="../javascripts/socket.io.js"></script>
+<script type="text/javascript" src="../lib/jquery.localize.min.js"></script>
+<script type="text/javascript" src="../lib/language_cookie.js"></script>
+<script type="text/javascript" src="../javascripts/main.js"></script>
+<script>
+	var vue = new Vue({
+		el: '#app',
+		data: {
+			selectValue: '',
+			currencyName: '',
+			value1: '',
+			value2: '',
+			leftList: [],
+			rightList: [],
+			datas: {},
+			leftLogo: '',
+			rightLogo: '',
+			prices: '',
+			inputPrice: '',
+			inputNUm: '',
+			balance: '0.00',
+			maxNumber: '',
+			minNumber: '',
+			leftId: '',
+			rightId: '',
+			orderList: [],
+			typeTab: 1,
+			pbPrice:''
+
+		},
+
+		mounted: function () {
+			let that = this;
+			// FastClick.attach(document.body);
+			let text = '';
+			initDataToken01({
+				url: 'wallet/flashAgainstList'
+			}, function (res) {
+				if (res.type == 'ok') {
+					that.datas = res.message;
+					that.leftList = res.message.left;
+					that.rightList = res.message.right;
+					that.value1 = res.message.left[0].name;
+					that.leftLogo = res.message.left[0].logo;
+					that.value2 = res.message.right[0].name;
+					that.rightLogo = res.message.right[0].logo;
+					that.prices = res.message.left[0].price;
+					that.maxNumber = res.message.left[0].max_number;
+					that.minNumber = res.message.left[0].min_number;
+					that.leftId = res.message.left[0].id;
+					that.rightId = res.message.right[0].id;
+					that.balance = res.message.left[0].balance;
+					that.pbPrice = res.message.left[0].to_pb_price;
+				}
+			})
+			that.getList();
+
+		},
+		methods: {
+			// 获取兑换列表
+			getList() {
+				var that = this;
+				initDataToken01({
+					url: 'wallet/myFlashAgainstList'
+				}, function (res) {
+					if (res.type == 'ok') {
+						that.orderList = res.message.data;
+
+					}
+				})
+			},
+
+			selectedOne(command) {
+				var that = this;
+				that.value1 = command.name;
+				that.leftId = command.id;
+				that.leftLogo = command.logos;
+				// if (that.typeTab == 1) {
+					that.prices = command.prices;
+					that.maxNumber = command.maxNUm;
+					that.minNumber = command.minNUm;
+					that.balance = command.balances;
+					that.pbPrice = command.pbPrice;
+				// }
+			},
+			selectedTwo(command) {
+				var that = this;
+				that.value2 = command.name;
+				that.rightId = command.id;
+				that.rightLogo = command.logos;
+				// if(that.typeTab == 2){
+				// 	that.prices = command.prices;
+				// 	that.maxNumber = command.maxNUm;
+				// 	that.minNumber = command.minNUm;
+				// 	that.balance = command.balances;
+				// }
+			},
+			coinTab() {
+				var that = this;
+				that.typeTab = that.typeTab == 1 ? 2 : 1;
+				if (that.typeTab == 1) {
+					that.leftList = that.datas.left;
+					that.rightList = that.datas.right;
+					that.value1 = that.datas.left[0].name;
+					that.leftLogo = that.datas.left[0].logo;
+					that.value2 = that.datas.right[0].name;
+					that.rightLogo = that.datas.right[0].logo;
+					that.prices = that.datas.left[0].price;
+					that.maxNumber = that.datas.left[0].max_number;
+					that.minNumber = that.datas.left[0].min_number;
+					that.leftId = that.datas.left[0].id;
+					that.rightId = that.datas.right[0].id;
+					that.balance = that.datas.left[0].balance;
+					that.pbPrice = that.datas.left[0].to_pb_price;
+				} else {
+					that.leftList = that.datas.right;
+					that.rightList = that.datas.left;
+					that.value1 = that.datas.right[0].name;
+					that.leftLogo = that.datas.right[0].logo;
+					that.value2 = that.datas.left[0].name;
+					that.rightLogo = that.datas.left[0].logo;
+					that.prices = that.datas.right[0].price;
+					that.maxNumber = that.datas.left[0].max_number;
+					that.minNumber = that.datas.left[0].min_number;
+					that.leftId = that.datas.right[0].id;
+					that.rightId = that.datas.left[0].id;
+					that.balance = that.datas.right[0].balance;
+					that.pbPrice = that.datas.right[0].to_pb_price;
+				}
+
+			},
+			// 兑换
+			sumbit() {
+				let that = this;
+				if (!that.inputPrice) {
+					layer_msg(getlg('ptprice'));
+					return false;
+				}
+				if (!that.inputNUm) {
+					layer_msg(getlg('ptnum'));
+					return false;
+				}
+				initDataToken01({
+					url: 'wallet/flashAgainst',
+					data: {
+						l_currency_id: that.leftId,
+						price: that.inputPrice,
+						num: that.inputNUm,
+						r_currency_id: that.rightId,
+					},
+					type: 'post'
+				}, function (res) {
+					layer_msg(res.message)
+					if (res.type == 'ok') {
+						setTimeout(function () {
+							location.reload();
+						}, 1000)
+
+					}
+				})
+
+			},
+			links() {
+				location.href = 'convertibilityRecord.html';
+			}
+		}
+	});
+</script>

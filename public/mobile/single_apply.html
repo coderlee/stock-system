@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, viewport-fit=cover" />
+    <title>编辑跟单</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/single_apply.css" />
+</head>
+
+<body>
+    <div id="app" v-cloak>
+	<header class="header">
+		<a href="javascript:history.go(-1)" class="back mt5"></a>
+		<h4 class="ft16">{{getlg('sqgd')}}</h4>
+	</header>
+	<div class="header-space"></div>
+	<div class="content">
+		<div class="apy-basis">{{getlg('jbzl')}}</div>
+		<div class="apy-name">
+			<input type="text" :placeholder="getlg('enterjbzl')">
+		</div>
+		<div class="apy-scan">
+			<div class="apy-scan-left">
+				<h1>{{getlg('apiinfo')}}</h1>
+				<a>{{getlg('rybdapi')}}?</a>
+			</div>
+			<div class="apy-scan-right">
+				<img src="images/scan_code.png">
+			</div>
+		</div>
+		<div class="apy-copy">
+			<div class="apy-copy-title">
+				<h1>API Key</h1>
+				<img src="images/copy_scan_code.png">
+			</div>
+			<div class="apy-copy-form">
+				<input type="text" :placeholder="getlg('enterapi')">
+			</div>
+		</div>
+		<div class="apy-copy">
+			<div class="apy-copy-title">
+				<h1>Secret Key</h1>
+				<img src="images/copy_scan_code.png">
+			</div>
+			<div class="apy-copy-form">
+				<input type="text" :placeholder="getlg('enterkey')">
+			</div>
+		</div>
+	</div> 
+	<!--<div class="apy-tip">{{qjnxy}}</div>-->
+	<div class="btm-mar"></div>
+	<div class="member-fix">
+		<button>{{getlg('qdgd')}</button>
+	</div>
+	</div>
+    <script type="text/javascript" src="lib/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="lib/bootstrap.min.js"></script>
+	<script type="text/javascript" src="javascripts/jquery.cookie.js"></script>
+	<script type="text/javascript" src="lib/layer_mobile/layer.js"></script>
+	<script type="text/javascript" src="lib/jquery.localize.min.js?v=10"></script>
+	<script type="text/javascript" src="lib/language_cookie.js"></script>
+	<script type="text/javascript" src="javascripts/main.js"></script>
+	<script type="text/javascript" src="lib/vue.min.js"></script>
+	<script>
+		var vue =new Vue({
+			el:"#app",
+			data:{
+			},
+			mounted: function () {
+            },
+            methods: {
+            }
+		})
+	</script>
+</body>
+
+</html>

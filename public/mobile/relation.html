@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>联系我们</title>
+		<link rel="stylesheet" href="css/common.css">
+		
+		<style type="text/css">
+			textarea{
+				width: 100%;
+				height: 300px;
+				padding: 10px 12px;
+				line-height: 1.2;
+				border-radius: 2px;
+				border: 1px solid #f1f1f1;
+				margin-top: 10px;
+				resize: none;
+			}
+			.right img{
+				top: 3px;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="app" v-cloak>
+			<header class="header">
+				<a class="back mt5" href="javascript:history.go(-1)">
+				
+				</a>
+				<h4 class="ft16" data-localize="personal.complaint">投诉建议</h4>
+				<div class="right" @click="but()" data-localize="auth.updata">
+					提交
+					<!-- <img src="images/myimg/contact.png" alt="" class="imgRight"  /> -->
+				</div>
+			</header>
+			<div class="header-space"></div>
+			<div class="text ml12">
+				<textarea id="textTxt" class="bgColor" data-localize="contract.reply" placeholder="请写下您的问题，我们将尽快回复您...">
+
+			</textarea>
+			</div>
+		</div>
+		<script type="text/javascript" src="lib/jquery-1.8.3.min.js"></script>
+		<script type="text/javascript" src="lib/vue.min.js"></script>
+		<script type="text/javascript" src="lib/swiper.jquery.min.js"></script>
+		<script type="text/javascript" src="javascripts/jquery.cookie.js"></script>
+		<script type="text/javascript" src="lib/layer_mobile/layer.js"></script>
+		<script type="text/javascript" src="lib/jquery.localize.min.js"></script>
+		<script type="text/javascript" src="lib/language_cookie.js"></script>
+		<script type="text/javascript" src="javascripts/main.js"></script>
+		<script>
+				var vue = new Vue({
+					el: '#app',
+					data: {
+						List: []
+					},
+					mounted: function() {
+						// FastClick.attach(document.body);
+					},
+					methods: {
+						but: function() {
+							var ads = $("#textTxt").val()
+							var self = this;
+							var token = get_user_login();
+							if(ads !=""){
+								$.ajax({
+								url: _API + "feedback/add",
+								type: "POST",
+								dataType: "json",
+								async: true,
+								data: {
+									content: ads
+								},
+								beforeSend: function beforeSend(request) {
+									request.setRequestHeader("Authorization", token);
+								},
+								success: function success(data) {
+									self.List = data.message;
+									if (data.type == 'ok') {
+										window.location.href ='order.html';
+									}
+								}
+							});
+							}else{
+								layer_msg(getlg('description'))
+							}
+						
+			
+						}
+					}
+				});
+			</script>
+	</body>
+</html>
+

@@ -1,0 +1,67 @@
+环境
+Nginx 1.17.8
+MySQL 5.6.47
+PHP-7.2  《禁函数》
+phpMyAdmin 4.7
+Redis 5.0.8
+
+PHP扩展：
+fileinfo	通用扩展	若可用内存小于1G，可能会安装不上		
+opcache	缓存器	用于加速PHP脚本!
+redis	缓存器	基于内存亦可持久化的Key-Value数据库
+imagemagick	通用扩展	Imagick高性能图形库
+imap	邮件服务	邮件服务器必备		
+exif	通用扩展	用于读取图片EXIF信息		
+intl	通用扩展	提供国际化支持		
+xsl	通用扩展	xsl解析扩展
+
+CentOS 7.6.1810(Py2.7.5)
+4核8G 容量大于50G
+
+cd /源码根目录
+php artisan schedule:run
+
+cd /源码根目录
+php artisan get_market
+
+cd /源码根目录
+php artisan get_kline_data
+
+cd /源码根目录
+php artisan get_kline_data_weekly
+
+cd /源码根目录
+php artisan get_kline_data_daily
+
+cd /源码根目录
+php artisan get_kline_data_hourly
+
+cd /源码根目录
+php artisan get_kline_data_monthly
+
+cd /源码根目录
+php artisan get_kline_data_thirtymin
+
+cd /源码根目录
+php artisan get_kline_data_fivemin
+
+cd /源码根目录
+php artisan queue:work
+
+cd /源码根目录
+php artisan update_balance
+
+cd /源码根目录
+php artisan websocket:client start
+
+cd /源码根目录
+php artisan schedule:run 1>> NUL 2>&1
+
+cd /源码根目录
+php artisan schedule:run
+
+cd /源码根目录/public/vendor/webmsgsender
+php start.php start -d
+
+cd /源码根目录/public/vendor/webmsgsender
+php start.php start

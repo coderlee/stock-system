@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport"
+		content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
+	<title></title>
+	<link rel="stylesheet" type="text/css" href="../lib/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="../fonts/iconfont.css">
+	<link rel="stylesheet" type="text/css" href="../css/common.css">
+	<link rel="stylesheet" type="text/css" href="../css/LeveragedDeals.css" />
+	<link rel="stylesheet" type="text/css" href="../css/footer.css" />
+</head>
+
+<body class="bgBalck">
+	<div id="app" v-cloak class="bgBalck">
+		<div id="header">
+			<div class="header bgBlackColor">
+				<p class="pull-left sideOpen" @click="leftShows">
+					<img class="mt10 leval-header-img" src="../images/list3.png" />
+					<span class="trade-name">{{leverDatas.currencyName}}/{{leverDatas.legalName}}</span>
+				</p>
+				<p class="pull-right right">
+					<img class="lever-detail" @click="linkLine" src="../images/datamap1.png" alt="">
+					<!-- <img class="recordList" src="images/record1.png" alt=""> -->
+				</p>
+
+			</div>
+
+			<div class="header-space"></div>
+		</div>
+		<div id="place">
+			<div id="data" class="bgBlackColor pb10">
+				<div class="pull-left active">
+					<div class="deal flex between">
+						<span :class="type=='buy'?'pull-left buy business bor':'pull-left buy business'">
+							<a data-localize="transaction.buy" :class="type=='buy'?'col':''" @click="selectType('buy')">买入</a>
+							<em></em>
+						</span>
+						<span :class="type=='sell'?'sell business bor2':'sell business'">
+							<a data-localize="transaction.sell" :class="type=='sell'?'col2':''" @click="selectType('sell')">卖出</a>
+						</span>
+					</div>
+					<div class="select-price clearfix">
+						<span class="fl active" data-localize="transaction.marketprice" @click="selectTrade(1)">市价</span>
+						<span class="fr" data-localize="transaction.limit" @click="selectTrade(0)">限价</span>
+					</div>
+					<div class="control"><input type="number" v-model="leverDatas.controlPrice" @input="inputPrice"
+							data-localize="deals.inputprice" placeholder="请输入价格"></div>
+					<div class="LimitedPrice ft12">
+						<p class="colorGrey" data-localize="deals.selectmul">请选择倍数</p>
+						<p class="multiple_sel bgBlackColor multiples colorGrey">
+							<span v-for="(item,index) in multList" :key="index"
+								:class="[{'active':item.value==leverDatas.muitNum && type=='sell','actives':item.value==leverDatas.muitNum && type=='buy'}]"
+								@click="selectMult(item.value)">{{item.value}}{{getlg('times')}}</span>
+						</p>
+						<div class="num mt10">
+							<p><b data-localize="deals.onehand">1手等于</b><b class="share-num"
+									style="font-weight:normal;">{{leverDatas.shareNum || '0.00' | toFixeds}}</b><b class="share-name"
+									style="font-weight:normal;">{{leverDatas.currencyName}}</b></p>
+							<!-- <h5 style="margin-top: 5px;">交易手数</h5> -->
+							<!-- <input class="share-input" v-model="leverDatas.share" type="number" @input="inputNum" :placeholder="testValue" /> -->
+							<input class="share-input" v-model="leverDatas.share" type="number" @input="inputNum"
+								:placeholder="getlg('oneHanded')" />
+
+							<span v-for="(item,index) in shareList"
+								:class="[{'active':item.value==leverDatas.share && type=='sell','actives':item.value==leverDatas.share && type=='buy'}]"
+								:key="index" @click="selectShare(item.value)">{{item.value}}{{getlg('hand')}}</span>
+						</div>
+					</div>
+					<div class="lever-total ft12">
+						<p class="clearfix">
+							<span class="fl colorGrey" data-localize="deals.marketval">市值</span>
+							<span class="market-value fr colorGrey">0.0000</span>
+						</p>
+						<p class="clearfix mt5">
+							<span class="fl colorGrey" data-localize="deals.bond">保证金</span>
+							<span class="bond fr colorGrey">0.0000</span>
+						</p>
+						<!-- <p class="clearfix mt5">
+							<span class="fl colorGrey" data-localize="deals.fee">手续费</span>
+							<span class="transaction-fee fr colorGrey">0.0000</span>
+						</p> -->
+						<p class="use_legal_num mt5 colorGrey">
+							{{getlg('balance')}}{{leverDatas.useLegalNum}}{{leverDatas.legalName}}</p>
+					</div>
+					<div class="transactionAmount mb10"	@click="submitBtn">
+						<button class="buy_sell" :class="type=='sell'?'activesell':''"><span
+							>{{type=='buy'?getlg('buy'):getlg('sell')}}</span><span
+								class="legal_title"></span></button>
+					</div>
+				</div>
+
+				<div class="pull-right active1">
+					<!--卖出-->
+					<div class="ft10color1">
+						<div class="flex alcenter around pb10  ft12 colorGrey">
+							<!-- <div class="flex1 tl">盘口</div> -->
+							<div class="flex1 mr5" data-localize="transaction.price">价格</div>
+							<div class="flex1 tr" data-localize="assets.num">数量</div>
+						</div>
+						<div>
+							<div class="sell_out">
+								<div class="flex alcenter around pb10 pd5" v-for="(item,index) in sellOut">
+									<!-- <div class="gray ft12 widths1">{{sellOut.length - index}}</div> -->
+									<div class="red ft12 flex2">{{item[0] || '0.0000' | toFixed4}}</div>
+									<div class="flex2 tr gray ft12">{{item[1] * 255 || '0.00' | toFixeds}}</div>
+								</div>
+							</div>
+							<p class="new_price red mt10">{{leverDatas.lastprice || '0.0000' | toFixed4}}</p>
+							<p style="margin-bottom:10px;"><span
+									class="cny_price colorGrey ft12">≈{{leverDatas.lastprice * leverDatas.rmbRate || '0.00' | toFixed4}}CNY</span>
+							</p>
+						</div>
+					</div>
+					<!--买入-->
+					<div class="ft10color1">
+						<div class="buyIn">
+							<div class="flex alcenter around pb10 pd5" v-for="(item,index) in buyOut" v-if="index < 5">
+								<!-- <div class=" gray ft12 widths1">{{index + 1}}</div> -->
+								<div class="gre flex2 ft12">{{item[0] || '0.0000' | toFixed4}}</div>
+								<div class="flex2 tr gray ft12">{{item[1] * 255 || '0.00' | toFixeds}}</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+			<div id="mask1" @click="close">
+				<div id="Limited">
+					<ul>
+						<li></li>
+						<li class="cancel" data-localize="transaction.cancel">取消</li>
+					</ul>
+				</div>
+			</div>
+			<div style="height:1px;background-color:#12151c;"></div>
+			<div id="entrust" style="margin-bottom: 50px;" class="bgBlackColor mt10">
+				<div>
+					<h3 class="pull-left ftw" data-localize="deals.currentPosition">
+						当前持仓
+					</h3>
+					<p class="pull-right filtrate all" @click="recordList">
+						<!-- <img src="../images/record1.png" /> -->
+						<span data-localize="deals.all">
+							全部
+						</span>
+					</p>
+					<ul class="list_ul" style="margin-top:35px;">
+						<li class="ft12 clearfix colorGrey bdbs">
+							<span class="width1 tc fl pb5" data-localize="deals.type">类型</span>
+							<span class="width2 tc fl pb5" data-localize="assets.time">时间</span>
+							<span class="width2 tc fl pb5" data-localize="transaction.price">价格</span>
+							<span class="width2 tc fl pb5" data-localize="assets.num">数量</span>
+							<span class="width11 tc fl pb5" data-localize="transaction.option">操作</span>
+						</li>
+						<li>
+							<ul class="conplete_list colorGrey ft12" style="padding: 10px 0;">
+								<li class="clearfix" v-for="item in completeList" :key="item.id" style="padding:5px 0;">
+									<span class="width1 tc fl">{{item.type == 1 ? getlg('buy'):getlg('sell')}}</span>
+									<span class="width2 tc fl">{{item.time}}</span>
+									<span class="width2 tc fl">{{item.price || '0.0000' | toFixed4}}</span>
+									<span class="width2 tc fl">{{item.number || '0.00' | toFixeds}}</span>
+									<a class='pingcang white tc width1 fl' @click="sellLoss(item.id)">{{getlg('pcang')}}</a>
+								</li>
+							</ul>
+						</li>
+						<li class="clickMore tc colorGrey" data-localize="deals.clickLoad" @click="reload">点击加载</li>
+					</ul>
+
+				</div>
+				<div class="no_record" style="display:none;">
+					<p>
+						<img src="../images/anonymous.png" />
+					</p>
+					<p data-localize="transaction.nodata">暂无记录</p>
+				</div>
+			</div>
+		</div>
+
+
+		<div id="sideColumn" class="bgBlackColor">
+			<h4>
+				<!-- <span class="side">HBG</span> -->
+				<!-- <img src="../images/arrows.png" class="pull-right sideclose" /> -->
+			</h4>
+			<div class="ft20 bold bdbs pl20 texts-lever" data-localize="contract.contract">合约</div>
+			<!-- <ol class="tabs hide">
+			</ol>
+			<ul class="ul" style="display:block">
+
+			</ul> -->
+			<div class="tabs">
+				<div class="currency_name" v-for="(item,index) in leftData" :key="item.id" @click="legalTab(item.id)">
+					<!-- <div :class="['pb10 tc blue',{'side side2':leverDatas.legalId==item.id}]">{{item.name}}</div> -->
+					<ul class="ul" style="display:block" v-if="item.id == leverDatas.legalId">
+						<li :class="['legal_name flex between',{'bg_active':leverDatas.currencyId==part.currency_id}]"
+							v-for="part in item.quotation" v-if="part.is_display == 1&&part.open_lever == 1"
+							@click="currencyTab(part.legal_name,part.currency_id,part.currency_name,part.lever_share_num,part.spread,part.lever_trade_fee,part.rmb_relation)">
+							<strong><span>{{part.currency_name}}</span><b>/{{part.legal_name}}</b></strong>
+							<p :class="part.change < 0 ? 'fontC' : 'gre'">
+								<span>{{part.now_price || '0.00' | toFixed4}}</span>
+								<!-- <span class="pull-right">{{part.change || '0.000' | toFixeds}}%</span> -->
+							</p>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		<div class="modal-submit" v-show='modalShow'>
+			<ul class="comfirm-modal">
+				<li>
+					<p class="name">{{leverDatas.currencyName}}/{{leverDatas.legalName}}</p>
+				</li>
+				<li>
+					<p>{{getlg('ttype')}}</p>
+					<p class="type">{{type=='buy'?getlg('buy'):getlg('sell')}}</p>
+				</li>
+				<li>
+					<p>{{getlg('hands')}}</p>
+					<p class="share">{{leverDatas.share}}</p>
+				</li>
+				<li>
+					<p>{{getlg('multiple')}}</p>
+					<p class="muit">{{leverDatas.muitNum}}</p>
+				</li>
+				<li>
+					<p>{{getlg('bond')}}</p>
+					<p class="bondPrice">{{leverDatas.bondTotal}}</p>
+				</li>
+				<li>
+						<p>{{getlg('fee')}}</p>
+						<p class="bondPrice">{{leverDatas.transactionTotal}}</p>
+					</li>
+			</ul>
+		</div>
+
+	</div>
+
+	<!-- 修改弹窗 -->
+	<div style="height:50px;"></div>
+	<footer>
+		<a href="index.html">
+			<div>
+				<p class="img img0"></p>
+				<span data-localize="footer.home">首页</span>
+			</div>
+		</a>
+		<a href="assets.html">
+			<div>
+				<p class="img img1"></p>
+				<span data-localize="footer.assets">资产</span>
+			</div>
+		</a>
+		<a href="trades.html" class="select">
+			<div>
+				<p class="img img3"></p>
+				<span data-localize="footer.transaction">交易</span>
+			</div>
+		</a>
+		<a href="fiatrad.html">
+			<div>
+				<p class="img img2"></p>
+				<span data-localize="index.legal">法币交易</span>
+			</div>
+		</a>
+		<a href="personal.html">
+			<div>
+				<p class="img img4"></p>
+				<span data-localize="footer.personal">我的</span>
+			</div>
+		</a>
+	</footer>
+
+	<script type="text/javascript" src="../lib/jquery-2.1.1.min.js"></script>
+	<script type="text/javascript" src="../lib/vue.min.js"></script>
+	<script type="text/javascript" src="../javascripts/socket.io.js"></script>
+	<script type="text/javascript" src="../javascripts/jquery.cookie.js"></script>
+	<script type="text/javascript" src="../lib/layer_mobile/layer.js"></script>
+	<script type="text/javascript" src="../lib/jquery.localize.min.js"></script>
+	<script type="text/javascript" src="../lib/language_cookie.js"></script>
+	<script type="text/javascript" src="../javascripts/main.js"></script>
+	<!-- <script type="text/javascript" src="../javascripts/LeveragedDeals.js"></script> -->
+	<script type="text/javascript" src="../javascripts/LeveragedDeal.js"></script>
+</body>
+
+</html>

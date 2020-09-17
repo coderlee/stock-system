@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport"
+		content="width=device-width, initial-scale=1, user-scalable=no, minimal-ui,viewport-fit=cover" />
+	<title>我的</title>
+	<link rel="stylesheet" type="text/css" href="../element-ui/lib/theme-chalk/index.css" />
+	<link rel="stylesheet" type="text/css" href="../css/common.css" />
+	<link rel="stylesheet" type="text/css" href="../fonts/iconfont.css" />
+	<link rel="stylesheet" type="text/css" href="../font/iconfont.css" />
+	<link rel="stylesheet" type="text/css" href="../css/footer.css">
+	<!-- <link rel="stylesheet" href="css/header.css"> -->
+
+
+	<style>
+		body {
+			background-color: #fff;
+		}
+
+		.hide {
+			display: none !important;
+		}
+
+		.login img {
+			width: 34px;
+			height: 34px;
+			float: left;
+			margin-right: 24px;
+		}
+
+		.login p {
+			font-size: 25px;
+		}
+
+		.login span {
+			font-size: 14px;
+		}
+
+		.nav {
+			width: 100%;
+			margin: 0 auto;
+			overflow: hidden;
+			margin-bottom: 68px;
+		}
+
+		.nav li {
+			width: 100%;
+			line-height: 50px;
+			font-size: 14px;
+			height: 50px;
+			border-bottom: 1px solid #202833;
+			padding: 0 10px 0 15px;
+		}
+
+		.nav li:last-child>span {
+			border: none;
+		}
+
+		.nav img {
+			width: 15px;
+			height: 15px;
+			vertical-align: middle;
+			margin-top: 18px;
+		}
+
+		.nav span {
+			margin-left: 10px;
+			font-size: 16px;
+			position: relative;
+			top: -2px;
+		}
+
+		.loginout {
+			margin-top: 10px;
+			padding: 0 20px;
+		}
+
+		.loginout a {
+			display: block;
+			width: 100%;
+			height: 50px;
+			border-radius: 2px;
+			color: #fff;
+			background: #f0b90b;
+			/* background: linear-gradient(to right, #f0b90b, #f0b90b); */
+			text-align: center;
+			line-height: 50px;
+			font-size: 18px;
+		}
+
+		.personal-header {
+			width: 100%;
+			min-height: 70px;
+			padding-top: 6px;
+			position: relative;
+			border-bottom: 1px solid #12151c;
+			padding-bottom: 6px;
+			border-top: 1px solid #12151c;
+		}
+
+		.personal-header li {
+			margin-top: 6px;
+		}
+
+		.slider-list {
+			width: 100%;
+			border-top: 1px solid #12151c;
+			margin-top: 12px;
+		}
+
+		.slider-list a {
+			width: 100%;
+			display: block;
+		}
+
+		.slider-list .iconfont {
+			font-size: 20px;
+			color: #959eaf;
+		}
+
+		.links {
+			position: absolute;
+			right: 30px;
+			top: 37px;
+		}
+
+		.charge {
+			width: 70px;
+			display: block;
+			text-align: center;
+			border: 1px solid #12151c;
+			background-color: #12151c;
+			border-radius: 2px;
+			font-size: 16px;
+			line-height: 30px;
+			color: #7d818a;
+		}
+
+		.mention {
+			width: 70px;
+			display: block;
+			text-align: center;
+			border: 1px solid #12151c;
+			border-radius: 2px;
+			margin-top: 17px;
+			font-size: 16px;
+			line-height: 30px;
+			background-color: #12151c;
+			color: #7d818a;
+		}
+
+		.personal-header {
+			color: #fff;
+			background-color: #202833;
+
+		}
+
+		.ml15 {
+			padding-left: 16px;
+			margin: 0;
+		}
+
+		.personal-list {
+			width: 100%;
+		}
+
+		.personal-list img {
+			width: 60px;
+			height: 60px;
+		}
+
+		.personal-list a {
+			width: 33.33%;
+			display: block;
+			text-align: center;
+		}
+
+		.el-switch__label * {
+			font-size: 10px;
+		}
+
+		.is-active {
+			z-index: 0 !important;
+			left: -60px !important;
+			display: none !important;
+		}
+
+		.el-switch__label--left {
+			position: absolute;
+			left: 5px;
+			z-index: 10;
+			display: block;
+		}
+
+		.el-switch__label--left span {
+			color: #fff;
+		}
+
+		.el-switch__label--right {
+			position: absolute;
+			z-index: 10;
+			display: block;
+			left: 10px;
+		}
+
+		.icon-taiyang {
+			color: #fff;
+		}
+		.icon-yueliang,.icon-taiyang{
+			font-size: 16px;
+		}
+		.icon-yueliang{
+			position: relative;
+			top: 1px;
+		}
+
+		/* .personal-list p{
+			color: #f0b90b;
+		} */
+	</style>
+</head>
+
+<body class="bgBalck">
+	<div id="app" v-cloak>
+		<div class="header bgBlackColor">
+			<div class="tl title ft20 bold ml15" data-localize="footer.personal">我的</div>
+			<div class="right">
+				<el-switch width="40" v-model="value3" active-icon-class="iconfont icon-yueliang" active-color="#f0b90b"
+					inactive-icon-class="iconfont icon-taiyang" @change="selectedTab">
+				</el-switch>
+			</div>
+		</div>
+		<div class="header-space"></div>
+		<div class="flex between">
+				<!-- <div class="personal-header tl ml15 flex1">
+						<p class="username" data-localize="contract.secondAccountBalance">秒合约账户余额</p>
+						<ul>
+							<li v-for="item in list" :key="item.id" v-if="item.is_micro == 1">{{item.micro_balance}} {{item.currency_name}}
+							</li>
+						</ul>
+					</div> -->
+					<div class="personal-header tl ml15 flex1">
+							<p class="username" data-localize="contract.leverAccountBalance">合约账户余额</p>
+							<ul>
+								<li v-for="(item,index) in leverList" :key="item.id" v-if="item.is_lever == 1">{{item.lever_balance}} {{item.currency_name}}
+								</li>
+							</ul>
+						</div>
+						<div class="personal-header tl ml15 flex1">
+							<p class="username" data-localize="contract.legalAccountBalance">法币账户余额</p>
+							<ul>
+								<li v-for="item in list" :key="item.id" v-if="item.is_legal == 1">{{item.legal_balance}} {{item.currency_name}}</li>
+							</ul>
+						</div>
+		</div>
+		<div class="flex personal-list between mt10">
+			<!-- <a class="huazhuan" href="transferredLegal.html?id=3&type=1"> -->
+			<a class="huazhuan" href="transferredLegal.html">
+				<div class="iconbox">
+					<img src="../images/hua4.png" alt="">
+				</div>
+				<p class="mt5 " data-localize="assets.transfer">划转</p>
+			</a>
+			<a href="chargeMoney.html?id=3&name=USDT">
+				<div class="iconbox">
+					<img src="../images/cb4.png" alt="">
+				</div>
+				<p class="mt5" data-localize="assets.cmoney">充币</p>
+			</a>
+			<a href="mentionMoney.html?id=3&type=legal">
+				<div class="iconbox">
+					<img src="../images/tb4.png" alt="">
+				</div>
+				<p class="mt5" data-localize="assets.tmoney">提币</p>
+			</a>
+		</div>
+		<div class="nav">
+			<ul class="slider-list">
+				<li class="hide ft_shop bdbs">
+					<a href="javascript:;">
+						<div class="flex between">
+							<div>
+								<i class="iconfont icon-store"></i>
+								<span data-localize="index.myshop">我的商铺</span>
+							</div>
+							<img src="../images/myimg/jitou.png" alt="">
+						</div>
+					</a>
+				</li>
+				<!-- <li class="bdbs">
+							<a href="assets.html">
+								<div class="flex between">
+									<div>
+										<i class="iconfont icon-wodetouzi"></i>
+										<span>我的资产</span>
+									</div>
+			
+									<img src="../images/myimg/jitou.png" alt="">
+								</div>
+							</a>
+						</li> -->
+				<li class="bdbs">
+					<a href="orderTotal.html">
+						<div class="flex between">
+							<div>
+								<i class="iconfont icon-dingdan2"></i>
+								<span data-localize="td.drecord">订单记录</span>
+							</div>
+							<img src="../images/myimg/jitou.png" alt="">
+						</div>
+					</a>
+				</li>
+				<!-- <li class="bdbs">
+							<a href="leverList.html">
+								<div class="flex between">
+									<div>
+										<i class="iconfont icon-dingdan1"></i>
+										<span data-localize="contract.contractOrder">合约订单</span>
+									</div>
+									<img src="../images/myimg/jitou.png" alt="">
+								</div>
+							</a>
+						</li>
+						<li class="bdbs">
+								<a href="orderList.html">
+									<div class="flex between">
+										<div>
+											<i class="iconfont icon-dingdan2"></i>
+											<span data-localize="contract.SecondContractOrder">秒合约订单</span>
+										</div>
+										<img src="../images/myimg/jitou.png" alt="">
+									</div>
+								</a>
+							</li> 
+				<li>
+					<a href="coinCurrencyFlash.html">
+						<div class="flex between">
+							<div>
+								<i class="iconfont icon-dingdan2"></i>
+								<span data-localize="footer.currency">币币交易</span>
+							</div>
+							<img src="../images/myimg/jitou.png" alt="">
+						</div>
+					</a>
+				</li>
+				<li>
+					<a href="exchange.html">
+						<div class="flex between">
+							<div>
+								<i class="iconfont icon-dingdan2"></i>
+								<span data-localize="contract.contractInsurance">合约保险</span>
+							</div>
+							<img src="../images/myimg/jitou.png" alt="">
+						</div>
+					</a>
+				</li>-->
+				<li class="bdbs">
+					<a href="personalCenter.html">
+						<div class="flex between">
+							<div>
+								<i class="iconfont icon-gerenzhongxin"></i>
+								<span data-localize="index.usercenter">个人中心</span>
+							</div>
+							<img src="../images/myimg/jitou.png" alt="">
+						</div>
+					</a>
+				</li>
+
+				<!-- <li class="bdbs">
+							<a href="Security.html">
+								<div class="flex between">
+									<div>
+										<i class="iconfont icon-anquan1"></i>
+										<span data-localize="index.security">安全中心</span>
+									</div>
+									<img src="../images/myimg/jitou.png" alt="">
+								</div>
+							</a>
+						</li>
+						<li class="bdbs">
+							<a href="adding.html">
+								<div class="flex between">
+									<div>
+										<i class="iconfont icon-paymg"></i>
+										<span data-localize="index.pay">收付款方式</span>
+									</div>
+									<img src="../images/myimg/jitou.png" alt="">
+								</div>
+							</a>
+						</li>
+						<li class="bdbs">
+							<a href="javascript:;" class="share">
+								<div class="flex between">
+									<div>
+										<i class="iconfont icon-tuiguang"></i>
+										<span data-localize="code.mycode">我的推广码</span>
+									</div>
+									<img src="../images/myimg/jitou.png" alt="">
+								</div>
+							</a>
+						</li> -->
+
+				<!-- <li class="bdbs">
+							<a href="news.html">
+								<div class="flex between">
+									<div>
+										<i class="iconfont icon-wenjian"></i>
+										<span data-localize="personal.statement">解释说明</span>
+									</div>
+									<img src="../images/myimg/jitou.png" alt="">
+								</div>
+							</a>
+						</li> -->
+				<li class="bdbs">
+					<a href="aboutUs.html">
+						<div class="flex between">
+							<div>
+								<i class="iconfont icon-aboutus"></i>
+								<span data-localize="index.about">关于GEMINI</span>
+							</div>
+							<img src="../images/myimg/jitou.png" alt="">
+						</div>
+					</a>
+				</li>
+				<!-- <li>
+							<a href="order.html">
+								<div class="flex between">
+									<div>
+										<i class="iconfont icon-zaixiankefu"></i>
+										<span data-localize="personal.complaint">投诉建议</span>
+									</div>
+									<img src="../images/myimg/jitou.png" alt="">
+								</div>
+							</a>
+						</li> -->
+				<li>
+					<a href="moneyList.html">
+						<div class="flex between">
+							<div>
+								<i class="iconfont icon-zaixiankefu"></i>
+								<span data-localize="assets.caidata">财务记录</span>
+							</div>
+							<img src="../images/myimg/jitou.png" alt="">
+						</div>
+					</a>
+				</li>
+
+			</ul>
+			<div class="loginout">
+				<a id="logout" href="login.html" data-localize="index.logout">退出登录</a>
+			</div>
+		</div>
+		<footer>
+			<a href="index.html">
+				<div>
+					<p class="img img0"></p>
+					<span data-localize="footer.home">首页</span>
+				</div>
+			</a>
+			<a href="assets.html">
+				<div>
+					<p class="img img1"></p>
+					<span data-localize="footer.assets">资产</span>
+				</div>
+			</a>
+			<a href="trades.html">
+				<div>
+					<p class="img img3"></p>
+					<span data-localize="footer.transaction">交易</span>
+				</div>
+			</a>
+			<a href="fiatrad.html">
+				<div>
+					<p class="img img2"></p>
+					<span data-localize="index.legal">法币交易</span>
+				</div>
+			</a>
+			<a href="personal.html" class="select">
+				<div>
+					<p class="img img4"></p>
+					<span data-localize="footer.personal">我的</span>
+				</div>
+			</a>
+		</footer>
+	</div>
+	<script type="text/javascript" src="../lib/jquery-2.1.1.min.js"></script>
+	<script type="text/javascript" src="../lib/vue.min.js"></script>
+	<script type="text/javascript" src="../element-ui/lib/index.js"></script>
+	<script type="text/javascript" src="../lib/layer_mobile/layer.js"></script>
+	<script type="text/javascript" src="../javascripts/jquery.cookie.js"></script>
+	<script type="text/javascript" src="../lib/jquery.localize.min.js"></script>
+	<script type="text/javascript" src="../lib/language_cookie.js"></script>
+	<script type="text/javascript" src="../javascripts/main.js"></script>
+	<script type="text/javascript" src="../javascripts/personal.js"></script>
+	<script>
+		var vue = new Vue({
+			el: '#app',
+			data: {
+				value3: false,
+				list: [],
+				leverList:[],
+			},
+			filters: {
+
+			},
+			mounted: function () {
+				var that = this;
+				initDataTokens({
+					url: 'user/info'
+				}, function (data) {
+					if (data.type == 'ok') {
+						setlocal_storage('phone', data.message.account_number);
+						$(".header .title").html("Hi," + data.message.account_number);
+						$('.share').data('id', data.message.extension_code);
+						$('.balance').text(getlg('contractAccountBalance') + data.message.lever_wallet.balance[0]
+							.lever_balance + 'USDT');
+						$('.charge').attr('href', 'chargeMoney.html?id=' + data.message.currency_usdt_id + "&name=USDT");
+						$('.mention').attr('href', 'mentionMoney.html?id=' + data.message.currency_usdt_id + '&type=legal');
+						that.list = data.message.legal_wallet.balance;
+						that.leverList = data.message.lever_wallet.balance.filter((item) => item.is_lever == 1);
+						if (data.message.is_seller == 1 && data.message.seller[0].status == 1) {
+							$('.ft_shop').removeClass('hide');
+						}
+						if (data.message.is_open_transfer_candy == 1) {
+							$('.sweet_transfer').removeClass('hide');
+						}
+					} else {
+						$("#ooo").css("display", "none");
+						$("#login").css("display", "block");
+						layer_msg(data.message);
+					}
+				})
+
+			},
+			methods: {
+				selectedTab(val) {
+					if (val == true) {
+						location.href = "../personal.html";
+						localStorage.setItem('skin', 'days');
+					} else {
+						location.href = "black/personal.html";
+						localStorage.setItem('skin', 'nights');
+					}
+
+
+				}
+
+
+			}
+		});
+		$(function () {
+			var token = get_user();
+			$('#logout').click(function () {
+				localStorage.removeItem('token');
+				localStorage.removeItem('userName');
+				localStorage.removeItem('passwords');
+				localStorage.removeItem('loginStute');
+			});
+
+			$("#login").click(function () {
+				window.location.href = 'login.html';
+			})
+			$('.onc').click(function () {
+				layer_msg(getlg('noOpen'))
+			})
+			$('.ai,.kuangji').click(function () {
+				layer_msg(getlg('noOpen'))
+			})
+		})
+	</script>
+</body>
+
+</html>

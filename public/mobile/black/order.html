@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>我的工单</title>
+		<link rel="stylesheet" type="text/css" href="../css/common.css" />
+		
+	</head>
+	<style>
+		.nav h5{
+			width: 100%;
+			overflow-x: hidden;
+			word-break: break-all;
+		}
+	</style>
+	<body class="bgBalck">
+		<div id="app" v-cloak>
+			<header class="header">
+				<a class="back mt5" href="javascript:history.go(-1)">
+				
+				</a>
+				<h4 class="ft16" data-localize="contract.suggestion">我的建议</h4>
+				<div class="right imgRight" data-localize="contract.edit">
+					编辑
+				</div>
+			</header>
+			<div class="header-space"></div>
+			
+
+			<div class="nav ml12 mt15">
+				<ul class="bgBlackColor">
+					<li class="ptb10 pb10 pl12 bdbs" v-for="(aa) in add" @click="sdfsd(aa.id)">
+						<div class="navWen">
+							<h5>{{aa.content}}</h5>
+							<p class="mt10" style="word-wrap:break-word;">{{aa.create_time}}</p>
+						</div>
+					</li>
+				</ul>
+				<p class="tc mt10 colorGrey" @click="mores" data-localize="transaction.getmore">加载更多</p>
+			</div>
+		</div>
+		<script type="text/javascript" src="../lib/jquery-2.1.1.min.js"></script>
+		<script type="text/javascript" src="../lib/vue.min.js"></script>
+    <script type="text/javascript" src="../lib/layer_mobile/layer.js"></script>
+		<script type="text/javascript" src="../lib/swiper.jquery.min.js"></script>
+		<script type="text/javascript" src="../javascripts/jquery.cookie.js"></script>
+		<script type="text/javascript" src="../lib/jquery.localize.min.js"></script>
+		<script type="text/javascript" src="../lib/language_cookie.js"></script>
+		<script type="text/javascript" src="../javascripts/main.js"></script>
+		<script type="text/javascript" src="../javascripts/order.js"></script>
+	</body>
+</html>
+<script>
+	var vue = new Vue({
+		el: '#app',
+		data: {
+			add: [],
+			page:1,
+		},
+		mounted: function() {
+			var self = this;
+			// FastClick.attach(document.body);
+			var token = get_user_login();
+			$.ajax({
+				url: _API + "feedback/list",
+				type: "POST",
+				dataType: "json",
+				async: true,
+				beforeSend: function beforeSend(request) {
+					request.setRequestHeader("Authorization", token);
+				},
+				success: function success(data) {
+					self.add = data.message.list;
+					if (data.type == 'ok') {
+
+
+					}
+				}
+			});
+
+		},
+		methods: {
+			sdfsd: function(id) {
+				window.location.href = 'Complaint.html?id=' + id;
+			},
+			mores(){
+				var that = this;
+				that.page++;
+				var token = get_user_login();
+				layer_loading();
+			$.ajax({
+				url: _API + "feedback/list",
+				type: "POST",
+				dataType: "json",
+				data:{
+					page:that.page
+				},
+				async: true,
+				beforeSend: function beforeSend(request) {
+					request.setRequestHeader("Authorization", token);
+				},
+				success: function success(data) {
+					layer_close();
+					if (data.type == 'ok') {
+						if(data.message.list.length > 0){
+							that.add = that.add.concat(data.message.list);
+						}
+						
+					}
+				}
+			});
+			}
+		}
+	});
+</script>

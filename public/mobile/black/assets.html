@@ -1,0 +1,322 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+  <meta name="format-detection" content="telephone=no">
+  <title>资产</title>
+  <link rel="stylesheet" type="text/css" href="../css/swiper.min.css">
+  <link rel="stylesheet" type="text/css" href="../css/common.css" />
+  <link rel="stylesheet" type="text/css" href="../css/global.css">
+  <link rel="stylesheet" type="text/css" href="../css/footer.css">
+  <style>
+    section li {
+      padding: 5px 10px;
+      margin-bottom: 10px;
+    }
+
+    .swiper-container {
+      width: 100%;
+    }
+
+    .header {
+      border-bottom: none;
+    }
+
+    .header-scroll {
+      box-shadow: 0 2px 2px #7d818a
+    }
+
+    header img {
+      width: 24px;
+      height: 24px;
+      float: left;
+      margin-left: 10px;
+      margin-top: 5px;
+    }
+
+    header a {
+      position: absolute;
+    }
+
+    header span {
+      line-height: 35px;
+      margin: 0 5px;
+      color: #758a8f;
+      padding-bottom: 4px;
+    }
+
+    header .active {
+      font-weight: bold;
+      color: #fff;
+    }
+
+    li a {
+      color: inherit;
+      display: block;
+      border: 1px solid #12151c;
+      padding: 10px;
+      background: #202833;
+      border-radius: 2px;
+    }
+
+    li a .flex1>p {
+      font-size: 14px;
+    }
+
+    .swiper-slide {
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .agent_level {
+      width: 100%;
+    }
+
+    .mr5 {
+      margin-right: 5px;
+    }
+
+    .level_con {
+      margin-top: 7px;
+    }
+
+    .back {
+      background: url(../images/return2.png)no-repeat;
+      background-size: 30px 24px;
+    }
+  </style>
+</head>
+
+<body class="bgBalck">
+  <div id="app" v-cloak>
+    <header class="header" :class="[{'level01':type== 'lever','level02':type== 'micro','level03':type== 'match','level04':type== 'legal'}]">
+      <!-- <a class="back" href="personal.html"></a> -->
+      <div class="top-tab tc">
+        <span :class="[{'active': type== 'lever'}]" @click="tabClick('lever')" data-localize="assets.contractAccount">合约账户</span>
+        <span :class="[{'active': type== 'micro'}]" @click="tabClick('micro')" data-localize="assets.secondContractAccount">秒合约账户</span>
+        <span :class="[{'active': type== 'match'}]" @click="tabClick('match')" data-localize="assets.curAccount">币币账户</span>
+        <span :class="[{'active': type== 'legal'}]" @click="tabClick('legal')" data-localize="assets.legalAccount">法币账户</span>
+      </div>
+
+    </header>
+
+    <!--切换-->
+
+    <section class="swiper-container mycontainer mt40">
+      <section class="swiper-wrapper">
+        <section class="swiper-slide">
+          <section class="agent_level">
+            <section class="levelbox level01">
+              <div class="white flex between alcenter">
+                <div>
+                  <span data-localize="assets.contractAccount">合约账户</span>
+                  <span class="ft12" data-localize="assets.total">总资产折合（$）</span>
+                </div>
+                <img :src="show==true?'../images/shows.png':'../images/hides.png'" alt="" @click='hide'>
+              </div>
+              <p class="mt20 legal_total">{{show?leverCount:hideit}}</p>
+            </section>
+          </section>
+        </section>
+        <section class="swiper-slide">
+          <section class="agent_level">
+            <section class="levelbox level02">
+              <div class="white flex between alcenter">
+                <div class="ft16">
+                  <span data-localize="assets.secondContractAccount">秒合约账户</span>
+                  <span class="ft12" data-localize="assets.total">总资产折合（$）</span>
+                </div>
+                <img :src="show==true?'../images/shows.png':'../images/hides.png'" alt="" @click='hide'>
+              </div>
+              <p class="mt20 deal_total bold">{{show?microCount:hideit}}</p>
+            </section>
+          </section>
+        </section>
+        <section class="swiper-slide">
+          <section class="agent_level">
+            <section class="levelbox level03">
+              <div class="white flex between alcenter">
+                <div>
+                  <span data-localize="assets.curAccount">币币账户</span>
+                  <span class="ft12" data-localize="assets.total">总资产折合（$）</span>
+                </div>
+                <img :src="show==true?'../images/shows.png':'../images/hides.png'" alt="" @click='hide'>
+              </div>
+              <p class="mt20 legal_total">{{show?changeCount:hideit}}</p>
+            </section>
+          </section>
+        </section>
+        <section class="swiper-slide">
+          <section class="agent_level">
+            <section class="levelbox level04">
+              <div class="white flex between alcenter">
+                <div>
+                  <span data-localize="assets.legalAccount">法币账户</span>
+                  <span class="ft12" data-localize="assets.total">总资产折合（$）</span>
+                </div>
+                <img :src="show==true?'../images/shows.png':'../images/hides.png'" alt="" @click='hide'>
+              </div>
+              <p class="mt20 legal_total">{{show?legalCount:hideit}}</p>
+            </section>
+          </section>
+        </section>
+      </section>
+    </section>
+
+
+    <section class="level_con">
+      <section>
+        <!-- 合约账户 -->
+        <ul class="deal_lists" v-show="type == 'lever'">
+          <li v-for="item in Lists" :key="item.id" v-if="item.is_lever == 1">
+            <a href="javascript:;" @click="links(item.currency)">
+              <p class="flex between">
+                <span class="blue bold ft20">{{item.currency_name}}</span>
+                <img src="../images/arrrowr.png" alt="" style="width:12px;height:12px;">
+              </p>
+              <div class="flex">
+                <div class="flex1 mr5">
+                  <span class="ft12 blue2" data-localize="assets.avaiable">{{getlg('canuse')}}</span>
+                  <p>{{show ? item.lever_balance || '0.00' : hideit}}</p>
+                </div>
+                <div class="flex1 mr5">
+                  <span class="ft12 blue2" data-localize="assets.lock">{{getlg('frezz')}}</span>
+                  <p>{{show ? item.lock_lever_balance || '0.00' : hideit}}</p>
+
+                </div>
+                <div class="flex1 tr">
+                  <span class="ft12 blue2" data-localize="assets.conversion">{{getlg('conversion')}}($)</span>
+                  <p class="white_gray">{{show ? iTofixed((item.usdt_price * item.lever_balance),4) || '0.00' : hideit}}
+                  </p>
+                </div>
+              </div>
+            </a>
+          </li>
+        </ul>
+        <!-- 秒合约账户 -->
+        <ul class="deal_lists" v-show="type == 'micro'">
+          <li v-for="item in Lists" :key="item.id" v-if="item.is_micro == 1">
+            <a href="javascript:;" @click="links(item.currency)">
+              <p class="flex between">
+                <span class="blue bold ft20">{{item.currency_name}}</span>
+                <img src="../images/arrrowr.png" alt="" style="width:12px;height:12px;">
+              </p>
+              <div class="flex">
+                <div class="flex1 mr5">
+                  <span class="ft12 blue2" data-localize="assets.avaiable">{{getlg('canuse')}}</span>
+                  <p>{{show ? item.micro_balance || '0.00' : hideit}}</p>
+                </div>
+                <div class="flex1 mr5">
+                  <span class="ft12 blue2" data-localize="assets.lock">{{getlg('frezz')}}</span>
+                  <p>{{show ? item.lock_micro_balance || '0.00' : hideit}}</p>
+                </div>
+                <div class="flex1 tr">
+                  <span class="ft12 blue2" data-localize="assets.conversion">{{getlg('conversion')}}($)</span>
+                  <p class="white_gray">{{show ? iTofixed((item.usdt_price * item.micro_balance),4) || '0.00' : hideit}}
+                  </p>
+                </div>
+              </div>
+            </a>
+          </li>
+        </ul>
+        <!-- 币币账户 -->
+        <ul class="deal_lists" v-show="type == 'match'">
+          <li v-for="item in Lists" :key="item.id" v-if="item.is_match == 1">
+            <a href="javascript:;" @click="links(item.currency)">
+              <p class="flex between">
+                <span class="blue bold ft20">{{item.currency_name}}</span>
+                <img src="../images/arrrowr.png" alt="" style="width:12px;height:12px;">
+              </p>
+              <div class="flex">
+                <div class="flex1 mr5">
+                  <span class="ft12 blue2" data-localize="assets.avaiable">{{getlg('canuse')}}</span>
+                  <p>{{show ? item.change_balance || '0.00' : hideit}}</p>
+                </div>
+                <div class="flex1 mr5">
+                  <span class="ft12 blue2" data-localize="assets.lock">{{getlg('frezz')}}</span>
+                  <p>{{show ? item.lock_change_balance || '0.00' : hideit}}</p>
+                </div>
+                <div class="flex1 tr">
+                  <span class="ft12 blue2" data-localize="assets.conversion">{{getlg('conversion')}}($)</span>
+                  <p class="white_gray">{{show ? iTofixed((item.usdt_price * item.change_balance),4) || '0.00' : hideit}}
+                  </p>
+                </div>
+              </div>
+            </a>
+          </li>
+        </ul>
+        <ul class="deal_lists" v-show="type == 'legal'">
+          <li v-for="item in Lists" :key="item.id" v-if="item.is_legal == 1">
+            <a href="javascript:;" @click="links(item.currency)">
+              <p class="flex between">
+                <span class="blue bold ft20">{{item.currency_name}}</span>
+                <img src="../images/arrrowr.png" alt="" style="width:12px;height:12px;">
+              </p>
+              <div class="flex">
+                <div class="flex1 mr5">
+                  <span class="ft12 blue2" data-localize="assets.avaiable">{{getlg('canuse')}}</span>
+                  <p>{{show ? item.legal_balance || '0.00' : hideit}}</p>
+                </div>
+                <div class="flex1 mr5">
+                  <span class="ft12 blue2" data-localize="assets.lock">{{getlg('frezz')}}</span>
+                  <p>{{show ? item.lock_legal_balance || '0.00' : hideit}}</p>
+                </div>
+                <div class="flex1 tr">
+                  <span class="ft12 blue2" data-localize="assets.conversion">{{getlg('conversion')}}($)</span>
+                  <p class="white_gray">{{show ? iTofixed((item.usdt_price * item.legal_balance),4) || '0.00' : hideit}}
+                  </p>
+                </div>
+              </div>
+            </a>
+          </li>
+        </ul>
+      </section>
+    </section>
+    <div style="height: 40px;"></div>
+    <footer>
+      <a href="index.html">
+        <div>
+          <p class="img img0"></p>
+          <span data-localize="footer.home">首页</span>
+        </div>
+      </a>
+      <a href="assets.html" class="select">
+        <div>
+          <p class="img img1"></p>
+          <span data-localize="footer.assets">资产</span>
+        </div>
+      </a>
+      <a href="trades.html">
+        <div>
+          <p class="img img3"></p>
+          <span data-localize="footer.transaction">交易</span>
+        </div>
+      </a>
+      <a href="fiatrad.html">
+        <div>
+          <p class="img img2"></p>
+          <span data-localize="index.legal">法币交易</span>
+        </div>
+      </a>
+      <a href="personal.html">
+        <div>
+          <p class="img img4"></p>
+          <span data-localize="footer.personal">我的</span>
+        </div>
+      </a>
+    </footer>
+  </div>
+  <script type="text/javascript" src="../lib/jquery-1.8.3.min.js"></script>
+  <script type="text/javascript" src="../lib/swiper.min.js"></script>
+  <script type="text/javascript" src="../javascripts/jquery.cookie.js"></script>
+  <script type="text/javascript" src="../lib/layer_mobile/layer.js"></script>
+  <script type="text/javascript" src="../lib/vue.min.js"></script>
+  <script type="text/javascript" src="../lib/jquery.localize.min.js"></script>
+	<script type="text/javascript" src="../lib/language_cookie.js"></script>
+  <script type="text/javascript" src="../javascripts/main.js"></script>
+  <script type="text/javascript" src="../javascripts/assets.js"></script>
+</body>
+
+</html>

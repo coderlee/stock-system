@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>提币</title>
+    <link rel="stylesheet" href="../css/common.css">
+    <!-- <link rel="stylesheet" href="../javascripts/common.js"> -->
+    <script>
+        function code(result) {
+            $(".address").val(result)
+        }
+        // function scaned(t, r, f){
+        //     // alert(r);
+        //     $('.address').val(r);
+        // }
+    </script>
+</head>
+<style>
+    .bline {
+        border-bottom: 1px solid #202833;
+        padding: 10px 0;
+    }
+
+    .mt30 {
+        margin-top: 30px
+    }
+
+    .color1b {
+        color: #728daf
+    }
+
+    .mention {
+        width: 100%;
+        height: 50px;
+        line-height: 50px;
+        color: #fff;
+        background: #f0b90b;
+        border-radius: 2px;
+        font-size: 20px;
+    }
+
+    .addbox img {
+        width: 20px;
+    }
+
+    .addbox span {
+        padding: 0 5px
+    }
+
+    input {
+        background-color: rgba(0, 0, 0, 0);
+    }
+    .address{
+        width:90%;
+    }
+</style>
+
+<body class="bgBalck">
+    <header class="header">
+        <a class="back mt5" href="javascript:history.go(-1)">
+
+        </a>
+        <h4 class="ft16" data-localize="assets.tmoney">提币</h4>
+    </header>
+    <div class="header-space"></div>
+    <div class="plr15 ft14 mt20">
+        <div class="ft20"><span class="title">USDT</span></div>
+        <p class="mt20" data-localize="assets.avaiable">可用</p>
+        <p class="mt20 ft14 bold"><span class="balance-num">0.00</span> <span class="title">USDT</span></p>
+        <div class="bline mt30">
+            <p data-localize="index.address">提币地址</p>
+            <div class="flex between alcenter mt20">
+                <input type="text" data-localize="assets.padd" placeholder="输入或长按粘贴地址" class="ft14 address ftw">
+                <!-- <div class="color3 flex alcenter addbox">
+                    <img src="../images/ercode.png" alt="" onclick="clicked('barcode_scan.html',true,true)">
+                    <img src="../images/ercode.png" alt="" onclick="BSL.Qcode('0','code')">
+                     <span>|</span> 
+                    <img src="../images/choose.png" alt=""> 
+                </div> -->
+            </div>
+        </div>
+        <div class="bline mt30">
+            <p data-localize="assets.num">数量</p>
+            <div class="flex between alcenter mt20">
+                <input type="number" data-localize="contract.minimum" placeholder="最小提币数量" class="ft14 count ftw">
+                <div>
+                    <span class="white_gray title">USDT</span>
+                    <span class="">|</span>
+                    <span class=" bold all_in" data-localize="deals.all">全部</span>
+                </div>
+            </div>
+        </div>
+        <div class="bline mt30">
+            <p><span data-localize="deals.fee">手续费</span>( <span class="ratenum">5.000-5.000</span> <span class="title">USDT</span> )</p>
+        </div>
+        <div class="flex between alcenter ft14 mt20">
+            <p data-localize="assets.dnum">到账数量</p>
+            <p class="bold  ft14"><span class="reach-num">0.0000</span> <span class="title  bold">USDT</span></p>
+        </div>
+        <div class="mention tc ft14 mt20" data-localize="assets.tmoney">提币</div>
+    </div>
+    <script type="text/javascript" src="../lib/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="../javascripts/jquery.cookie.js"></script>
+    <script type="text/javascript" src="../lib/layer_mobile/layer.js"></script>
+    <script type="text/javascript" src="../lib/jquery.localize.min.js"></script>
+	<script type="text/javascript" src="../lib/language_cookie.js"></script>
+    <script type="text/javascript" src="../javascripts/main.js"></script>
+    <script type="text/javascript" src="../javascripts/immersed.js"></script>
+    <script>
+        $(function () {
+            // FastClick.attach(document.body);
+            var currency = get_param('id');
+            var balance, min_number, rate;
+            initDataToken({
+                url: 'wallet/get_info',
+                type: 'post',
+                data: {
+                    currency
+                }
+            }, function (res) {
+                balance = res.change_balance;
+                $('.balance-num').html(balance)
+                $('.title').html(res.name)
+                rate = res.rate;
+                $('.ratenum').html(rate)
+                min_number = res.min_number;
+                $('.count').attr('placeholder', getlg('minimum') + iTofixed(min_number,2))
+                var num = 0;
+                $('.reach-num').html(iTofixed(num,2));
+            })
+
+            function postData() {
+                var address = $('.address').val();
+                var number = $('.count').val();
+                if (!address) {
+                    layer_msg(getlg('withdrawalAddress'));
+                    return;
+                }
+                if (!number) {
+                    layer_msg(getlg('withdrawalAmount'));
+                    return;
+                }
+
+                if ((number - 0) < min_number) {
+                    return layer_msg(getlg('withdrawals'));
+                }
+
+                initDataToken({
+                    url: 'wallet/out',
+                    type: 'post',
+                    data: {
+                        currency,
+                        number,
+                        rate,
+                        address
+                    }
+                }, function (res) {
+                    layer_msg(res)
+                    setTimeout(() => {
+                        location.href = 'matchAccount.html?id=' + currency + '&type=2'
+                    }, 1500);
+                })
+
+            }
+            $('.mention').click(function () {
+                postData();
+            })
+            $('.all_in').click(function () {
+                $('.count').val(balance);
+                var num = iTofixed(balance - rate,2);
+                if (num > 0) {
+                    $('.reach-num').html(num);
+                } else {
+                    $('.reach-num').html('0.00');
+                }
+
+            })
+            $('.count').keyup(function () {
+                var value = $(this).val();
+                var num = iTofixed(value - rate,2);
+                if (num > 0) {
+                    $('.reach-num').html(num);
+                } else {
+                    $('.reach-num').html('0.00');
+                }
+
+            })
+
+        })
+    </script>
+</body>
+
+</html>

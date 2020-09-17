@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="lib/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/common.css" />
+    <link rel="stylesheet" type="text/css" href="css/login.css" />
+    <style>
+         .selected img{
+            width: 15px;
+            height:15px;
+            margin-left: 5px;
+            margin-right: 5px;
+            /* position: relative;
+            top: 3px; */
+        }
+        .selected p{
+            min-width: 40px;
+            text-align: center;
+            font-size: 14px;
+
+        }
+        .mask-content{
+            width: 100.0vw;
+            background-color: #fff;
+            border: 1px solid #f1f1f1;
+            top:48px;
+            position: absolute;
+            left: 0;
+            border-radius: 2px;
+            height: calc(100.0vh - 48px);
+        }
+        .area-code li{
+            line-height: 40px;
+            text-align: center;
+            border-bottom: 1px solid #f1f1f1;
+            font-size: 14px!important;
+        }
+        .area-code li:last-child{
+            border: none;
+        }
+        .active{
+            color: #f0b90b;
+        }
+    </style>
+</head>
+
+<body class="bgWhite">
+    <div id="app" v-cloak>
+        <div class="lang-box">
+            <span :class="langIndex===0?'lang-active':''" @click="langClick(0)">中</span>
+            <span :class="langIndex===1?'lang-active':''"  @click="langClick(1)">En</span>
+        </div>
+        <div class="header-space"></div>
+        
+        <div id="login">
+            <div class="logo">
+                <img src="images/logo2.png" /> 
+            </div>
+            <div class="theme mt40">
+                
+                <div class="form-input">
+                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACoAAAAqCAYAAADFw8lbAAABrElEQVRYR+2Zz07CQBDGvxES/wSMr8CBE62GxYNC9SnA6DsoD4O+g0Z9C1vwQgm2nDz4BF4EkYN2DESMGtgudi8k21vTma/f/mY7TaeEJTlI1afbDo6YqE7ADoCMat6cuAEDXWJuOCX7WkVLyajrh+cATlUE/xFz4QjrLC4v1qjnh8cMXMYJJbkeASeHwrqSacQaddtBC0R7MhE7n8NmZmNmyMtgiODxSb4O5nunZO8nMnrnhyMCVmUi2/kcsnOM9gdDPMQZBUaOsNYTGXX9kJOUVTXXEZa0uvGlN0Z/s9ZGtFIsqFZxoTiv05vEG6MLYZMEG6K6SE51DFFDVNebyfRR0/A1P02mPWkGCkPUEDUNX9MeMA+TJpDfMoaoIaqrPekm+VdP23e9MfpFQAfRNwBrikSfkUpXoo/3FIE9Am2p5DH49UDY0nG7yjSvCUA6ZP1hpu0Ia3d87naCAEyWilGAW46wy4nmo54fVhm4UbshwMB4xJ0moKqaQ0CtIqzbREYndJbhZ8N0lc1OrxaB6xj/vmFkVWnNjCP0AXRXQI1ysaBUrdg9msiQxuRPAcYfOjnJvOwAAAAASUVORK5CYII=">
+                    <!-- <div class="flex selected" @click="selectedTab">-->
+                    <!--    <p>+{{areaCode}}</p>-->
+                    <!--    <img width="15px" src="images/downs.png" alt="">-->
+                    <!--</div>-->
+                    <input type="text" v-model="userName" :placeholder="getlg('phoneandemail')">
+                </div>
+                <div class="form-input" style="margin-bottom:0">
+                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACoAAAAqCAYAAADFw8lbAAACsElEQVRYR+2YT0gUURzHv7/ZNSIoj4F0sKyLvSX3kUY6uzAnD0WHqC5dgohAKCqQCm+dBKOoQ0IEXQMLCjt0KCR2FLL9o+0YgdqhsIIiESLsz8wvZncOGus2760bWDOngfn+3vfzvu83j8cjrJGH1ggn/h/QkRGOr2ucOgTgIAPtAJr8VWLwHIHGCbj7feHjfcuyftayejUlOjbhdHsu3wDRtmoQBEwbMHr2ytbHurDaoJlcsc8wjEvMbIQ090B8wUwmBkLql8m0QO2CcwaMq8sNOUtMQ0zuK6I4MbxWgA6DkVyqI3BPl0wMqsIqg2byzi4CngNoKPcivjBwIi3FnUrmdu7FUcAYBGFj8P2bB8i0FC9VYHVAHxHQXTbhr57rWun2tvFqpmOFYqfn0RMQ1ge6YVOKA3UDHc0WW9igaSDY1gycM9vEby1Q2X50wjnPHvr9r0TwGuLc3JFIvA0Lq5RoJl88TaBrQZrzPxY+NVmWtRjGLJt9t2HR+PwewCZfbxBOdibFzTC1pcmFFfo6O+/cAnA8qLlnSuHvn6GfTK44TET7g4kOmjLRE7ZYFfQBgHJvEV02kzt7wxqVJzp1HeBTwU84lJLiSNh6NdBc8SGI9gWD95tSXAxrVAItOFfAOKuzIhFopaSjRJ9OTm6NubEBgJuDH2A7gRpL74wPRDyn0qMg2gLG5qBmHuDXwVizYOpN7RZvVhqvao+OFpxnzOhQgtEUMzCekmKPFqidd1x/b9b0Vi3zTCliuqCs6laL3pRixRWuuvR23olAKyUfJVpLP0aJrnZ6UaJRoksSiLan1W6HKNEo0QoJ/COnp4LjgdUuKbTbgcBmUqx4SP9TojMAWrTNFQoJmOmSYofeCX9yKgWXb/8F2Fk2cCzVJmwtUIVA6i5VuimpO00VgzUD+gt/aCw6WyWMbwAAAABJRU5ErkJggg==">
+                    <input type="passwords" v-model="passwords" v-show="!eye"  :placeholder="getlg('pinpwd')">
+                    <input type="text" v-model="passwords"  v-show="eye" class="form-input-txt" :placeholder="getlg('pinpwd')">
+                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAFB0lEQVRYR+2XbWxTVRjH/8+51L0xJ1kiQYzBxIiCRhQExJjgyxb54CcY6tpubO06xnBLWFvCQNNEYLJ1JMwhtLR7u918WfbJDygoygd5UVSIoqAmEgMSTAgOWLex3fOY266jm11tt2H2YffTzbnPc87v/p97n/M/hCl+0RTnwzTgRCs0reC0ghNVYKL54/oGX7F50mfdbVjBJHMAegqEecyYQ0CqDsRAHxEug3EB4O+IxeFr1weOfewtDSYLnBRgftWBxYpQNjDkagJlRS/GwC0C9YUBOZWAu0Y+526C6NKk9l5Hfcm3iYImBGisan6ahNxOQO7wxIwzDP4Ego4BOM+9PZfP9af06s8fSelPo7SMOQDmQ/IKAr0MwhORXAYOsRTb2uuLvvkv0LiABeWN2TI99R0CWYdK102MZqFovtZdtrOjJ9dLr4/FKqXZ7nsMIAsTiggIqc+AVwR7q9v2brw6FuiYgCZ780qQbCfgPgB9ADfQDENtW03hiMlec/qXGJjKGPJ5As0eKvEVgvhigHjfB7WWU9GLF2xpzebBASdAFQBSGfgTLIwBd9GXsSBjApoc/moCdgwlHL+laes+3G37JXqCVW80pGSnztxD4NKo8YGhe8PtcpLnat/NyoPvVvRH57+6yfuwQRGtBFoeGmeuVt3WmtGQowHJ5GjaN7wo8Q41/eJbcLlkdKLN5jEEs5TPCfQcA71g7JOkqQODN8/rcYYZM+cLVswglBGQBuBoWvdgjtdbGnmB8HQulzD1zH2bIKqHlPcE6qxl4eqHr9uALpcw99yvApQPIMhAQaDO0hVLdrPD3wigHMAlkMxRa0t+jhnnPPAoWBwGMBfAXrXOsjFWnMnhX01AG4B0gDvUjIvmiCjDgGZHUzvA+WD8rbHyUkf9upitIPSxE/0QaiskF40FFwExhyFPQ287zI+rbuuPsSDzq1oWK6R9BsI9ANrVOotpWEGj3bdTEG0BcJ00Xtm22/r9WH+V0eFvFEC5ZDS0uy2VY8VFjxvt/j2CUCGBve1jqKjHF2zyPckKHQWQCf3zqrVuI6OzaY1g7gSggSlXdRcfibeoye4/S4QFYFquuotPJgJotjctA/EJZvwUcFsWxssxOn0vCqZPASgMrCGz0/8rGA8x0/qAu9gTLzkv7yMldd6Nv5gxq18ZnNW5q7Q7EcC8zZ6sFG3GNSJc67uQeW9n51otvghNpUS8H4TfogB5fcBtnSKAvlIiCgOOLLHMVd0lCZWYiJe11Vq/TkTBAqdvKTOdHFeJ9QXMdt9OTNWfJKKAyeHvIOD1RNsMgP5BKRa9X190Lp6KepthFqdD7ma8bSbS1c09D6ihXjhJjdpY1bRACD6UXKOmDjXjj3836rAKrG91+wmwhbceuTOQcenN/3ers5QBFGOri6pTtFlg8IkBTRbGNgsZDZGXGUqPYRbgvdrXUzHaLJic/vlgbknWLAxj3nG7xagEUYq+nzMLU1J2K0KpG1bOSKsBoyRccozbsBZublkoNc060rCSRwSDW8dlWKP/zHynb6nC2A5QzvA44wwIB5lwPJ7lJ8YzYKyKtvwAH5ZS2Tphyz+6fYQch5AbGKzboyQPTegmcJcmefIPTaNBbS5PevCGeJaEeAHAEoAfZMZsItLNKZi5lwhXAPodwCmW8kh6pvzK67rDx85EtrXJjkno2DnZiyYz3zRgMmrFip1WcFrBiSow0fx/APR2tl+RUZ/4AAAAAElFTkSuQmCC"  v-show="!eye" @click="checkEye(1)">
+                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAADS0lEQVRYR+2U34tUZRjHP887M+u0RisYJcWuF0lSUBDkjVDgTRRl3Thi7hwX5qgbYdTueFYMigmxHzMHErtYdOds5MyINEKZf0BEJK0ZeFF6E7kX3QS2OrvtDxnnPHHWEonVmdkzF3txXjhw4LzP8/283+f7HmGFL1nhfESAYScUORg5GNaBsPVRBiMHwzoQtn7lZzDteD8KzCyYm9uqnwzWwp64E/XWyNgTquY0yoRYzvjXoK8Bv6D+qyV3z5VOiCy3R78z/oqgZYEeVQ5JKvdl16rZvz1B06DXfBW74tpfLVdguXWpXK4rOdv7oSrDItz0IVsp2J/dzmDaKZYESS8KKCVJxIdOfDTw13IF26nrz36+SYzvCTx1S15/KBfs50B0ETA94m0U5bxCUpRJhMeBKdT/4NK0P/rz8cF6O4Kt7n397bGH4wk5hEgGiCGcAvpQNvtwsFKwPxZr/4nVKvXzAk+Cv+/qwnxx7X2rD4riAN3AFUUKtVr9i7PHB+daFb/Xvh0j3iNxNIvPXhG5H5hsqLxz0s2c2TE83pswelFFH2j4jS2SdrzDAu8GYy259q7/GlsHjvWpH3tPkAEggXJd4STin7ox2XOuWt3eaAd2695j3T1rYi+gDAjy8mJPmFLV/I3G9NHqp8Pzt7X3F7cqckZEf5ed2eLzJmZStev1A0s5tDNbXB83Zp+iu4E1/zaZUvgO0QlV86tRf3IhYf5M1uNzCVM383G/O9Yw6/DZIOjTIJuB4AkmcivmyvvThiPf5O2ZpQ5qOeNDiPa19qPO5Yw113sZ1Q1AFcwW0IfacTCICspZhXUibFfUKRd2u816tATYnx3bZoypqnK67NopQNIjXnCRnsVnI7AeWCtCMLoZhW8FuQp+kN/LKv5EJb/njwAmNTT6aDLe9RvCtYV67bE7R7sUbEuAluP9tAgjbCrl7Qt3O7XleKrIxXIh88y9nLEcbxR4Q5E3y4VM8H7X1RTwpbeOrnow2T2FmO9L+cyLTYRbAgxybQwXVOVwxbWPhAIMioPfQsJP1ErurtlOADbL3Z3fmzrYTjPL8c6pcqns2sGN78jqKGBHiP7XJAIM62rkYORgWAfC1kcZjBwM60DY+iiDYR38Bx57OxxOBYzlAAAAAElFTkSuQmCC"   v-show="eye"  @click="checkEye(0)">
+                </div>
+                <a class="btn btn-default" id="sendLogin" @click="logon" data-localize="lg.lgs">登录</a>
+
+               
+                <div class="nocount">
+                    <a href="register.html" data-localize="lg.register">注册</a>
+                     <a  href="forgetpass.html" data-localize="lg.ftpwds">忘记密码？</a>
+                </div>
+            </div>
+            
+        </div>
+        <div class="mask-content" v-show="listShow">
+            <ul class="area-code" >
+                <li v-for="item in areaList" :key="item.id" @click="areaSelected(item.id,item.area_code,item.name)" class="flex between plr15">
+                    <p>{{item.name}}</p>
+                    <p>+{{item.area_code}}</p>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <script type="text/javascript" src="lib/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="javascripts/jquery.cookie.js"></script>
+    <script type="text/javascript" src="lib/layer_mobile/layer.js"></script>
+    <script type="text/javascript" src="lib/vue.min.js"></script>
+    <script type="text/javascript" src="lib/jquery.localize.min.js"></script>
+    <script type="text/javascript" src="lib/language_cookie.js"></script>
+    <script type="text/javascript" src="javascripts/main.js"></script>
+    <script type="text/javascript" src="javascripts/login.js"></script>
+    <script>
+    if(!localStorage.getItem('language')|| !localStorage.getItem('lang')){
+        localStorage.setItem('lang','hk');
+        localStorage.setItem('language','hk');
+        window.location.reload();
+    }
+    </script>
+</body>
+
+</html>

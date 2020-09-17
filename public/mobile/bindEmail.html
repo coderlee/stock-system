@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<!-- <meta name="viewport" content="width=750"/> -->
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, minimal-ui" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<title>邮箱验证</title>
+	
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+			list-style: none;
+			text-decoration: none;
+		}
+
+		header {
+			width: 90%;
+			margin: 0 auto;
+		}
+
+		header img {
+			margin-top: 10px;
+			width: 20px;
+			height: 20px;
+		}
+
+		.txt {
+			width: 90%;
+			margin: 0 auto;
+			line-height: 80px;
+			font-size: 24px;
+			color: #06365a;
+			font-weight: normal;
+		}
+
+		.nav {
+			width: 95%;
+			margin-left: 5%;
+		}
+
+		.nav p {
+			width: 100%;
+			line-height: 47px;
+			font-size: 20px;
+			color: #06365a
+		}
+
+		.nav li {
+			width: 95%;
+			border-bottom: 1px solid #eee;
+			line-height: 40px;
+			font-size: 16px;
+			margin-top: 20px;
+			color: #06365a;
+		}
+
+		.nav li .big {
+			width: 58%;
+			border: none;
+			line-height: 40px;
+			font-size: 16px;
+			outline: none;
+			background: transparent;
+			color: #06365a
+		}
+
+		.send {
+			float: right;
+			width: 40%;
+			border: none;
+			line-height: 40px;
+			font-size: 16px;
+			outline: none;
+			color: #fff;
+			background-color: #5890bd;
+			z-index: 999;
+			border-radius: 2px;
+		}
+
+		.nav li .hang {
+			display: inline-block;
+		}
+
+		.clearfix:before,
+		.clearfix:after {
+			content: "";
+			display: block;
+			clear: both;
+		}
+
+		.clearfix {
+			zoom: 1;
+		}
+
+		footer {
+			width: 90%;
+			position: fixed;
+			height: 100px;
+			bottom: 5px;
+			left: 5%;
+			text-align: center;
+		}
+
+		footer a {
+			display: inline-block;
+			width: 100%;
+			color: #fff;
+			line-height: 50px;
+			background-color: #5b8cd9;
+			font-size: 20px;
+		}
+	</style>
+</head>
+
+<body>
+	<header>
+		<a href="javascript:history.go(-1)"></a>
+	</header>
+	<div class="txt">
+		<h4 data-localize="safe.bindEmail">绑定邮箱</h4>
+	</div>
+	<div class="nav">
+		<p data-localize="lg.email">邮箱</p>
+		<ul>
+			<li></li>
+		</ul>
+	</div>
+	<footer class="none">
+		<a onclick="bindemail()" data-localize="safe.next">下一步</a>
+	</footer>
+	<script type="text/javascript" src="lib/jquery-2.1.1.min.js"></script>
+	<script type="text/javascript" src="lib/layer_mobile/layer.js"></script>
+	<script type="text/javascript" src="javascripts/jquery.cookie.js"></script>
+	<script type="text/javascript" src="lib/jquery.localize.min.js"></script>
+	<script type="text/javascript" src="lib/language_cookie.js"></script>
+	<script type="text/javascript" src="javascripts/main.js"></script>
+	<script type="text/javascript" src="javascripts/order.js"></script>
+	<!-- <script type="text/javascript" src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+	 crossorigin="anonymous"></script> -->
+</body>
+
+</html>
+<script>
+	function check_email() {
+		var emreg = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
+		if (!emreg.test($("#email").val())) {
+			//$("#email").html("");
+			$("#email").html(getlg('mnot'));
+			return false
+		} else {
+			return true;
+		}
+	};
+	$(document).ready(function () {
+		var token = get_user_login();
+		$.ajax({
+			url: _API + "safe/safe_center",
+			type: "post",
+			dataType: "json",
+			async: true,
+			beforeSend: function beforeSend(request) {
+				request.setRequestHeader("Authorization", token);
+			},
+			success: function success(data) {
+				var email = data.message.email;
+				if (email == null || email == '') {
+					var html =
+						"<li><input type='text' placeholder='"+getlg('enterEmail')+"' class='big' id='email' name='email' onchange='check_email()'></li>" +
+						"<li class='clearfix'><input type='text' placeholder='"+getlg('pyan')+"' class='big w-160 verify' id='code'><input type='button' value='"+getlg('sendCode')+"' class='send' onclick='sendCode(this)'></li>"
+					$(".nav>ul").html(html);
+					$(".none").show();
+				} else {
+					var html = "<li>" + email + '</li>'
+					$(".nav>ul").html(html);
+					$(".none").hide();
+				}
+				//    var html="<li>"+[email==null?'未绑定':email]+'</li>'
+				//    $(".nav>ul").html(html);
+			}
+		})
+	})
+	var clock = '';
+	var nums = 60;
+	var btn;
+
+	function sendCode(thisBtn) {
+		var res = check_email();
+		var email = $('#email').val();
+		if (res == true) {
+			$.ajax({
+				type: "post",
+				url: _API + "sms_mail",
+				data: {
+					user_string: email,
+					type: ''
+				},
+				dataType: "json",
+				success: function (data) {
+					if (data == 'OK') {
+
+					} else {
+						layer_msg(data.message)
+					}
+				}
+			});
+		} else {
+			layer_msg(getlg('mnot'));
+			return false;
+		}
+		btn = thisBtn;
+		btn.disabled = true; //将按钮置为不可点击
+		btn.value = nums + getlg('seconds');
+		clock = setInterval(doLoop, 1000); //一秒执行一次			
+	}
+
+	function doLoop() {
+		nums--;
+		if (nums > 0) {
+			btn.value = nums + getlg('seconds');
+		} else {
+			clearInterval(clock); //清除js定时器
+			btn.disabled = false;
+			btn.value = getlg('sendCode');
+			nums = 60; //重置时间
+		}
+	}
+
+	function bindemail() {
+		var email = $('#email').val();
+		var code = $('#code').val();
+		var token = get_user_login();
+		if (email != '' && code != '') {
+			$.ajax({
+				type: "post",
+				url: _API + "safe/email",
+				data: {
+					email: email,
+					code: code
+				},
+				dataType: "json",
+				beforeSend: function beforeSend(request) {
+					request.setRequestHeader("Authorization", token);
+				},
+				success: function (data) {
+					if (data.type == "ok") {
+						setTimeout(function () {
+							window.location.href = "Security.html";
+						}, 2000);
+					} else {
+						layer_msg(data.message)
+					}
+				}
+			});
+		} else {
+			layer_msg(getlg('pmsg'));
+		}
+	}
+</script>

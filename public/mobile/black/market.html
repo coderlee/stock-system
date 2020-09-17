@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no,viewport-fit=cover" />
+	<title>行情</title>
+	<link rel="stylesheet" type="text/css" href="../fonts/iconfont.css">
+	<link rel="stylesheet" type="text/css" href="../css/common.css" />
+	<link rel="stylesheet" type="text/css" href="../css/market.css" />
+	<link rel="stylesheet" type="text/css" href="../css/footer.css" />
+</head>
+
+<body class="bgBalck">
+	<div id="app" v-cloak>
+		<div class="header bgBlackColor">
+			<div class="tl title ft20 ml15" data-localize="footer.quotation">行情</div>
+		</div>
+		<div class="header-space"></div>
+		<div class="wrap-tab" id="content">
+			<div class="wrap-table info">
+				<div class="wrap-cont">
+					<div class="inContent">
+						<!-- <div class="tabs">
+								<div v-for="item in dataList">{{item.name}}</div>
+							</div> -->
+						<div class="wrap-main-two legal_wrap">
+							<div class="market-name flex between">
+								<div class="main-name ft12" data-localize="index.name">名称</div>
+								<div class="main-price ft12" style="padding:0;" data-localize="index.lastPrice">最新价</div>
+								<div class="main-rate ft12 tr" data-localize="index.change">涨跌幅</div>
+							</div>
+							<a v-for="item in detailList.quotation" :key="item.id" v-if="item.is_display == 1"
+								:href="'dataMap.html?tradeId='+item.id+'&legal_id='+item.legal_id+'&currency_id='+item.currency_id+'&symbol='+item.currency_name+'/'+item.legal_name+''"
+								class="main-asset" data-currentId="item.id">
+								<div class="flex between">
+									<div class="main-name">
+										<div class="name_1" style="margin-top:8px;">
+											<h5>{{item.currency_name}}</h5>
+											<span>/{{item.legal_name}}</span>
+										</div>
+										<div class="name_2">
+											<span data-localize="index.vol">24H量</span>
+											<span class='volume'>{{item.volume || 0 | toFixed4s}}</span>
+										</div>
+									</div>
+									<div class="main-price">
+										<div class="name_1 usdprice">{{item.now_price || 0.00 | toFixed4}}</div>
+										<div class="name_2 cnyprice">≈ {{item.now_price * item.rmb_relation || 0.00 | toFixed2}}CNY</div>
+									</div>
+									<div class="main-rate">
+										<div :class="['rate_green',{'bg2':item.change < 0}]">
+											{{item.change|| 0.000}}%
+										</div>
+									</div>
+								</div>
+
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<footer>
+		<a href="index.html">
+			<div>
+				<p class="img img0"></p>
+				<!-- <i class="iconfont icon-yemian-copy"></i> -->
+				<span data-localize="footer.home">首页</span>
+			</div>
+		</a>
+		<a href="market.html" class="select">
+			<div>
+				<p class="img img1"></p>
+				<!-- <i class="iconfont icon-jiaoyihangqing"></i> -->
+				<span data-localize="footer.quotation">行情</span>
+			</div>
+		</a>
+		<a href="fiatrad.html">
+			<div>
+				<p class="img img2"></p>
+				<!-- <i class="iconfont icon-jiaoyiguanli"></i> -->
+				<span data-localize="index.legal">法币交易</span>
+			</div>
+		</a>
+		<a href="LeveragedDeals.html">
+			<div>
+				<p class="img img3"></p>
+				<!-- <i class="iconfont icon-jiaoyidingdan"></i> -->
+				<span data-localize="contract.contract">合约</span>
+			</div>
+		</a>
+		<a href="personal.html">
+			<div>
+				<p class="img img4"></p>
+				<!-- <i class="iconfont icon-wode"></i> -->
+				<span data-localize="footer.personal">我的</span>
+			</div>
+		</a>
+	</footer>
+	<script type="text/javascript" src="../lib/jquery-2.1.1.min.js"></script>
+	<script type="text/javascript" src="../javascripts/socket.io.js"></script>
+	<script type="text/javascript" src="../javascripts/jquery.cookie.js"></script>
+	<script type="text/javascript" src="../lib/layer_mobile/layer.js"></script>
+	<script type="text/javascript" src="../lib/jquery.localize.min.js"></script>
+	<script type="text/javascript" src="../lib/language_cookie.js"></script>
+	<script type="text/javascript" src="../lib/vue.min.js"></script>
+	<script type="text/javascript" src="../javascripts/main.js"></script>
+	<script>
+		var token = get_user_login();
+		var vue = new Vue({
+			el: '#app',
+			data: {
+				tabList: [],
+				detailList: [],
+				selectId: 0,
+				dataList: []
+			},
+			filters: {
+				toFixeds1: function (value) {
+					var vals = iTofixed(value,8);
+					return vals;
+				},
+				toFixed2: function (value) {
+					var vals = iTofixed(value,2);
+					return vals;
+				},
+				toFixed4: function (value) {
+					var vals = iTofixed(value,4);
+					return vals;
+				},
+				toFixed4s: function (value) {
+					var vals = iTofixed(value,0);
+					return vals;
+				}
+			},
+			mounted: function () {
+				let that = this;
+				initDataTokens({
+					url: 'currency/quotation_new'
+				}, that.currencyQuotationSuccess);
+			},
+			methods: {
+				currencyQuotationSuccess(res) {
+					let that = this;
+					if (res.type == 'ok') {
+						that.socket(token);
+						that.tabList = res.message;
+						if (res.message.length > 0) {
+							that.selectId = res.message[0].id;
+							that.detailList = res.message[0];
+							that.dataList = res.message;
+						}
+					}
+				},
+				// 资产切换
+				tab(ids) {
+					let that = this;
+					that.selectId = ids;
+					let lists = that.tabList;
+					for (i in lists) {
+						if (ids == lists[i].id) {
+							that.detailList = lists[i];
+						}
+					}
+				},
+				//socket连接封装
+				socket(token) {
+					let that = this;
+					$.ajax({
+						url: _API + "user/info",
+						type: "GET",
+						dataType: "json",
+						async: true,
+						beforeSend: function beforeSend(request) {
+							request.setRequestHeader("Authorization", token);
+						},
+						success: function success(data) {
+							if (data.type == 'ok') {
+								var socket = io(socket_api);
+								socket.on('connect', function (datas) {
+									socket.emit('login', data.message.id);
+									// 后端推送来消息时
+									socket.on('daymarket', function (msg) {
+										if (msg.type == 'daymarket') {
+											if (that.selectId && (that.selectId == msg.legal_id)) {
+												// now_price
+												let lists = that.detailList.quotation;
+												for (i in lists) {
+													if (lists[i].currency_id == msg.currency_id) {
+														that.detailList.quotation[i].volume = msg.volume;
+														that.detailList.quotation[i].now_price = msg.now_price;
+														that.detailList.quotation[i].change = msg.change;
+													}
+												}
+											}
+										}
+									});
+								});
+							}
+						}
+					});
+				}
+			}
+		});
+	</script>
+</body>
+
+</html>

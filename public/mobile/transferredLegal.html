@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+        content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>划转</title>
+    <link rel="stylesheet" type="text/css" href="element-ui/lib/theme-chalk/index.css" />
+    <link rel="stylesheet" type="text/css" href="css/common.css" />
+</head>
+<style>
+    .coinbox {
+        width: 50%;
+        background-color: #262a42;
+        border-radius: 2px;
+        color: #fff;
+        line-height: 30px;
+        padding: 0 5%;
+        border: 1px solid #52688c;
+    }
+
+    .coinbox option {
+        text-align: center;
+    }
+
+    .imgbox {
+        width: 60px;
+        height: 60px;
+    }
+
+    .imgbox img {
+        width: 100%;
+    }
+
+    .textbox {
+        width: 80%;
+    }
+
+    .bline {
+        border-bottom: 1px solid #1B2A3E;
+        padding: 10px 0;
+    }
+
+    .transit {
+        width: 100%;
+        height: 40px;
+        line-height: 40px;
+        color: #fff;
+        background: #cfd9de;
+        margin-top: 80px
+    }
+
+    .btnbox {
+        position: fixed;
+        bottom: 10px;
+        padding: 0 15px;
+        width: 100%
+    }
+
+    .transit {
+        width: 100%;
+        height: 50px;
+        line-height: 50px;
+        color: #fff;
+        background: #588bf7;
+        border-radius: 2px;
+        font-size: 20px;
+    }
+
+    .huazhuan-num {
+        background-color: rgba(0, 0, 0, 0);
+    }
+
+    .right img {
+        top: 4px;
+    }
+
+    .line30 {
+        line-height: 40px;
+    }
+    .huazhuan{
+        background: #fff;
+        border-radius: 10px;
+        margin: 20px 3% 0;
+      
+    }
+    .huazhuan h1{
+        font-size: 16px;
+        color: #90a2b0;
+        font-weight: normal;
+        padding: 10px 2%;
+        border-bottom:1px solid #eee;
+    }
+    .huazhuan-left{
+        width: 20%;
+        font-size: 16px;
+        color:#90a2b0;
+        text-align: right;
+    }
+    .huazhuan-right article{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        margin-right: 8px;
+    }
+    .huazhuan-right{
+        width: 80%;
+        flex-wrap: wrap;
+         display: flex;
+        flex-direction: row;
+    }
+    .huazhuan-row img{
+        width: 15px;
+        height: 15px;
+        margin-right: 5px;
+    }
+    .huazhuan-row span{
+        font-size: 14px;
+        color:#90a2b0;
+    }
+    .huazhuan-row{
+        display: flex;
+        flex-direction: row;
+        padding: 10px 2%;
+    }
+    .bizhong{
+        background: #fff;
+        border-radius: 10px;
+        margin: 10px 3%;
+        padding: 10px 3%;
+        align-items: center;
+    }
+    .bizhong-ml{
+        width: 68%;
+    border: 1px solid #588bf7;
+    padding: 10px;
+    border-radius: 5px;
+    }
+   .bizhong-ml .el-dropdown-link{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+   .bizhong-ml .el-dropdown{
+        width: 100%;
+    }
+    .hz-num{
+         background: #fff;
+        border-radius: 10px;
+        margin: 10px 3%;
+    }
+    .hz-row{
+        display: flex;
+        flex-direction: row;
+        padding: 10px 3%;
+        justify-content: space-between;
+        border-bottom: 1px solid #eee;
+    }
+    .hz-row em{
+        font-size: 20px;
+    }
+    .hz-row input{
+        font-size: 20px;
+    }
+    .hz-row span{
+        font-size: 14px;
+        color:#588bf7;
+    }
+    .hz-title{
+        font-size: 16px;
+        padding: 10px 3%;
+        color: #90a2b0;
+    }
+    .hz-balance{
+        padding: 10px 3%;
+        color: #62759a;
+    }
+    .hz-submit div{
+        text-align: center;
+        margin: 30px 3%;
+        height: 40px;
+        line-height: 40px;
+        color: #fff;
+        background: #588bf7;
+        border-radius: 15px;
+        font-size: 20px;
+    }
+</style>
+
+<body>
+    <div id="app" v-cloak>
+        <header class="header">
+            <a class="back mt5" href="javascript:history.go(-1)">
+            </a>
+            <h4 class="ft16" data-localize="assets.transfer">划转</h4>
+            <div class="right" @click="links">
+                <img src="images/record1.png" />
+            </div>
+        </header>
+        <div class="header-space"></div>
+        <!--<div class="Transferred">-->
+        <!--    <div class="transfer plr15">-->
+        <!--        <div class="flex mt30">-->
+        <!--            <p data-localize="transaction.currency">币种</p>-->
+        <!--            <div class="ml10">-->
+        <!--                <el-dropdown trigger="click" @command="selectedCurrency">-->
+        <!--                    <span class="el-dropdown-link">-->
+        <!--                        {{value3}}<i class="el-icon-arrow-down el-icon--right"></i>-->
+        <!--                    </span>-->
+        <!--                    <el-dropdown-menu slot="dropdown">-->
+        <!--                        <el-dropdown-item v-for="item in currencyList" :key="item.id" :command="item">-->
+        <!--                            {{item.name}}-->
+        <!--                        </el-dropdown-item>-->
+        <!--                    </el-dropdown-menu>-->
+        <!--                </el-dropdown>-->
+        <!--            </div>-->
+
+        <!--        </div>-->
+        <!--        <div class="flex between center mt10">-->
+        <!--            <div class="flex flexcol between textbox">-->
+        <!--                <div class="flex line30">-->
+        <!--                    <p class="mr10" data-localize="assets.from">从</p>-->
+        <!--                    <el-dropdown trigger="click" @command="selectedOne">-->
+        <!--                        <span class="el-dropdown-link">-->
+        <!--                            {{value1}}<i class="el-icon-arrow-down el-icon--right"></i>-->
+        <!--                        </span>-->
+        <!--                        <el-dropdown-menu slot="dropdown">-->
+        <!--                            <el-dropdown-item v-for="(item,index) in accountList" :key="index"-->
+        <!--                                :command="item.type">{{item.texts}}-->
+        <!--                            </el-dropdown-item>-->
+        <!--                        </el-dropdown-menu>-->
+        <!--                    </el-dropdown>-->
+        <!--                </div>-->
+        <!--                <div class="flex line30">-->
+        <!--                    <p class="mr10" data-localize="assets.to">到</p>-->
+        <!--                    <el-dropdown trigger="click" @command="selectedTwo">-->
+        <!--                        <span class="el-dropdown-link">-->
+        <!--                            {{value2}}<i class="el-icon-arrow-down el-icon--right"></i>-->
+        <!--                        </span>-->
+        <!--                        <el-dropdown-menu slot="dropdown">-->
+        <!--                            <el-dropdown-item v-for="(item,index) in accountList" :key="index"-->
+        <!--                                :command="item.type">{{item.texts}}-->
+        <!--                            </el-dropdown-item>-->
+        <!--                        </el-dropdown-menu>-->
+        <!--                    </el-dropdown>-->
+        <!--                </div>-->
+        <!--            </div>-->
+        <!--        </div>-->
+        <!--    </div>-->
+        <!--</div>-->
+        <div class="huazhuan">
+            <h1 data-localize="zdy.huazhuan">划转账户</h1>
+            <div class="huazhuan-row">
+                <div class="huazhuan-left"><span data-localize="assets.from">从</span>：</div>
+                <div class="huazhuan-right">
+                    <article v-for="(item,index) in accountList" @click="selectedTxtOne(item.type,index)">
+                        <img :src='imgsIndex==index?imgs[1]:imgs[0]'>
+                        <span>{{item.texts}}</span>
+                    </article>
+                </div>
+            </div>
+            <div class="huazhuan-row">
+                <div class="huazhuan-left"><span data-localize="zdy.huanzhuanzhi">划转至</span>：</div>
+                <div class="huazhuan-right">
+                    <article v-for="(item,index) in accountList" @click="selectedTxtTwo(item.type,index)">
+                        <img :src='imgsTwoIndex==index?imgs[1]:imgs[0]'>
+                        <span>{{item.texts}}</span>
+                    </article>
+                </div>
+            </div>
+        </div>
+        <div class="flex  bizhong ">
+            <p data-localize="zdy.huazhuanbizhong" style="color:#90a2b0;font-size:16px;margin-right: 20px;">划转币种</p>
+            <div class="ml10 bizhong-ml">
+                <el-dropdown trigger="click" @command="selectedCurrency">
+                    <span class="el-dropdown-link">
+                        {{value3}}<i class="el-icon-arrow-down el-icon--right"></i>
+                    </span>
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item v-for="item in currencyList" :key="item.id" :command="item">
+                            {{item.name}}
+                        </el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>
+            </div>
+        </div>
+        <div class="hz-num">
+            <div class="hz-title" data-localize="assets.transnum">划转数量</div>
+            <div class="hz-row">
+                <em>{{value3}}</em>
+                <input type="text" data-localize="assets.pmin" placeholder="请输入划转数量" v-model="numbers"
+                        class="ft14 huazhuan-num">
+                <span class="all" @click="alls" data-localize="deals.all">全部</span>
+            </div>
+            <div class="hz-balance">
+                <span data-localize="assets.avaiable">{{getlg('canuse')}}</span> {{balances}}
+            </div>
+        </div>
+        
+        <div class="hz-submit" @click="sumbitOrder">
+            <div  data-localize="assets.transfer">划转</div>
+        </div>
+        <!--<div class="line mt30"></div>-->
+        <!--<div class="plr15">-->
+        <!--    <div class="bline mt30">-->
+        <!--        <p data-localize="assets.transnum">划转数量</p>-->
+        <!--        <div class="flex between alcenter mt20">-->
+        <!--            <input type="text" data-localize="assets.pmin" placeholder="请输入划转数量" v-model="numbers"-->
+        <!--                class="ft14 huazhuan-num">-->
+        <!--            <div>-->
+        <!--                <span class="white_gray coin coin-name ">{{value3}}</span>-->
+        <!--                <span class="white_gray">|</span>-->
+        <!--                <span class="all" @click="alls" data-localize="deals.all">全部</span>-->
+        <!--            </div>-->
+        <!--        </div>-->
+        <!--    </div>-->
+        <!--    <p class="ft12 mt5"><span data-localize="assets.avaiable">{{getlg('canuse')}}</span> {{balances}}</p>-->
+        <!--</div>-->
+        <!--<div class="btnbox" @click="sumbitOrder">-->
+        <!--    <div class="transit tc ft14 ftw" data-localize="assets.transfer">划转</div>-->
+        <!--</div>-->
+    </div>
+    <script type="text/javascript" src="lib/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="lib/vue.min.js"></script>
+    <script type="text/javascript" src="element-ui/lib/index.js"></script>
+    <script type="text/javascript" src="javascripts/jquery.cookie.js"></script>
+    <script type="text/javascript" src="lib/layer_mobile/layer.js"></script>
+    <script type="text/javascript" src="lib/jquery.localize.min.js"></script>
+    <script type="text/javascript" src="lib/language_cookie.js"></script>
+    <script type="text/javascript" src="javascripts/main.js"></script>
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                type: 2, //默认
+                datas: {},
+                value1: '',
+                value2: '',
+                balances: 0,
+                currency: '',
+                numbers: '',
+                currencyList: [],
+                value3: "",
+                accountList: [],
+                value3Id: '',
+                imgsIndex:0,
+                imgsTwoIndex:0,
+                imgs:['data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAADj0lEQVRIS8WXz09cVRTHv983M1DaqKShCixMWlur7czADCRqZl7txKRNTN1YA7rXGkVF19ZYTVj7E2z0DxBJGhcaEpsYUuahNRlmKPMgtjXtjggllWootgz3a+4MIPTnVBm4i7d479zzufe8c8/5XqKM0d/fX72l/uGDAeKADFpJ7ZCw1U4leVnCBTrILAgnZ++r/uHZXbuu3c0t72QwkMvVVqGqU9IbAOru5mzx+7Sk7oJT+DgVi83cbs5twd7weDtoPgHwkJ0sYJTgCRilDZxff7/gT9n39TvCDxqYxxwYl45zmEB0ETYJOZ3Jlj3f3Ap+E7ivry/Q8Mjjn5J8vTRBg5A5mmxpSpez4/SIn6RRF8B9JXt+MX9l6q1UKlVYOX8VWFLAy431EngB4By08E6yJfplacP3NOgNjx4BAx8BqgFwIhHb205yYcnLKvBQzu+WYHd6mTCHEvHoz/eEu8F4KDv6lOB8D2AriZ5ELNxxE9gbGW+HMb2Q5kg983+hS4AiXPwRZA2BlxLxcG/xB9iHzd6QQucAbJPMq24pvGs2hnL+KxKsz0vz3PJoKrZ9pghOD+ePkXzfJlIyHnl6zYgrHHnZ/CmbcJI+cFsix5jJZEJzzqYJAnVy4LrNYa8S4HTGT9JBWsB0jfm7kT+N5A8Zw+8EjbrxSFMloEs+09n8GYJRx9Fz9HL+5xA6KB1NtES6Kgn2sv57AD4E0U1v2D8N4gkDs39fPHqqkuB0Lr+f4gDIX+hli6VvWzCk+icjkclKggczmQbH2TRhs5vp4XyBZGDit/FgW1vbcmWpxAJsOW7cuceWzsK6gn3fr5q5Dtsyr69zqMcbHMfYUE/ZrD4NbURybcBxktCzXEAAnEnGw82VSKoln17WHwHQVCwgq0qmgeu2rlPJ3LAmUWqLF2tDmi22RRJHErHwV2sZci/nvwzB+rykWbPbdaN/LCuQoaz/ooCv11UI/Pvzx3oAvVYJ6QPoeDIesb6LY5XmGhhQMPTAmJWjz6+l2BPxbWFmb1sqxWWleQt5q0DjTv8zgKXVSYMS3y0324sNn+oCl+Stjs9fmX7zjvJ2ZULdKOjtObcyVVRaC4Gzm3F12tpfxeY6BhZ2U3QBHLbntBhKYlJ0OpPNZQr6lXArAoMm+DbpdAAq8wrDacn89yvMygX0nz9fff9f1w6COACwFdJ2ALWLNjMgLwLKQDj5Z5mXtn8AbtDYHY9my00AAAAASUVORK5CYII=','data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAEf0lEQVRIS8VXW2wUZRT+zsy2O7PFUpsil2jiLVJ9EB4M2oZqExMrCV4CbHdXow9GawC5JcyignE1KZFOkyraipiYqAk72w0RFaOQGIGaVo0PlBfxgoaQkFIaLm06M1t255h/u9vOdunulja6j7PnnO+fb875zvcTSvit2vSnd/6tS5pA8mMgfoAZdxKhWqQycImAv8H0Kzh19KrqO/LtZkoUK0uFAp6OXK5SKpQtAL8CUE2xYuP/8xAc6rQt+91DkZuvTJczLXCwzQwA9B4ICzMFTzHTQWb0JJPOafmkb1A8Ty03b/F4pFoiNBDxWoDuH8fHBYC3GGFf7HrgecB+P8vSCmsvgTZkqDxBjF1GWO0p5Y1D7eZKh6mVgIcz8R8OjCqbj0Uo6c7PAfZ3syyfTRgArwPIYqS2xTTffoC4FNDJGKaAbrYQ5A6AVcGUc7s3EG+mVDYmBzig250E3sDgSxKwOqr5+mYGmBsd0s06Bh0GUM2grpimbMwDDrYlAiDHAGCl4Hk0rpXlgTa3203E/AyB6hm4TRQh4ByDe5noQPd25cjUg/r1a3Uykt8DUBkcimk+gSHygEz3/gFgAbPzcixcsd9dILQ7UctlzicA6oow0EfXpBeir3tPu+OCuvUSAFHzou1R7jm0ja6kgYN7rAgkvMnAiZimPjIlqRGgLwGuLI12Ggb4KUNTj7njA7p1PN1wDt4ydqgRavmIy4aHrfNiTom4Ibrd92M2IbAncS9Jzk8ASgSdgBpmR3ootsP7W/aJ6HZm6hFzXlmpLqFAm72aiL8G+JSh+Zblvq3ZC1Axeqcjos/Q1Pop9frFnDPTExRstz8A80YGdsU0tTUbKBpJYv6uNHqvH+UQPe5uuKBuvQHgbRB1UlC3BJUPphiN8bB6fIJm3fqUgOdnAwzgc0NTJ2oEdasRwA8AfqaAbg0SsIDKlEXRrXQhCxTUrb8A3DUrYMYZI6zena2xpnV0cXm5dF50t3hjIWVy6hfFE49PKktAt20Ce2cJPGaE1YkaQo7lFbbAS/63wBEulyvsBBhjk1SPpRZFd86bW6qBM4bmorpjdHF5Mk314LTNFdStzwA8NyuqCzXX/zFODO5yCQj1G5qyfIpc9pagzzMQEPskwMvSAlJIMv27R+6TyzxiS829ZJayJBj4ioCbSvneDIwQ8GTRJZFeix1cpSTt9FoE0GJo6sc5a7E9Uct842sx1G69yAxR8+JIMrH0m9eqLk84kIBuBgkULWYEJOZnAdQzZ4wA4RyA3hSnDsTD8/K0vaARcMlkF4D1c2l9HOAwgarB2GeE1fVZrBzP1Rhhz8KKRIzAa+bG7EkdwvKA+YsBU212O818e9vNsnTWfp+A9OmEK3FSvDP+6qRBKNRk/nfMlZLssreMfQOmsqmgvc2Z4TxDT/0AHwTQM+Zxfq/x+YZE/JBp1pQnpaUAGgBaK+Y0XWemht4NnjaBqrIVEoQtLfEKA3GgTnv0Bq8w7gOs2sve+VaiCYT0pQ3AHQCqMjHifvTP+KUNR6+q3pIubf8C8rBQ3JEmtQIAAAAASUVORK5CYII=']
+            },
+            mounted: function () {
+                let that = this;
+                that.init();
+            },
+            methods: {
+                init() {
+                    var that = this;
+                    // initDataTokens({
+                    //     url: 'wallet/list',
+                    //     type: 'post',
+                    // }, function (res) {
+                    //     if (res.type == 'ok') {
+                    //         that.datas = res.message;
+                    //         var dataList = res.message.lever_wallet.balance;
+                    //         for (var i = 0; i < dataList.length; i++) {
+                    //             if (dataList[i].currency_name == "USDT") {
+                    //                 that.balances = dataList[i].lever_balance
+                    //             }
+                    //         }
+
+                    //     }
+                    // })
+                    initDataTokens({
+                        url: 'currency/user_currency_list',
+                        type: 'get',
+                    }, function (res) {
+                        if (res.type == 'ok') {
+                            var datas = res.message;
+                            if (datas.length > 0) {
+                                var arr = [];
+                                for (var i = 0; i < datas.length; i++) {
+                                    var nums = (datas[i].is_legal - 0) + (datas[i].is_lever - 0) + (
+                                        datas[i].is_match - 0) + (datas[i].is_micro - 0);
+                                    if (nums > 1) {
+                                        arr.push(datas[i]);
+                                    }
+                                }
+                                that.value3 = arr[0].name;
+                                that.currency = arr[0].id;
+                                var arr2 = [];
+                                if (arr[0].is_legal == 1) {
+                                    var obj = {
+                                        type: 'legal',
+                                        texts: getlg('c2cAccount')
+                                    }
+                                    arr2.push(obj);
+                                }
+                                if (arr[0].is_micro == 1) {
+                                    var obj = {
+                                        type: 'micro',
+                                        texts: getlg('secondContractAccount')
+                                    }
+                                    arr2.push(obj);
+                                }
+                                if (arr[0].is_lever == 1) {
+                                    var obj = {
+                                        type: 'lever',
+                                        texts: getlg('contractAccount')
+                                    }
+                                    arr2.push(obj);
+                                }
+                                
+                                if (arr[0].is_match == 1) {
+                                    var obj = {
+                                        type: 'match',
+                                        texts: getlg('Flashexchange')
+                                    }
+                                    arr2.push(obj);
+                                }
+                                that.accountList = arr2;
+                                that.currencyList = arr;
+                                that.value1 = arr2[0].texts;
+                                that.value2 = arr2[0].texts;
+                                if(arr2[0].type == 'lever'){
+                                    that.balances = arr[0].wallet.lever_balance;
+                                // }else if(arr2[0].type == 'micro'){
+                                //     that.balances = arr[0].wallet.micro_balance;
+                                }else if(arr2[0].type == 'match'){
+                                    that.balances = arr[0].wallet.change_balance;
+                                }else if(arr2[0].type == 'legal'){
+                                    that.balances = arr[0].wallet.legal_balance;
+                                }
+                            }
+
+                        }
+                    })
+                },
+                selectedTxtOne(command,index){
+                    this.imgsIndex=index;
+                    let that=this;
+                    if (command == 'lever') {
+                        var j = 0;
+                        for (var i = 0; i < that.accountList.length; i++) {
+                            if (that.accountList[i].type != 'lever') {
+                                j = i;
+                            }
+                        }
+                        that.value1 = getlg('contractAccount');
+                        for (var i = 0; i < that.currencyList.length; i++) {
+                            if (that.currencyList[i].id == that.currency) {
+                                that.balances = that.currencyList[i].wallet.lever_balance;
+                            }
+                        }
+                    }else if (command == 'micro') {
+                        that.value1 = getlg('secondContractAccount');
+                        var j = 0;
+                        for (var i = 0; i < that.accountList.length; i++) {
+                            if (that.accountList[i].type != 'micro') {
+                                j = i;
+                            }
+                        }
+                        for (var i = 0; i < that.currencyList.length; i++) {
+                            if (that.currencyList[i].id == that.currency) {
+                                that.balances = that.currencyList[i].wallet.micro_balance;
+                            }
+                        }
+                    } else if (command == 'match') {
+                         that.value1 = getlg('Flashexchange');
+                        var j = 0;
+                        for (var i = 0; i < that.accountList.length; i++) {
+                            if (that.accountList[i].type != 'match') {
+                                j = i;
+                            }
+                        }
+                        for (var i = 0; i < that.currencyList.length; i++) {
+                            if (that.currencyList[i].id == that.currency) {
+                                that.balances = that.currencyList[i].wallet.change_balance;
+                            }
+                        }
+                    } else if (command == 'legal') {
+                         that.value1 = getlg('c2cAccount');
+                        var j = 0;
+                        for (var i = 0; i < that.accountList.length; i++) {
+                            if (that.accountList[i].type != 'legal') {
+                                j = i;
+                            }
+                        }
+                        for (var i = 0; i < that.currencyList.length; i++) {
+                            if (that.currencyList[i].id == that.currency) {
+                                that.balances = that.currencyList[i].wallet.legal_balance;
+                            }
+                        }
+                    }
+                },
+                selectedTxtTwo(command,index){
+                    this.imgsTwoIndex=index;
+                    let that=this;
+                    if (command == 'lever') {
+                        that.value2 = getlg('contractAccount');
+                    }else if (command == 'micro') {
+                        that.value2 = getlg('secondContractAccount');
+                    } else if (command == 'match') {
+                        that.value2 = getlg('Flashexchange');
+                    } else if (command == 'legal') {
+                        that.value2 = getlg('c2cAccount');
+                    }
+                },
+                selectedOne(command,index) {
+                    this.imgsIndex=index;
+                    var that = this;
+                    if (command == 'lever') {
+                        var j = 0;
+                        for (var i = 0; i < that.accountList.length; i++) {
+                            if (that.accountList[i].type != 'lever') {
+                                j = i;
+                            }
+                        }
+                        that.value1 = getlg('contractAccount');
+                        for (var i = 0; i < that.currencyList.length; i++) {
+                            if (that.currencyList[i].id == that.currency) {
+                                that.balances = that.currencyList[i].wallet.lever_balance;
+                            }
+                        }
+                        if (that.value2 == getlg('contractAccount')) {
+                            that.value2 = that.accountList[j].texts;
+                        }
+                    } else if (command == 'micro') {
+                        that.value1 = getlg('secondContractAccount');
+                        var j = 0;
+                        for (var i = 0; i < that.accountList.length; i++) {
+                            if (that.accountList[i].type != 'micro') {
+                                j = i;
+                            }
+                        }
+                        for (var i = 0; i < that.currencyList.length; i++) {
+                            if (that.currencyList[i].id == that.currency) {
+                                that.balances = that.currencyList[i].wallet.micro_balance;
+                            }
+                        }
+                        if (that.value2 == getlg('secondContractAccount')) {
+                            that.value2 = that.accountList[j].texts;
+                        }
+                    } else if (command == 'match') {
+                        that.value1 = getlg('Flashexchange');
+                        var j = 0;
+                        for (var i = 0; i < that.accountList.length; i++) {
+                            if (that.accountList[i].type != 'match') {
+                                j = i;
+                            }
+                        }
+                        for (var i = 0; i < that.currencyList.length; i++) {
+                            if (that.currencyList[i].id == that.currency) {
+                                that.balances = that.currencyList[i].wallet.change_balance;
+                            }
+                        }
+                        if (that.value2 == getlg('Flashexchange')) {
+                            that.value2 = that.accountList[j].texts;
+                        }
+                    } else if (command == 'legal') {
+                        that.value1 = getlg('c2cAccount');
+                        var j = 0;
+                        for (var i = 0; i < that.accountList.length; i++) {
+                            if (that.accountList[i].type != 'legal') {
+                                j = i;
+                            }
+                        }
+                        for (var i = 0; i < that.currencyList.length; i++) {
+                            if (that.currencyList[i].id == that.currency) {
+                                that.balances = that.currencyList[i].wallet.legal_balance;
+                            }
+                        }
+                        if (that.value2 == getlg('c2cAccount')) {
+                            that.value2 = that.accountList[j].texts;
+                        }
+                    }
+                },
+                selectedTwo(command,index) {
+                    var that = this;
+                    this.imgsTwoIndex=index;
+                    if (command == 'lever') {
+                        that.value2 = getlg('contractAccount');
+                        var j = 0;
+                        for (var i = 0; i < that.accountList.length; i++) {
+                            if (that.accountList[i].type != 'lever') {
+                                j = i;
+                            }
+                        }
+                        if (that.value1 == getlg('contractAccount')) {
+                            that.value1 = that.accountList[j].texts;
+                            var dataList = that.datas.micro_wallet.balance;
+                            for (var i = 0; i < that.currencyList.length; i++) {
+                                if (that.currencyList[i].id == that.currency) {
+                                    if (that.accountList[j].type == 'micro') {
+                                        that.balances = that.currencyList[i].wallet.micro_balance;
+                                    } else if (that.accountList[j].type == 'match') {
+                                        that.balances = that.currencyList[i].wallet.change_balance;
+                                    } else if (that.accountList[j].type == 'legal') {
+                                        that.balances = that.currencyList[i].wallet.legal_balance;
+                                    }
+
+                                }
+                            }
+                        }
+                    } else if (command == 'micro') {
+                        that.value2 = getlg('secondContractAccount');
+                        var j = 0;
+                        for (var i = 0; i < that.accountList.length; i++) {
+                            if (that.accountList[i].type != 'micro') {
+                                j = i;
+                            }
+                        }
+                        if (that.value1 == getlg('secondContractAccount')) {
+                            that.value1 = that.accountList[j].texts;
+                            for (var i = 0; i < that.currencyList.length; i++) {
+                                if (that.currencyList[i].id == that.currency) {
+                                    if (that.accountList[j].type == 'lever') {
+                                        that.balances = that.currencyList[i].wallet.lever_balance;
+                                    } else if (that.accountList[j].type == 'match') {
+                                        that.balances = that.currencyList[i].wallet.change_balance;
+                                    } else if (that.accountList[j].type == 'legal') {
+                                        that.balances = that.currencyList[i].wallet.legal_balance;
+                                    }
+
+                                }
+                            }
+                        }
+                    } else if (command == 'match') {
+                        that.value2 = getlg('Flashexchange');
+                        var j = 0;
+                        for (var i = 0; i < that.accountList.length; i++) {
+                            if (that.accountList[i].type != 'match') {
+                                j = i;
+                            }
+                        }
+                        if (that.value1 == getlg('Flashexchange')) {
+                            that.value1 = that.accountList[j].texts;
+                            var dataList = that.datas.micro_wallet.balance;
+                            for (var i = 0; i < that.currencyList.length; i++) {
+                                if (that.currencyList[i].id == that.currency) {
+                                    if (that.accountList[j].type == 'lever') {
+                                        that.balances = that.currencyList[i].wallet.lever_balance;
+                                    } else if (that.accountList[j].type == 'micro') {
+                                        that.balances = that.currencyList[i].wallet.micro_balance;
+                                    } else if (that.accountList[j].type == 'legal') {
+                                        that.balances = that.currencyList[i].wallet.legal_balance;
+                                    }
+
+                                }
+                            }
+                        }
+                    } else if (command == 'legal') {
+                        that.value2 = getlg('c2cAccount');
+                        var j = 0;
+                        for (var i = 0; i < that.accountList.length; i++) {
+                            if (that.accountList[i].type != 'legal') {
+                                j = i;
+                            }
+                        }
+                        if (that.value1 == getlg('c2cAccount')) {
+                            that.value1 = that.accountList[j].texts;
+                            for (var i = 0; i < that.currencyList.length; i++) {
+                                if (that.currencyList[i].id == that.currency) {
+                                    if (that.accountList[j].type == 'lever') {
+                                        that.balances = that.currencyList[i].wallet.lever_balance;
+                                    } else if (that.accountList[j].type == 'match') {
+                                        that.balances = that.currencyList[i].wallet.change_balance;
+                                    } else if (that.accountList[j].type == 'micro') {
+                                        that.balances = that.currencyList[i].wallet.micro_balance;
+                                    }
+
+                                }
+                            }
+                        }
+                    }
+                },
+                // 币种选择
+                selectedCurrency(command) {
+                    var that = this;
+                    that.value3 = command.name;
+                    that.currency = command.id;
+
+                    for (var i = 0; i < that.currencyList.length; i++) {
+                        if (that.currencyList[i].id == that.currency) {
+                            var arr2 = [];
+                            if (that.currencyList[i].is_legal == 1) {
+                                var obj = {
+                                    type: 'legal',
+                                    texts: getlg('c2cAccount')
+                                }
+                                arr2.push(obj);
+                            }
+                           
+                            if (that.currencyList[i].is_micro == 1) {
+                                var obj = {
+                                    type: 'micro',
+                                    texts: getlg('secondContractAccount')
+                                }
+                                arr2.push(obj);
+                            }
+                            if (that.currencyList[i].is_lever == 1) {
+                                var obj = {
+                                    type: 'lever',
+                                    texts: getlg('contractAccount')
+                                }
+                                arr2.push(obj);
+                            }
+                            if (that.currencyList[i].is_match == 1) {
+                                var obj = {
+                                    type: 'match',
+                                    texts: getlg('Flashexchange')
+                                }
+                                arr2.push(obj);
+                            }
+                            
+                            that.accountList = arr2;
+                            that.value1 = that.accountList[0].texts;
+                            this.imgsIndex=0;
+                              if (that.accountList[0].type == 'lever') {
+                                that.balances = that.currencyList[i].wallet.lever_balance;
+                            } else if (that.accountList[0].type == 'match') {
+                                that.balances = that.currencyList[i].wallet.change_balance;
+                            } else if (that.accountList[0].type == 'micro') {
+                                that.balances = that.currencyList[i].wallet.micro_balance;
+                            } else if (that.accountList[0].type == 'legal') {
+                                that.balances = that.currencyList[i].wallet.legal_balance;
+                            }
+                            // console.log(that.accountList);
+                            // that.value1 = that.accountList[0].texts;
+                            // that.value2 = that.accountList[1].texts;
+                            // if (that.accountList[0].type == 'lever') {
+                            //     that.balances = that.currencyList[i].wallet.lever_balance;
+                            // } else if (that.accountList[0].type == 'match') {
+                            //     that.balances = that.currencyList[i].wallet.change_balance;
+                            // } else if (that.accountList[0].type == 'micro') {
+                            //     that.balances = that.currencyList[i].wallet.micro_balance;
+                            // } else if (that.accountList[0].type == 'legal') {
+                            //     that.balances = that.currencyList[i].wallet.legal_balance;
+                            // }
+                        }
+                    }
+
+                },
+                // 划转
+                sumbitOrder() {
+                    var that = this;
+                    var froms = '';
+                    var tos = '';
+                    if (!that.numbers) {
+                        layer_msg(getlg('hnum'));
+                        return false;
+                    }
+                    if (that.value1 == getlg('contractAccount')) {
+                        froms = 'lever'
+                    } else if (that.value1 == getlg('secondContractAccount')) {
+                        froms = 'micro'
+                    } else if (that.value1 == getlg('Flashexchange')) {
+                        froms = 'change'
+                    } else if (that.value1 == getlg('c2cAccount')) {
+                        froms = 'legal'
+                    }
+                    if (that.value2 == getlg('contractAccount')) {
+                        tos = 'lever'
+                    } else if (that.value2 == getlg('secondContractAccount')) {
+                        tos = 'micro'
+                    } else if (that.value2 == getlg('Flashexchange')) {
+                        tos = 'change'
+                    } else if (that.value2 == getlg('c2cAccount')) {
+                        tos = 'legal'
+                    }
+                    initDataTokens({
+                        url: 'wallet/change',
+                        type: 'post',
+                        data: {
+                            currency_id: that.currency,
+                            number: that.numbers,
+                            from_field: froms,
+                            to_field: tos
+                        }
+                    }, function (res) {
+                        layer_msg(res.message);
+                        if (res.type == 'ok') {
+                            setTimeout(function () {
+                                window.location = 'TransferRecord.html';
+                            }, 1000)
+
+                        }
+                    })
+                },
+                // 跳转划转记录
+                links() {
+                    window.location = 'TransferRecord.html';
+                },
+                alls() {
+                    var that = this;
+                    that.numbers = that.balances;
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

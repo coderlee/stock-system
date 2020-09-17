@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<title>安全中心</title>
+	<link rel="stylesheet" type="text/css" href="css/common.css" />
+	<link rel="stylesheet" type="text/css" href="css/style.css" />
+
+</head>
+
+<body class="bgWhite">
+	<header class="header">
+		<a class="back mt5" href="javascript:history.go(-1)">
+
+		</a>
+		<h4 class="ft20 bold" data-localize="index.security">安全中心</h4>
+	</header>
+	<div class="header-space"></div>
+	<div class="nav safe-center">
+		<ul class="ft16">
+			<li></li>
+		</ul>
+	</div>
+	<script type="text/javascript" src="lib/jquery-2.1.1.min.js"></script>
+	<script type="text/javascript" src="lib/layer_mobile/layer.js"></script>
+	<script type="text/javascript" src="javascripts/jquery.cookie.js"></script>
+	<script type="text/javascript" src="lib/jquery.localize.min.js"></script>
+	<script type="text/javascript" src="lib/language_cookie.js"></script>
+	<script type="text/javascript" src="javascripts/main.js"></script>
+	<script type="text/javascript" src="javascripts/order.js"></script>
+	<script>
+			$(document).ready(function () {
+				var token = get_user_login();
+				$.ajax({
+					url: _API + "safe/safe_center",
+					type: "post",
+					dataType: "json",
+					async: true,
+					beforeSend: function beforeSend(request) {
+						request.setRequestHeader("Authorization", token);
+					},
+					success: function success(data) {
+						var html = "<li><a href='bindPhone.html' class='clearfix'>"+getlg('mobile')+"<span class='fr'>" + [(data.message.mobile == null ||
+									data.message.mobile == '') ?
+									getlg('unbound') : getlg('bound')
+							] + "<img width='18' src='images/myimg/jitou.png' alt=''/></span></a></li>" +
+							"<li><a href='forgetpass.html?type=1' class='clearfix'>"+getlg('loginPassword')+"<span class='fr'>"+getlg('modify')+"<img width='18' src='images/myimg/jitou.png' alt='' /></span></a></li>"
+						$(".nav>ul").html(html);
+		
+						var pass = $("#pass").text();
+		
+						if (pass == getlg('alreadyOpened')) {
+							$("#word").on('click', function () {
+								delgesture();
+								return false;
+							});
+						}
+						if (data.type == 'ok') {} else if (data.type == '999') {
+							// layer_msg("请先登录");
+							window.location = "login.html";
+						}
+					}
+				});
+				//删除手势密码
+				function delgesture() {
+					layer.open({
+						// title: '<img class="modal-logo" src="images/modal-logo.png" alt="">',
+						title:false,
+						shadeClose: true,
+						skin: 'btn-text loads-btn',
+						area: ['70%', 'auto'],
+						content: getlg('pdel'),
+						btn: [getlg('ceil'), getlg('sure')],
+						btn2: function (index) {
+							var token = get_user_login();
+							$.ajax({
+								url: _API + "safe/gesture_del",
+								type: "POST",
+								dataType: "json",
+								async: true,
+								beforeSend: function beforeSend(request) {
+									request.setRequestHeader("Authorization", token);
+								},
+								success: function success(data) {
+									if (data.type == 'ok') {
+										layer_msg(data.message);
+										setTimeout(function () {
+											window.location.href = "Security.html";
+										}, 2000);
+										layer.close(index);
+									} else if (data.type == '999') {
+										window.location = 'login.html';
+									} else {
+										layer_msg(data.message);
+									}
+								}
+							});
+						}
+					});
+		
+				}
+		
+		
+		
+			})
+		</script>
+</body>
+
+</html>

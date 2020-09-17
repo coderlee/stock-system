@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<title>帮助中心</title>
+	<!-- css引入 -->
+	<link rel="stylesheet" type="text/css" href="lib/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="css/common.css" />
+	<style>
+		.demos li{
+			padding: 15px;
+			border-bottom: 1px solid #f1f1f1;
+		}
+		a:link,a:hover{color: #333;}
+		.news-item a{
+			display: block;
+			width: 100%;
+		}
+		.header-box{
+		    background: #2351bd;
+		}
+		.header-back{
+		    margin: 0 2%;
+		        padding: 10px 0;
+		}
+		.header-back a img{
+		    width: 30px;
+		    height: 30px;
+		}
+		.header-content{
+		    display: flex;
+		    flex-direction: row;
+		    align-items: center;
+		    justify-content: space-between;
+		    margin: 0 3%;
+		}
+		.header-txt h1{
+		    font-size: 30px;
+		    color:#fff;
+		    font-weight: bold;
+		    margin-bottom: 10px;
+		}
+		.header-txt span{
+		    color:#84a8e1;
+		}
+		.header-img img{
+		    height: 120px;
+		}
+	</style>
+</head>
+
+<body class="bgWhite">
+	<!--<header class="header">-->
+	<!--	<a class="back" href="javascript:history.go(-1)">-->
+	<!--	</a>-->
+	<!--	<h4 class="ft16" data-localize="index.helpcenter">帮助中心</h4>-->
+	<!--</header>-->
+	<!--<div class="header-space"></div>-->
+	<div class="header-box">
+	    <div class="header-back">
+	        <a href="javascript:history.go(-1)">
+	            <img src="images/return.png">
+	        </a>
+	    </div>
+	    <div class="header-content">
+	        <div class="header-txt">
+	            <h1 data-localize="index.helpcenter">帮助中心</h1>
+	            <span data-localize="zdy.suishisuidi">随时随地为您提供服务</span>
+	        </div>
+	        <div class="header-img">
+	            <img src="images/new/mine_help_top_pic.1f4ca66.png">
+	        </div>
+	    </div>
+	</div>
+	<div class="nav about-list">
+		<ul class="ft16 demos">
+
+
+
+		</ul>
+	</div>
+	<!-- js引入 -->
+	<script type="text/javascript" src="lib/jquery-2.1.1.min.js"></script>
+	<script type="text/javascript" src="lib/layer_mobile/layer.js"></script>
+	<script type="text/javascript" src="lib/jquery.localize.min.js"></script>
+	<script type="text/javascript" src="lib/language_cookie.js"></script>
+	<script type="text/javascript" src="javascripts/main.js"></script>
+	<script>
+		$(function () {
+			$.ajax({
+				type: 'post',
+				url: _API + 'news/list',
+				dataType: 'json',
+				data: {
+					c_id: 18
+				},
+				success: function (data) {
+					var html = '';
+					var title;
+					for (i = 0; i < data.message.list.length; i++) {
+						html += "<li class='news-item'><a href='journalism.html?id=" + data.message.list[i].id +
+							"'>" + data.message.list[i].title + "</a></li>";
+					};
+					$('.demos').html(html);
+				}
+			});
+		})
+	</script>
+</body>
+
+</html>

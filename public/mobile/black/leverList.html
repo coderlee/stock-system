@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<title>交易记录</title>
+	<link rel="stylesheet" type="text/css" href="../css/common.css" />
+	<link rel="stylesheet" type="text/css" href="../css/leverList.css" />
+	<link rel="stylesheet" type="text/css" href="../css/footer.css" />
+	
+	<style>
+		.lever-rate {
+			background-color: #12151c;
+		}
+
+		.tab-header {
+			border-bottom: 1px solid #12151c;
+		}
+	</style>
+</head>
+
+<body class="bgBalck">
+	<div id="app" v-cloak class="bgBalck">
+		<div class="tab-header bgBlackColor">
+			<a class="back mt5" href="javascript:history.go(-1)"></a>
+			<div class="clearfix tab-list between">
+				<div>
+					<span :class="[{'active':status==1}]" @click="tabSelect(1)" data-localize="contract.inPosition">持仓中</span>
+				</div>
+				<div>
+					<span :class="[{'active':status==0}]" @click="tabSelect(0)" data-localize="deals.weing">委托中</span>
+				</div>
+
+				<!-- <div>
+					<span :class="[{'active':status==2}]" @click="tabSelect(2)">平仓中</span>
+				</div> -->
+				<div>
+					<span :class="[{'active':status==3}]" @click="tabSelect(3)" data-localize="deals.pied">已平仓</span>
+				</div>
+				<div>
+					<span :class="[{'active':status==4}]" @click="tabSelect(4)" data-localize="deals.ceiled">已撤单</span>
+				</div>
+			</div>
+		</div>
+		<div class="header-space"></div>
+		<div class="content">
+			<div class="lever-rate flex between" v-show="status==1">
+				<p><span data-localize="deals.risk">风险率</span>：{{rate || '0.00' | toFixeds}}%</p>
+				<p><span data-localize="deals.total">持仓总盈亏：</span>{{totalRate|| '0.00' | toFixeds}}</p>
+			</div>
+
+			<ul class="list bgBlackColor">
+				<li v-for="(item,index) in tabList" class="bgBlackColor pl10 pr10 pb10">
+					<div @click="listShow = !listShow,showIndex=index">
+						<div class="list-header flex between" :class="[{'bdt':status==1}]">
+							<span>{{item.type == 1? getlg('buy'):getlg('sell')}} {{item.symbol}} x{{item.share}} (No.{{item.id}})</span>
+							<p>
+								<span :class="['red',{'green':item.profits > 0}]">{{item.profits || '0.0000' | toFixed4}}</span>
+								<!-- <span class="ftColor ml10">{{item.status_name}}</span> -->
+							</p>
+						</div>
+						<div class="flex between colorGrey ft12">
+							<p v-if="status==0 || status==4">{{item.origin_price || '0.0000' | toFixed4}}-{{item.update_price || '0.0000' |
+								toFixed4}}</p>
+							<p v-else>{{item.price || '0.0000' | toFixed4}}-{{item.update_price || '0.0000' | toFixed4}}</p>
+							<p v-if="!item.handle_time">{{item.time}}</p>
+						</div>
+						<div class="flex between colorGrey" v-if="item.handle_time">
+							<p>{{item.time}}</p>
+							<p>{{item.handle_time}}</p>
+						</div>
+					</div>
+
+					<ul class="list-content mt10 pb10" v-show="listShow && showIndex == index">
+						<li class="flex between">
+							<div class="tl flex" v-show="status==0 || status==4">
+								<p class="colorGrey" data-localize="deals.weprice">{{getlg('entrustPrice')}}</p>：
+								<p class="ftColor">{{item.origin_price || '0.0000' | toFixed4}}</p>
+							</div>
+							<div class="tl flex" v-show="status==1 || status==3">
+								<p class="colorGrey" data-localize="deals.oprice">{{getlg('oprice')}}</p>：
+								<p class="ftColor">{{item.price || '0.0000' | toFixed4}}</p>
+							</div>
+							<div class="tr flex">
+								<p class="colorGrey" data-localize="deals.nowprice">{{getlg('tnowprice')}}</p>：
+								<p class="ftColor now">{{item.update_price || '0.0000' | toFixed4}}</p>
+							</div>
+						</li>
+						<li class="flex between mt5">
+							<div class="tl flex">
+								<p class="colorGrey" data-localize="deals.zyprice">{{getlg('zyprice')}}</p>：
+								<p class="ftColor ying">{{item.target_profit_price || '0.0000' | toFixed4}}</p>
+							</div>
+							<div class="tr flex">
+								<p class="colorGrey" data-localize="deals.bond">{{getlg('bond')}}</p>：
+								<p class="ftColor">{{item.origin_caution_money || '0.0000' | toFixed4}}</p>
+							</div>
+						</li>
+						<li class="flex between mt5">
+							<div class="tl flex">
+								<p class="colorGrey" data-localize="deals.zsprice">{{getlg('zsprice')}}</p>：
+								<p class="ftColor zhi">{{item.stop_loss_price || '0.0000' | toFixed4}}</p>
+							</div>
+							<!-- <div class="tc">
+											<p class="colorGrey">可用保证金</p>
+											<p class="ftColor mt5 bao">{{item.caution_money || '0.0000' | toFixed4}}</p>
+										</div> -->
+							<div class="tr flex" v-if="!item.handle_time">
+								<p class="colorGrey" data-localize="deals.fee">{{getlg('fee')}}</p>：
+								<p class="ftColor">{{item.trade_fee || '0.0000' | toFixed4}}</p>
+							</div>
+							<div class="tr flex" v-if="item.handle_time">
+								<p class="colorGrey" data-localize="deals.fee">{{getlg('fee')}}</p>：
+								<p class="ftColor">{{item.trade_fee || '0.0000' | toFixed4}}</p>
+							</div>
+
+						</li>
+						<li class="flex between mt5">
+							<div class="tl flex">
+								<p class="colorGrey" data-localize="deals.gprice">{{getlg('gprice')}}</p>：
+								<p class="ftColor">{{item.overnight_money || '0.0000' | toFixed4}}</p>
+							</div>
+							<div class="tr flex">
+								<p class="colorGrey" data-localize="deals.znum">{{getlg('znum')}}</p>：
+								<p class="ftColor">{{item.number || '0.0000' | toFixed4}}</p>
+							</div>
+						</li>
+						<li class="btns" v-if="status == 0 || status == 1">
+							<button class="ftw" style="margin-right:10px;" v-if="status == 1" type="button"
+								@click="setLoss(item.target_profit_price,item.stop_loss_price,item.update_price,item.price,item.id,item.type,item.share,index)" data-localize="safe.reset">{{getlg('modify')}}</button>
+							<button class="ftw" v-if="status == 1" type="button" @click="stopTrade(item.id)" data-localize="deals.pcang">{{getlg('pcang')}}</button>
+							<button class="ftw" v-if="status == 0" type="button" @click="cannelTrade(item.id)" data-localize="deals.revoke">{{getlg('revoke')}}</button>
+						</li>
+					</ul>
+				</li>
+			</ul>
+			<div class="no_record bgBlackColor">
+				<img v-show="nodataShow" src="../images/anonymous.png">
+				<p @click="moreLoad();" class="colorGrey pt20">{{more}}</p>
+			</div>
+		</div>
+
+		<!-- 止盈止损弹窗 -->
+		<div class="modals">
+			<div><span class="prices-modals" data-localize="deals.zyprice">{{getlg('zyprice')}}</span>
+				<p class="clearfix inputs"><span class="reduce fl tc"><i>-</i></span><input class="prices fl"
+						type="number" /><span class="add fr">+</span></p>
+			</div>
+			<p class="yl tc">{{getlg('expectProfit')}}：<span style="color:#f0b90b;"></span></p>
+			<div><span class="prices-modals" data-localize="deals.zsprice">{{getlg('zsprice')}}</span>
+				<p class="clearfix inputs"><span class="reduce fl tc"><i>-</i></span><input class="reduce-price fl"
+						type="number" /><span class="add fr">+</span></p>
+			</div>
+			<p class="ks tc">{{getlg('expectLoss')}}：<span style="color:#f0b90b;"></span></p>
+		</div>
+	</div>
+	<script type="text/javascript" src="../lib/jquery-2.1.1.min.js"></script>
+	<script type="text/javascript" src="../lib/vue.min.js"></script>
+	<script type="text/javascript" src="../javascripts/jquery.cookie.js"></script>
+	<script type="text/javascript" src="../lib/layer_mobile/layer.js"></script>
+	<script type="text/javascript" src="../javascripts/socket.io.js"></script>
+	<script type="text/javascript" src="../lib/jquery.localize.min.js"></script>
+	<script type="text/javascript" src="../lib/language_cookie.js"></script>
+	<script type="text/javascript" src="../javascripts/main.js"></script>
+
+	<script>
+		var token = get_user_login();
+		var vue = new Vue({
+			el: '#app',
+			data: {
+				tabList: [],
+				detailList: [],
+				selectId: 0,
+				status: localStorage.getItem('leverStatus') || 1,
+				page: 1,
+				currencyId: get_param('currency_id') || '',
+				legalId: get_param('legal_id') || '',
+				more: getlg('more'),
+				nodataShow: false,
+				leverName: get_param('symbol'),
+				inters: function () {},
+				rate: '',
+				totalRate: '',
+				listShow: false,
+				showIndex: 0
+
+			},
+			filters: {
+				toFixeds: function (value) {
+					var vals = iTofixed(value,2);
+					return vals;
+				},
+				toFixed4: function (value) {
+					var vals = iTofixed(value,4);
+					return vals;
+				}
+			},
+			mounted: function () {
+				let that = this;
+				// FastClick.attach(document.body);
+				$('input').blur(function () {
+					setTimeout(function () {
+						document.body.scrollTop = document.body.scrollHeight;
+					}, 300);
+				})
+				that.init();
+			},
+			methods: {
+				getnew() {
+					let that = this;
+					var token = get_user_login();
+					$.ajax({
+						url: _API + "user/info",
+						type: "GET",
+						dataType: "json",
+						async: true,
+						beforeSend: function beforeSend(request) {
+							request.setRequestHeader("Authorization", token);
+						},
+						success: function success(data) {
+							if (data.type == 'ok') {
+								var socket = io(socket_api);
+								socket.emit('login', data.message.id);
+								// 后端推送来消息时
+								socket.on('lever_trade', function (msg) {
+									var lists = that.tabList;
+									if (msg.type == 'lever_trade') {
+										that.rate = msg.hazard_rate;
+										that.totalRate = msg.profits_all;
+										if (that.status == 0) {
+											var datas = JSON.parse(msg.trades_entrust);
+											that.tabList = datas;
+										} else if (that.status == 1) {
+											var datas = JSON.parse(msg.trades_all);
+											that.tabList = datas;
+										}
+
+									}
+
+								})
+							}
+						}
+					});
+				},
+				init() {
+					let that = this;
+					initDataTokens({
+						url: 'lever/my_trade',
+						type: 'post',
+						data: {
+							page: that.page,
+							status: that.status,
+							currency_id: that.currencyId,
+							legal_id: that.legalId,
+						}
+					}, that.currencyQuotationSuccess);
+				},
+				currencyQuotationSuccess(res) {
+					let that = this;
+					if (res.type == 'ok') {
+						let datas = res.message.message.data;
+						that.rate = res.message.rate_profits_total.hazard_rate;
+						that.totalRate = res.message.rate_profits_total.profits_total;
+						if (datas.length > 0) {
+							that.nodataShow = false;
+							that.tabList = that.tabList.concat(datas);
+							that.more = getlg('more');
+							if (that.status == 0 || that.status == 1) {
+								that.getnew();
+							}
+						} else if (that.tabList.length == 0) {
+							that.more = getlg('nodata');
+							that.nodataShow = true;
+						} else {
+							that.nodataShow = false;
+							that.more = getlg('nomore')
+						}
+					}
+
+				},
+				// 状态切换
+				tabSelect(value) {
+					let that = this;
+					that.status = value;
+					localStorage.setItem('leverStatus', value);
+					that.tabList = [];
+					that.page = 1;
+					that.init();
+				},
+				// 加载更多
+				moreLoad() {
+					let that = this;
+					that.page = that.page + 1;
+					that.init();
+				},
+				// 平仓
+				stopTrade(ids) {
+					layer.open({
+						type: 1,
+						// title: '<img class="modal-logo" src="../images/logo1.png" alt="">',
+						title: false,
+						shadeClose: true,
+						area: ['70%', 'auto'],
+						skin: 'loads-btn btn-text',
+						content: getlg('sureClose'),
+						btn: [getlg('ceil'), getlg('sure')],
+						btn2: function (index) {
+							initDataTokens({
+								url: 'lever/close',
+								type: 'post',
+								data: {
+									id: ids
+								}
+							}, function (res) {
+								layer_msg(res.message)
+								setTimeout(function () {
+									window.location.reload();
+								}, 500)
+							})
+						}
+					});
+				},
+				// 撤单
+				cannelTrade(ids) {
+					let that = this;
+					layer.open({
+						type: 1,
+						// title: '<img class="modal-logo" src="../images/logo1.png" alt="">',
+						title: false,
+						shadeClose: true,
+						skin: 'loads-btn btn-text',
+						area: ['70%', 'auto'],
+						content: getlg('revokeOrder'),
+						btn: [getlg('ceil'), getlg('sure')],
+						btn2: function (index) {
+							initDataTokens({
+								url: 'lever/cancel',
+								type: 'post',
+								data: {
+									id: ids
+								}
+							}, function (res) {
+								layer_msg(res.message)
+								setTimeout(function () {
+									that.tabSelect(that.status)
+								}, 500)
+							})
+						}
+					});
+				},
+				setLoss(targetProfitPrice, stopLossPrice, updatePrice, price, ids, types, shareNum, indexs) {
+					let that = this;
+					var pricesAdd = iTofixed(Number(targetProfitPrice) - Number(price),2);
+					var pricesReduce = iTofixed(Number(price) - Number(stopLossPrice),2);
+					// 卖出盈利
+					var sellPrice = iTofixed(Number(price) - Number(targetProfitPrice),2);
+					// 卖出亏损
+					var sellLoss = iTofixed(Number(stopLossPrice) - Number(price),2);
+					layer.open({
+						type: 1,
+						// title: '<img class="modal-logo" src="../images/logo1.png" alt="">',
+						title: false,
+						shadeClose: true,
+						area: ['90%', 'auto'],
+						content: $('.modals'),
+						skin: 'stopLoss btn-text',
+						btn: [getlg('ceil'), getlg('sure')],
+						btn2: function (index) {
+							var value1 = $('.prices').val();
+							var value2 = $('.reduce-price').val();
+							initDataTokens({
+								url: 'lever/setstop',
+								type: 'post',
+								data: {
+									id: ids,
+									target_profit_price: value1,
+									stop_loss_price: value2,
+								}
+							}, function (res) {
+								layer_msg(res.message);
+								if (res.type == 'ok') {
+									that.positionList[indexs].target_profit_price = value1;
+									that.positionList[indexs].stop_loss_price = value2;
+								}
+							})
+						},
+						success: function () {
+							if (types == 1) {
+								if (targetProfitPrice > 0) {
+									$('.prices').val(targetProfitPrice);
+									$('.yl span').text(iTofixed((pricesAdd - 0) * (shareNum - 0),2));
+								} else {
+									$('.prices').val(updatePrice);
+									$('.yl span').text('0.00');
+								}
+								if (stopLossPrice > 0) {
+									$('.reduce-price').val(stopLossPrice);
+									$('.ks span').text(iTofixed((pricesReduce - 0) * (shareNum - 0),2));
+								} else {
+									$('.reduce-price').val(updatePrice);
+									$('.ks span').text('0.00');
+								}
+
+								$('.add').click(function () {
+									var value = iTofixed(Number($(this).parent().find('input').val()) + 0.01,2);
+									$(this).parent().find('input').val(value);
+									if ($(this).parent().find('input').hasClass('prices')) {
+										var ylValue = iTofixed(value - price,2);
+										ylValue = (ylValue - 0) * (shareNum - 0);
+										if (ylValue < 0) {
+											$('.yl span').text('0.00')
+										} else {
+											$('.yl span').text(iTofixed(ylValue,2))
+										}
+
+									} else {
+										var zsValue = iTofixed(price - value,2);
+										zsValue = (zsValue - 0) * (shareNum - 0);
+										if (zsValue < 0) {
+											$('.ks span').text('0.00');
+										} else {
+											$('.ks span').text(iTofixed(zsValue,2));
+										}
+
+									}
+
+								})
+								$('.reduce').click(function () {
+									var value = iTofixed(Number($(this).parent().find('input').val()) - 0.01,2);
+									$(this).parent().find('input').val(value);
+									if ($(this).parent().find('input').hasClass('prices')) {
+										var ylValue = iTofixed(value - price,2);
+										ylValue = (ylValue - 0) * (shareNum - 0);
+										if (ylValue < 0) {
+											$('.yl span').text('0.00')
+										} else {
+											$('.yl span').text(iTofixed(ylValue,2))
+										}
+
+									} else {
+										var zsValue = iTofixed(price - value,2);
+										zsValue = (zsValue - 0) * (shareNum - 0);
+										if (zsValue < 0) {
+											$('.ks span').text('0.00');
+										} else {
+											$('.ks span').text(iTofixed(zsValue,2));
+										}
+
+									}
+								})
+								$('input').on('input', function () {
+									if ($(this).hasClass('prices')) {
+										if ($(this).val() != '') {
+											var pricesAdd = iTofixed(Number($(this).val()) - price,2);
+											pricesAdd = (pricesAdd - 0) * (shareNum - 0);
+											if (pricesAdd < 0) {
+												$('.yl span').text('0.00')
+											} else {
+												$('.yl span').text(iTofixed(pricesAdd,2))
+											}
+										} else {
+											$('.yl span').text('0.00')
+										}
+									} else {
+										if ($(this).val() != '') {
+											var zsValue = iTofixed(price - Number($(this).val()),2);
+											zsValue = (zsValue - 0) * (shareNum - 0)
+											if (zsValue <= 0) {
+												$('.ks span').text('0.00');
+											} else {
+												$('.ks span').text(iTofixed(zsValue,2));
+											}
+										} else {
+											$('.ks span').text('0.00');
+										}
+									}
+								})
+							} else {
+								if (stopLossPrice > 0) {
+									$('.reduce-price').val(stopLossPrice);
+									$('.yl span').text(iTofixed((sellPrice - 0) * (shareNum - 0),2));
+								} else {
+									$('.prices').val(updatePrice);
+									$('.yl span').text('0.00');
+								}
+								if (targetProfitPrice > 0) {
+									$('.prices').val(targetProfitPrice);
+									$('.ks span').text(iTofixed((sellLoss - 0) * (shareNum - 0),2));
+								} else {
+									$('.reduce-price').val(updatePrice);
+									$('.ks span').text('0.00');
+								}
+
+
+								$('.add').click(function () {
+									var value = iTofixed(Number($(this).parent().find('input').val()) + 0.01,2);
+									$(this).parent().find('input').val(value);
+									if ($(this).parent().find('input').hasClass('prices')) {
+										var ylValue = iTofixed(price - value,2);
+										ylValue = (ylValue - 0) * (shareNum - 0);
+										$('.yl span').text(iTofixed(ylValue,2))
+									} else {
+										var zsValue = iTofixed(value - price,2);
+										zsValue = (zsValue - 0) * (shareNum - 0);
+										$('.ks span').text(iTofixed(zsValue,2));
+									}
+
+								})
+								$('.reduce').click(function () {
+									var value = iTofixed(Number($(this).parent().find('input').val()) - 0.01,2);
+									$(this).parent().find('input').val(value);
+									if ($(this).parent().find('input').hasClass('prices')) {
+										var ylValue = iTofixed(price - value,2);
+										ylValue = (ylValue - 0) * (shareNum - 0);
+										$('.yl span').text(iTofixed(ylValue,2))
+									} else {
+										var zsValue = iTofixed(value - price,2);
+										zsValue = (zsValue - 0) * (shareNum - 0);
+										$('.ks span').text(iTofixed(zsValue,2));
+									}
+								})
+								$('input').on('input', function () {
+									if ($(this).hasClass('prices')) {
+										if ($(this).val() != '') {
+											var pricesAdd = iTofixed(price - Number($(this).val()),2);
+											pricesAdd = (pricesAdd - 0) * (shareNum - 0);
+											if (pricesAdd < 0) {
+												$('.yl span').text('0.00')
+											} else {
+												$('.yl span').text(iTofixed(pricesAdd,2))
+											}
+										} else {
+											$('.yl span').text('0.00')
+										}
+
+									} else {
+										if ($(this).val() != '') {
+											var zsValue = iTofixed(Number($(this).val()) - price,2);
+											zsValue = (zsValue - 0) * (shareNum - 0);
+											if (zsValue <= 0) {
+												$('.ks span').text('0.00');
+											} else {
+												$('.ks span').text(iTofixed(zsValue,2));
+											}
+										} else {
+											$('.ks span').text('0.00');
+										}
+									}
+								})
+							}
+
+						}
+					});
+				},
+			}
+		});
+	</script>
+</body>
+
+</html>

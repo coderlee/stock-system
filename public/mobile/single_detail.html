@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, viewport-fit=cover" />
+    <title>介绍</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/single_detail.css" />
+</head>
+
+<body>
+	<div id="app" v-cloak>
+	<header class="header">
+		<a href="javascript:history.go(-1)" class="back mt5"></a>
+		<!--<h4 class="ft16">跟单</h4>-->
+		<a href="index.html"><img src="images/back_index.png" class="back_index"></a>
+	</header>
+	<div class="header-space"></div>
+	<div class="intro">
+		<div class="intro-msg">
+			<div class="intro-img">
+				<img src="images/cn.png">
+			</div>
+			<div class="intro-txt">
+				<h1>其实金融学院</h1>
+				<div class="intro-address">
+					<div class="intro-time">
+						<span>2020/03/07</span>	
+					</div>
+					<div class="intro-box">
+						<img src="images/address_black.png">
+						<span>中国大陆</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="intro-info">
+			<article>{{getlg('grjj')}}</article>
+			<aside @click="opentxt()">人大金融学硕士，btc合约学院教育领军人芥末圈关注btc金融学院人大金融学硕士，btc合约学院教育领军人芥末圈关注 btc金融学院</aside>
+			<img @click="opentxt()" src="images/btm_arrow.png">
+		</div>
+	</div>
+	<div class="intro-data">
+		<div class="intro-data-top">
+			<div class="intro-data-list">
+				<span>839.50%</span>
+				<aside>{{getlg('ljsy')}}</aside>
+			</div>
+			<div class="intro-data-list">
+				<span>839.50%</span>
+				<aside>{{getlg('jszsl')}}</aside>
+			</div>
+			<div class="intro-data-list">
+				<span>839.50%</span>
+				<aside>{{getlg('maxhcl')}}<img src="images/infomation.png"></aside>
+			</div>
+			<div class="intro-data-list">
+				<span>839.50%</span>
+				<aside>{{getlg('jyts')}}</aside>
+			</div>
+			<div class="intro-data-list">
+				<span>839.50%</span>
+				<aside>{{getlg('jybs')}}</aside>
+			</div>
+			<div class="intro-data-list">
+				<span>839.50%</span>
+				<aside>{{getlg('ljgsrs')}}</aside>
+			</div>
+		</div>
+		<div class="intro-data-btm">
+			<span>{{getlg('gdlrfc')}}：8.00%</span>
+			<img src="images/infomation.png">
+		</div>
+	</div>
+	<div class="histor">
+		<div class="histor-title">
+			<h1>{{getlg('lscc')}}</h1>
+			<span>{{getlg('jzzfive')}}</span>
+		</div>
+		<div class="histor-info">
+			<div class="histor-left">
+				<article class="histor-left-title"><span>买涨</span>BTC/USDT 100X</article>
+				<div class="histor-price">
+					<div class="histor-price-box">
+						<span>6,2895</span>
+						<em>{{getlg('kcj')}}</em>
+					</div>
+					<div class="histor-price-img">
+						<img src="images/left_arrow.png">
+					</div>
+					<div class="histor-price-box">
+						<span>6,2895</span>
+						<em>{{getlg('pcj')}}</em>
+					</div>
+				</div>
+			</div>
+			<div class="histor-right">
+				<article>
+					<span>-16.48%</span>
+					<em>{{getlg('sly')}}</em>
+				</article>
+			</div>
+		</div>
+		<div class="histor-time">
+			<article>
+				<span>{{getlg('kcsj')}}：03/20 00:28:04</span>
+				<span>{{getlg('pcsj')}}：03/20 00:28:04</span>
+			</article>
+			<aside>{{getlg('ddh')}}:475676421</aside>
+		</div>
+	</div>
+	<div class="submit-btn" @click="folkme()">{{getlg('gendan')}}</div>
+	<transition name="fade">
+	<div class="mask-box" v-show="isMask == '1'">
+		<div class="mask" @click="closemask()"></div>
+		<div class="mask-content">
+			<div class="mask-txt">
+			人大金融学硕士，btc合约学院教育领军人芥末圈关注btc金融学院人大金融学硕士，btc合约学院教育领军人芥末圈关注 btc金融学院
+			</div>
+		</div>
+	</div>
+	</transition>
+	</div>
+    <script type="text/javascript" src="lib/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="lib/bootstrap.min.js"></script>
+	<script type="text/javascript" src="javascripts/jquery.cookie.js"></script>
+	<script type="text/javascript" src="lib/layer_mobile/layer.js"></script>
+	<script type="text/javascript" src="lib/jquery.localize.min.js?v=10"></script>
+	<script type="text/javascript" src="lib/language_cookie.js"></script>
+	<script type="text/javascript" src="javascripts/main.js"></script>
+	<script type="text/javascript" src="lib/vue.min.js"></script>
+	<script>
+		var vue=new Vue({
+			el:"#app",
+			data:{
+			   isMask:0,
+			   uid:'',
+			},
+			mounted(){
+				let url=window.location.href;
+				this.uid=url.substring(url.indexOf("uid")+4);
+			},
+			methods:{
+				closemask(){
+					this.isMask=0;
+				},
+				opentxt(){
+					this.isMask=1;
+				},
+				folkme(){
+					window.location.href="single_folk.html?uid="+this.uid;
+				}
+			},
+		})
+	</script>
+</body>
+
+</html>

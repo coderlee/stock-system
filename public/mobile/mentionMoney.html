@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>提币</title>
+    <link rel="stylesheet" type="text/css" href="element-ui/lib/theme-chalk/index.css" />
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="javascripts/common.js">
+    <script>
+        function code(result) {
+            $(".address").val(result)
+        }
+        // function scaned(t, r, f){
+        //     // alert(r);
+        //     $('.address').val(r);
+        // }
+    </script>
+</head>
+<style>
+    .bline {
+        border-bottom: 1px solid #eee;
+        padding: 10px 0;
+    }
+
+    .mt30 {
+        margin-top: 30px
+    }
+
+    .color1b {
+        color: #728daf
+    }
+
+    .mention {
+        width: 100%;
+        height: 50px;
+        line-height: 50px;
+        color: #fff;
+        background: #588bf7;
+        border-radius: 30px;
+        font-size: 20px;
+    }
+
+    .addbox img {
+        width: 20px;
+    }
+
+    .addbox span {
+        padding: 0 5px
+    }
+
+    input {
+        background-color: rgba(0, 0, 0, 0);
+    }
+    .address{
+        width:90%;
+    }
+    .tibi-biz{
+        margin-bottom: 10px;
+    }
+    .tibi-biz h1{
+        font-size: 18px;
+        color: #1c1d31;
+    }
+    .selectbiz .el-dropdown{
+        width: 100%;
+    }
+    .selectbiz .el-dropdown-link{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+    .selectbiz{
+        padding: 10px 3%;
+        border-radius: 5px;
+        border: 1px solid #dcdfe6;
+    }
+    .tibi-address input{
+        width: 100%;
+        padding: 10px 3%;
+        background: #f7f7fa;
+    }
+    .tibi-sl{
+        width: 100%;
+        padding: 10px 3%;
+        background: #f7f7fa;
+    }
+    .all_in{
+        color: #91a0be;
+    }
+    .tibi-balance{
+        color:#8d9dbc;
+        margin-top:10px;
+         display: flex;
+        flex-direction: row;
+    }
+    .tibi-fee{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        width: 100%;
+        padding: 10px 3%;
+        background: #f7f7fa;
+    }
+</style>
+
+<body class="bgWhite">
+    <div id="app" v-cloak>
+    <header class="header">
+        <a class="back mt5" href="javascript:history.go(-1)">
+
+        </a>
+        <h4 class="ft16" data-localize="assets.tmoney">提币</h4>
+    </header>
+    <div class="header-space"></div>
+    <div class="plr15 ft14 mt20">
+        <!--<div class="ft20"><span class="title">USDT</span>-->
+        <!--     <span data-localize="assets.tmoney">提币</span> -->
+        <!--</div>-->
+        <div class="tibi-biz">
+            <h1 data-localize="zdy.tibibizhong">提币币种</h1>
+        </div>
+        <div class="selectbiz">
+         <el-dropdown trigger="click" @command="selectedCurrency">
+            <span class="el-dropdown-link">
+                {{value3}}<i class="el-icon-arrow-down el-icon--right"></i>
+            </span>
+            <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item v-for="item in list" :key="item.id" :command="item">
+                    {{item.texts}}
+                </el-dropdown-item>
+            </el-dropdown-menu>
+        </el-dropdown>
+        </div>
+         <div class="tibi-biz mt20">
+            <h1 data-localize="index.address">提币地址</h1>
+        </div>
+        <div class="tibi-address">
+             <input type="text" data-localize="assets.padd" placeholder="输入或长按粘贴地址" class="ft14 address">
+        </div>
+        <div class="tibi-biz mt20">
+            <h1 data-localize="zdy.tibishuliang">提币数量</h1>
+        </div>
+        <div class="tibi-sl">
+            <div class="flex between alcenter">
+                <input type="number" data-localize="contract.minimum" placeholder="最小提币数量" class="ft14 count">
+                <div>
+                    <span class="white_gray title">USDT</span>
+                    <span class="">|</span>
+                    <span class="all_in" data-localize="deals.all">全部</span>
+                </div>
+            </div>
+        </div>
+        <div class="tibi-balance">
+        <p data-localize="assets.avaiable">可用</p>
+        <p class=" ft14"><span class="balance-num">0.00</span> <span class="title">USDT</span></p>
+        </div>
+        <!--<div class="bline mt30">-->
+        <!--    <p data-localize="index.address">提币地址</p>-->
+        <!--    <div class="flex between alcenter mt20">-->
+        <!--        <input type="text" data-localize="assets.padd" placeholder="输入或长按粘贴地址" class="ft14 address">-->
+                <!-- <div class="color3 flex alcenter addbox">
+        <!--            <img src="images/ercode.png" alt="" onclick="clicked('barcode_scan.html',true,true)">-->
+        <!--            <img src="images/ercode.png" alt="" onclick="BSL.Qcode('0','code')">-->
+        <!--            <span>|</span>-->
+        <!--            <img src="images/choose.png" alt="">-->
+        <!--        </div> -->
+        <!--    </div>-->
+        <!--</div>-->
+        <!--<div class="bline mt30">-->
+        <!--    <p data-localize="assets.num">数量</p>-->
+        <!--    <div class="flex between alcenter mt20">-->
+        <!--        <input type="number" data-localize="contract.minimum" placeholder="最小提币数量" class="ft14 count">-->
+        <!--        <div>-->
+        <!--            <span class="white_gray title">USDT</span>-->
+        <!--            <span class="">|</span>-->
+        <!--            <span class=" bold all_in" data-localize="deals.all">全部</span>-->
+        <!--        </div>-->
+        <!--    </div>-->
+        <!--</div>-->
+        <div class="tibi-biz mt20">
+            <h1 data-localize="deals.fee">手续费</h1>
+        </div>
+        <div class="tibi-fee">
+            <span data-localize="deals.fee" style="color:#b9b9b9">手续费</span>
+            <article>
+            <span class="ratenum" style="color:#62759a">5.000-5.000</span> <span class="title" style="color:#62759a">USDT</span>
+            </article>
+        </div>
+        <div class="tibi-biz mt20">
+            <h1 data-localize="assets.dnum">到账数量</h1>
+        </div>
+        <div class="tibi-fee">
+            <span data-localize="assets.dnum" style="color:#b9b9b9">到账数量</span>
+            <article>
+            <span class="reach-num" style="color:#62759a">0.0000</span> <span class="title" style="color:#62759a">USDT</span>
+            </article>
+        </div>
+        <!--<div class="flex between alcenter ft14 mt20">-->
+        <!--    <p data-localize="assets.dnum">到账数量</p>-->
+        <!--    <p class="bold  ft14"><span class="reach-num">0.0000</span> <span class="title  bold">USDT</span></p>-->
+        <!--</div>-->
+        <div class="mention tc ft14 mt20" data-localize="assets.tmoney">提币</div>
+    </div>
+    </div>
+    <script type="text/javascript" src="lib/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="javascripts/jquery.cookie.js"></script>
+    <script type="text/javascript" src="lib/layer_mobile/layer.js"></script>
+    <script type="text/javascript" src="lib/jquery.localize.min.js"></script>
+    <script type="text/javascript" src="lib/language_cookie.js"></script>
+    <script type="text/javascript" src="javascripts/main.js"></script>
+    <script type="text/javascript" src="javascripts/immersed.js"></script>
+    <script type="text/javascript" src="lib/vue.min.js"></script>
+    <script type="text/javascript" src="element-ui/lib/index.js"></script>
+    <script>
+    new Vue({
+        el: '#app',
+        data: {
+            list:[],
+            value3:"",
+        },
+        mounted(){
+          this.init();  
+        },
+        methods:{
+            selectedCurrency(command){
+                this.value3=command.texts;
+                $(".title").html(command.texts);
+                $(".count").val('');
+                $(".reach-num").html('0.00');
+                initDataToken({
+                    type:"post",
+                    url:"wallet/get_info",
+                    data:{
+                        currency:command.currency
+                    }
+                },function(res){
+                    balance = res.legal_balance;
+                    rate=res.rate;
+                    $('.balance-num').html(balance)
+                    $(".ratenum").html(res.rate);
+                })
+            },
+            init(){
+                let that=this;
+                initDataToken({
+                    url:"wallet/list",
+                    type:"POST",
+                },function(res){
+                    if(res.legal_wallet.balance){
+                        let data=res.legal_wallet.balance;
+                        for(let i=0;i<data.length;i++){
+                            if(data[i].is_legal==1){
+                                if(get_param('id')==data[i].currency){
+                                    that.value3=data[i].currency_name
+                                }
+                                that.list.push({"currency":data[i].currency,"balance":data[i].legal_balance,"texts":data[i].currency_name});
+                            }
+                        }
+                    }
+                    
+                })  
+            },
+        },
+    })
+        $(function () {
+            
+            // FastClick.attach(document.body);
+            var currency = get_param('id');
+            var balance, min_number, rate;
+            initDataToken({
+                url: 'wallet/get_info',
+                type: 'post',
+                data: {
+                    currency
+                }
+            }, function (res) {
+                balance = res.legal_balance;
+                $('.balance-num').html(balance)
+                $('.title').html(res.name)
+                rate = res.rate;
+                $('.ratenum').html(rate)
+                min_number = res.min_number;
+                $('.count').attr('placeholder', getlg('minimum') + iTofixed(min_number,2))
+                var num = 0;
+                $('.reach-num').html(iTofixed(num,2));
+            })
+
+            function postData() {
+                var address = $('.address').val();
+                var number = $('.count').val();
+                if (!address) {
+                    layer_msg(getlg('withdrawalAddress'));
+                    return;
+                }
+                if (!number) {
+                    layer_msg(getlg('withdrawalAmount'));
+                    return;
+                }
+
+                if ((number - 0) < min_number) {
+                    return layer_msg(getlg('withdrawals'));
+                }
+
+                initDataToken({
+                    url: 'wallet/out',
+                    type: 'post',
+                    data: {
+                        currency,
+                        number,
+                        rate,
+                        address
+                    }
+                }, function (res) {
+                    layer_msg(res)
+                    setTimeout(() => {
+                        location.href = 'matchAccount.html?id=' + currency + '&type=2'
+                    }, 1500);
+                })
+
+            }
+            $('.mention').click(function () {
+                postData();
+            })
+            $('.all_in').click(function () {
+                $('.count').val(balance);
+                var num = iTofixed(balance - rate,2);
+                if (num > 0) {
+                    $('.reach-num').html(num);
+                } else {
+                    $('.reach-num').html('0.00');
+                }
+
+            })
+            $('.count').keyup(function () {
+                var value = $(this).val();
+                var num = iTofixed(value - rate,2);
+                if (num > 0) {
+                    $('.reach-num').html(num);
+                } else {
+                    $('.reach-num').html('0.00');
+                }
+
+            })
+
+        })
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, minimal-ui" />
+	<title>合约保险</title>
+	<link rel="stylesheet" type="text/css" href="../element-ui/lib/theme-chalk/index.css" />
+	<link rel="stylesheet" type="text/css" href="../css/common.css" />
+	<link rel="stylesheet" type="text/css" href="../css/global.css" />
+	<style>
+		.content {
+			margin: 0 20px;
+		}
+
+		.content span {
+			display: block;
+		}
+
+		.content input {
+			margin-top: 20px;
+			width: 44%;
+			border: 1px solid #12151c;
+			line-height: 30px;
+			padding: 0 10px;
+			color: #fff;
+		}
+
+		.password {
+			line-height: 40px;
+		}
+
+		.password input {
+			padding-left: 4px;
+		}
+
+		.btns {
+			margin-top: 40px;
+		}
+
+		.btns button {
+			width: 100%;
+			background-color: rgba(0, 0, 0, 0);
+			border: none;
+			outline: none;
+			background-color: #f0b90b;
+			height: 40px;
+			/* line-height: 40px; */
+			border-radius: 2px;
+		}
+
+		#currency {
+			padding: 0 10px;
+			border: 1px solid #12151c;
+			width: 120px;
+			line-height: 30px;
+			height: 30px;
+
+		}
+
+		.logos {
+			width: 20px;
+			height: 20px;
+			position: relative;
+			top: 5px;
+			margin-right: 6px;
+		}
+
+		.tab-logo {
+			width: 30px;
+			height: 30px;
+			margin-top: 5px;
+		}
+
+		.coin-currency-flash {
+			padding-bottom: 20px;
+		}
+
+		.width1 {
+			width: 23%;
+		}
+
+		.width2 {
+			width: 15%;
+		}
+
+		.width3 {
+			width: 32.5%;
+		}
+
+		.order-list {
+			width: 100%;
+			margin-top: 10px;
+		}
+
+		.order-list ul {
+			width: 100%;
+			background-color: #202833;
+			margin-top: 10px;
+		}
+
+		.order-list ul li {
+			border-bottom: 1px solid #12151c;
+			padding: 10px 0;
+		}
+
+		.bg {
+			background-color: #202833;
+			padding-bottom: 30px;
+			padding-top: 10px;
+		}
+
+		.order-list-text {
+			width: 100%;
+			line-height: 40px;
+			background-color: #202833;
+			padding-left: 10px;
+		}
+
+		.top-tab span {
+			color: #758a8f;
+			margin: 0 3px;
+		}
+
+		.top-tab .active {
+			color: #fff;
+		}
+
+		.back {
+			background: url(images/return3.png)no-repeat;
+			background-size: 30px 24px;
+		}
+
+		.insurance-content div {
+			margin-top: 20px;
+		}
+
+		.insurance-content input {
+			margin-top: 0;
+			margin-right: 10px;
+			width: 60%;
+			color: #fff;
+		}
+
+		.insurance-content div span:first-child {
+			width: 110px;
+		}
+
+		.insurance-btn button {
+			width: 31%;
+		}
+
+		.loads-btn .layui-layer-content {
+			height: auto !important;
+			line-height: 30px;
+			margin: 20px 0;
+		}
+
+		.more {
+			line-height: 50px;
+		}
+		.el-dropdown-link{
+			color: #fff;
+		}
+	</style>
+</head>
+
+<body class="bgBalck">
+	<div id="app" v-cloak>
+		<header class="header"
+			:class="[{'level01':tradeType== 'exchange','level02':tradeType== 'insurance','level03':tradeType== 'rawCurrency'}]">
+			<a class="back" href="personal.html"></a>
+			<div class="top-tab tc">
+				<span :class="[{'active': tradeType=='exchange'}]" @click="tabClick('exchange')" data-localize="exchange.title">资产兑换</span>
+				<span :class="[{'active': tradeType== 'insurance'}]" @click="tabClick('insurance')"
+					data-localize="contract.contractInsurance">合约保险</span>
+				<span :class="[{'active': tradeType== 'rawCurrency'}]" @click="tabClick('rawCurrency')" data-localize="exchange.dangerousCurrency">持险生币</span>
+			</div>
+
+		</header>
+		<div class="header-space"></div>
+		<div v-show="tradeType=='exchange'">
+			<div class="bg">
+				<div class="convertibility-header flex between ml10 mr10">
+					<div class="tl">
+						<p data-localize="contract.currencyExchange">兑出币种</p>
+						<p class="tc">{{leftValue}}</p>
+					</div>
+					<img class="tab-logo" src="../images/transer.png" alt="" @click="coinTab">
+					<div class="tl">
+						<p data-localize="contract.currencyExchangeIn">兑入币种</p>
+						<p class="tc">{{rightValue}}</p>
+					</div>
+				</div>
+				<div class="content ml12 flex between">
+					<!-- <span data-localize="transaction.price">价格</span> -->
+					<input type="number" v-model="inputPrice" data-localize="td.pnum" placeholder="请输入数量" @input="inputs()">
+					<!-- <span data-localize="assets.num">数量</span> -->
+					<input type="number" v-model="inputNUm" data-localize="exchange.convertibleQuantity" placeholder="可兑换数量" readonly>
+				</div>
+				<div class="ml20 mr20">
+					<p class="mt10"><span data-localize="contract.cashableBalance">可兑出余额：</span>{{balance}}</p>
+					<p class="mt10"><span data-localize="contract.currencyExchange">币币兑换率：</span>{{rate}}</p>
+					<p class="mt10"><span data-localize="deals.fee">手续费</span>：{{fee}}%</p>
+					<!-- <p class="mt10">最小可兑出：{{minNumber}}</p>
+					<p class="mt10">最大可兑出：{{maxNumber}}</p> -->
+				</div>
+				<div class="btns ml12">
+					<button type="button" class="white" @click="sumbit()" data-localize="jc.exnow">立即兑换</button>
+				</div>
+				<div class="tc mt10" style="color:#f0b90b;" data-localize="contract.automatically">点击兑换之后将自动完成，不能返回</div>
+			</div>
+
+			<!-- 兑换记录 -->
+			<div class="order-list">
+				<p class="order-list-text" data-localize="jc.record">兑换记录</p>
+				<ul>
+					<li class="flex between ft10 tc alcenter">
+						<p class="width1" data-localize="deals.type">类型</p>
+						<p class="width2" data-localize="assets.num">数量</p>
+						<p class="width2" data-localize="deals.fee">手续费</p>
+						<p class="width3" data-localize="assets.time">时间</p>
+					</li>
+					<li class="flex between ft10 tc alcenter" v-for="item in list" :key="item.id">
+						<p class="width1">{{item.form_currency}}<span data-localize="exchange.match">兑</span>{{item.to_currency}}</p>
+						<p class="width2">{{item.num}}</p>
+						<p class="width2">{{item.fee}}</p>
+						<p class="width3">{{item.create_time}}</p>
+					</li>
+				</ul>
+				<div v-if="list.length > 0" @click="mores" class="mt10 tc more">{{moreText}}</div>
+				<div v-show="list.length==0" class="mt10 tc more" data-localize="transaction.nodata">暂无记录</div>
+			</div>
+		</div>
+		<!-- 合约保险 -->
+		<div v-show="tradeType=='insurance'">
+			<div class="bg">
+				<div class="convertibility-header flex between ml10 mr10">
+					<div class="tl">
+						<p data-localize="exchange.insuranceCurrency">保险币种</p>
+						<div>
+							<el-dropdown trigger="click" @command="selectedCurrency" class="tc">
+
+								<span class="el-dropdown-link">
+									{{insuranceCurrencyName}}<i class="el-icon-arrow-down el-icon--right"></i>
+								</span>
+								<el-dropdown-menu slot="dropdown">
+									<el-dropdown-item v-for="item in currencyList" :key="item.id" :command="item" :disabled="disabledStatu">
+										{{item.name}}</el-dropdown-item>
+									<!-- <el-dropdown-item :command="2">反向险</el-dropdown-item> -->
+								</el-dropdown-menu>
+
+								<!-- </el-dropdown-menu> -->
+							</el-dropdown>
+						</div>
+					</div>
+					<img class="tab-logo" src="../images/transer.png" alt="">
+					<div class="tl">
+						<p data-localize="exchange.insuranceType">保险类型</p>
+						<el-dropdown trigger="click" @command="selectedOne" class="tc">
+
+							<span class="el-dropdown-link">
+								{{insuranceText}}<i class="el-icon-arrow-down el-icon--right"></i>
+							</span>
+							<el-dropdown-menu slot="dropdown">
+								<el-dropdown-item v-for="item in insuranceList" :key="item.id" :command="item" :disabled="disabledStatu">
+									{{item.name}}</el-dropdown-item>
+								<!-- <el-dropdown-item :command="2">反向险</el-dropdown-item> -->
+							<!-- </el-dropdown-menu> -->
+
+							</el-dropdown-menu>
+						</el-dropdown>
+					</div>
+				</div>
+				<div class="content ml12 insurance-content">
+					<div class="flex alcenter">
+						<span data-localize="exchange.contractAsset">合约资产保险额</span>
+						<input type="number" v-model="insuranceNum" :placeholder="pla" class="insurance-num"
+							:disabled="disabledStatu">
+						<span data-localize="contract.tenThousand">万</span>
+					</div>
+					<div class="flex alcenter">
+						<span data-localize="exchange.warehouses">保险仓数量</span>
+						<input type="number" :value="insuranceNum * insuranceAssets /100" placeholder="保险仓数量" readonly>
+						<span data-localize="contract.tenThousand">万</span>
+					</div>
+					<div>
+					</div>
+
+				</div>
+				<div class="ml20 mr20">
+					<p class="mt10"><span data-localize="exchange.availableAssets">可用资产：</span>{{currencyBalnace}}</p>
+					<p class="mt10"><span data-localize="exchange.insuredAssets">受保资产：</span>{{insuranceBalnce}}</p>
+					<p class="mt10"><span data-localize="exchange.insuranceAssets">保险资产：</span>{{InsuranceAssets}}</p>
+					<!-- <p class="mt10">最小可兑出：{{minNumber}}</p>
+					<p class="mt10">最大可兑出：{{maxNumber}}</p> -->
+				</div>
+				<div class="btns ml12 insurance-btn flex between">
+					<button type="button" class="white" @click="purchaseInsurance" data-localize="exchange.purchaseInsurance">申购保险</button>
+					<button type="button" class="white" @click="insuranceClaims" data-localize="exchange.insuranceClaims">保险理赔</button>
+					<button type="button" class="white" @click="insuranceCancellation" data-localize="exchange.insuranceCancellation">保险解约</button>
+				</div>
+			</div>
+
+			<!-- 兑换记录 -->
+		</div>
+		<!-- 持险生币 -->
+		<div v-show="tradeType=='rawCurrency'">
+			<div class="bg">
+				<div class="convertibility-header flex between ml10 mr10 alcenter">
+					<p data-localize="exchange.coinWallet">保险币钱包</p>
+					<img class="tab-logo" src="../images/transer.png" alt="">
+					<p data-localize="exchange.bmbWallet">YMT钱包</p>
+				</div>
+				<div class="ml10 mr10">
+					<p class="mt10"><span data-localize="exchange.cumulativeCoins">累计生币：</span>{{moneyData.sum_balance}}</p>
+					<p class="mt10"><span data-localize="exchange.availableQuantity">可用数量：</span>{{moneyData.usabled_balance}}</p>
+				</div>
+				<!-- <div class="btns ml12">
+							<button type="button" class="white" @click='moneyTransfer'>转币</button>
+						</div> -->
+			</div>
+
+			<!-- 转币记录 -->
+			<div class="order-list">
+						<p class="order-list-text" data-localize="exchange.rawCurrency">生币记录</p>
+						<ul>
+							<li class="flex between ft10 tc alcenter">
+									<p class="width1" data-localize="transaction.currency">币种</p>
+									<p class="width2" data-localize="assets.num">数量</p>
+									<p class="width3" data-localize="assets.time">时间</p>
+							</li>
+							<li class="flex between ft10 tc alcenter" v-for="item in moneyList" :key="item.id">
+									<p class="width1">{{item.currency_name}}</p>
+									<p class="width2">{{item.value}}</p>
+									<p class="width3">{{item.created_time}}</p>
+								</li>
+						</ul>
+						<div v-if="moneyList.length > 0" @click="moneyMore" class="mt10 tc more">{{moneyText}}</div>
+				<div v-show="moneyList.length == 0" class="mt10 tc more" data-localize="transaction.nodata">暂无记录</div>
+					</div>
+		</div>
+
+	</div>
+</body>
+
+</html>
+<script type="text/javascript" src="../lib/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="../lib/vue.min.js"></script>
+<script type="text/javascript" src="../element-ui/lib/index.js"></script>
+<script type="text/javascript" src="../lib/layer_mobile/layer.js"></script>
+<script type="text/javascript" src="../javascripts/jquery.cookie.js"></script>
+<script type="text/javascript" src="../javascripts/socket.io.js"></script>
+<script type="text/javascript" src="../lib/jquery.localize.min.js"></script>
+<script type="text/javascript" src="../lib/language_cookie.js"></script>
+<script type="text/javascript" src="../javascripts/main.js"></script>
+<script>
+	var vue = new Vue({
+		el: '#app',
+		data: {
+			selectValue: '',
+			currencyName: '',
+			value2: '',
+			leftList: [],
+			rightList: [],
+			datas: {},
+			leftLogo: '',
+			rightLogo: '',
+			prices: '',
+			inputPrice: '',
+			inputNUm: '',
+			balance: '0.00',
+			maxNumber: '',
+			minNumber: '',
+			leftId: '',
+			rightId: '',
+			orderList: [],
+			typeTab: 1,
+			leftValue: 'USDT',
+			rightValue: 'YMT',
+			rate: '',
+			tradeType: get_param('type') || 'exchange',
+			fee: '',
+			rawCurrencyTotal: '0.00',
+			rawCurrencyNum: '0.00',
+			usdtId: '',
+			bmbId: '',
+			usdtRate: '',
+			bmbRate: '',
+			usdtFee: '',
+			bmbFee: '',
+			usdtBalance: '',
+			bmbBalance: '',
+			formCurrencyId: '',
+			toCurrencyId: '',
+			proportion: '',
+			bmbProportion: '',
+			usdtProportion: '',
+			list: [],
+			page: 1,
+			moreText: getlg('more'),
+			// 保险
+			pla: '',
+			insuranceList: [],
+			insuranceText: "",
+			insuranceId: "",
+			insuranceCurrencyId: "",
+			insuranceNum: '',
+			currencyBalnace: '0.00',
+			insuranceBalnce: '0.00',
+			InsuranceAssets:"",
+			insuranceType: get_param('insuranceType') || '',
+			insuranceAssets: "",
+			insuranceMin: 0,
+			insuranceMax: 0,
+			currencyList: [],
+			insuranceCurrencyName: "",
+			microWallet: [],
+			multi: '',
+			profit: '',
+			disabledStatu:false,
+			userInsuranceId:'',
+			pages:1,
+			moneyList:[],
+			moneyData:{},
+			moneyText:getlg('more'),
+		},
+
+		mounted: function () {
+			let that = this;
+			that.init();
+			that.getList();
+			that.getInsuranceType();
+			that.insuranceMoney();
+		},
+		methods: {
+			init() {
+				var that = this;
+				if (that.tradeType == 'exchange') {
+					initDataTokens({
+						url: 'wallet/conversion_set',
+						type: 'post',
+					}, function (res) {
+						if (res.type == 'ok') {
+							var datas = res.message;
+							var rates = iTofixed(1 / (datas.bmb_usdt_proportion - 0),0);
+							that.usdtRate = '1' + ':' + datas.usdt_bmb_proportion;
+							that.bmbRate = rates + ':' + '1';
+							that.rate = that.usdtRate;
+							that.usdtFee = datas.usdt_bmb_fee;
+							that.bmbFee = datas.bmb_usdt_fee;
+							that.fee = that.usdtFee;
+							that.usdtBalance = datas.user_balance;
+							that.bmbBalance = datas.bmb_balance;
+							that.balance = that.usdtBalance;
+							that.bmbProportion = datas.bmb_usdt_proportion;
+							that.usdtProportion = datas.usdt_bmb_proportion;
+							that.proportion = that.usdtProportion;
+
+						}
+					})
+					initDataTokens({
+						url: 'wallet/conversion_list'
+					}, function (res) {
+						if (res.type == 'ok') {
+							var datas = res.message;
+							for (var i = 0; i < datas.length; i++) {
+								if (datas[i].name == 'USDT') {
+									that.usdtId = datas[i].id;
+								} else if (datas[i].name == 'YMT') {
+									that.bmbId = datas[i].id;
+								}
+							}
+							that.formCurrencyId = that.usdtId;
+							that.toCurrencyId = that.bmbId;
+
+						}
+					})
+
+				}
+
+			},
+			// 获取兑换列表
+			getList() {
+				var that = this;
+				initDataTokens({
+					url: 'wallet/my_conversion',
+					data: {
+						page: that.page
+					}
+				}, function (res) {
+					if (res.type == 'ok') {
+						if (res.message.data.length > 0) {
+							that.moreText = getlg('more')
+							that.list = that.list.concat(res.message.data);
+						} else if (res.message.data.length == 0 && that.page > 1) {
+							that.moreText = getlg('nomore')
+						}
+
+
+					}
+				})
+			},
+			coinTab() {
+				var that = this;
+				that.typeTab = that.typeTab == 1 ? 2 : 1;
+				that.inputNUm = '';
+				that.inputPrice = '';
+				if (that.typeTab == 1) {
+					that.leftValue = 'USDT',
+						that.rightValue = 'YMT';
+					that.rate = that.usdtRate;
+					that.fee = that.usdtFee;
+					that.balance = that.usdtBalance;
+					that.formCurrencyId = that.usdtId;
+					that.toCurrencyId = that.bmbId;
+					that.proportion = that.usdtProportion;
+				} else {
+					that.leftValue = 'YMT',
+						that.rightValue = 'USDT';
+					that.rate = that.bmbRate;
+					that.fee = that.bmbFee;
+					that.balance = that.bmbBalance;
+					that.formCurrencyId = that.bmbId;
+					that.toCurrencyId = that.usdtId;
+					that.proportion = that.bmbProportion;
+				}
+
+			},
+			// 兑换数量实时输入
+			inputs() {
+				var that = this;
+				var arr = that.rate.split(':');
+				// that.inputNUm = (that.inputPrice / arr[0]) * arr[1] - that.fee;
+				that.inputNUm = iTofixed((that.inputPrice - 0) * (100 - that.fee) / 100 * (that.proportion - 0),4);
+
+			},
+				// 保险种类
+				getInsuranceType() {
+				var that = this;
+				initDataTokens({
+					url: 'currency/list',
+					data: {
+						insurancable: 1,
+					}
+
+				}, function (res) {
+					if (res.type == 'ok') {
+						console.log(res);
+						var datas = res.message.currency;
+						var arr = [];
+						if (datas.length > 0) {
+							for (var i = 0; i < datas.length; i++) {
+								if (datas[i].insurancable == 1) {
+									arr.push(datas[i]);
+								}
+							}
+							that.currencyList = arr;
+							that.insuranceCurrencyId = arr[0].id;
+							that.insuranceCurrencyName = arr[0].name;
+							that.getUserInsurance();
+
+							
+						}
+
+					}
+				})
+
+			},
+			// 获取用户的保险
+			getUserInsurance() {
+				var that = this;
+				initDataTokens({
+					url: 'insurance/get_user_currency_insurance',
+					data: {
+						currency_id: that.insuranceCurrencyId
+					},
+					type: 'post'
+				}, function (res) {
+					if (res.type == 'ok') {
+						console.log(res);
+						that.currencyBalnace = res.message.user_wallet.micro_balance;
+						that.insuranceBalnce = res.message.user_wallet.insurance_balance;
+						that.InsuranceAssets = res.message.user_wallet.lock_insurance_balance;
+						if(res.message.user_insurance&&res.message.user_insurance.id){
+							that.insuranceNum = res.message.user_insurance.amount/10000;
+							that.disabledStatu = true;
+							that.insuranceAssets = res.message.user_insurance.insurance_amount / res.message.amount *100;
+							// that.insuranceBalnce = res.message.insurance_amount;
+							that.insuranceType = res.message.user_insurance.insurance_type_id;
+							that.userInsuranceId = res.message.user_insurance.id;
+						}else{
+							that.insuranceNum = '';
+							that.disabledStatu = false;
+						}
+						initDataTokens({
+								url: 'insurance/get_insurance_type',
+								data: {
+									currency_id: that.insuranceCurrencyId
+								},
+								type: 'post'
+							}, function (res) {
+								if (res.type == 'ok') {
+									console.log(res);
+									that.insuranceList = res.message;
+									for (var i = 0; i < res.message.length; i++) {
+										if (res.message[i].name == '反向险') {
+											that.multi = res.message[i].claim_rate / 100;
+											that.profit = res.message[i].profit_termination_condition;
+										}
+									}
+									if (that.insuranceType) {
+										for (var i = 0; i < res.message.length; i++) {
+											if (that.insuranceType == res.message[i].id) {
+												that.insuranceText = res.message[i].name;
+												that.insuranceMin = res.message[i].min_amount / 10000;
+												that.insuranceMax = res.message[i].max_amount / 10000;
+												that.pla = that.insuranceMin + '≤'+getlg('ptnum')+'≤' + that.insuranceMax;
+												that.insuranceAssets = res.message[i].insurance_assets;
+											}
+										}
+
+									} else {
+										that.insuranceText = res.message[0].name;
+										that.insuranceMin = res.message[0].min_amount / 10000;
+										that.insuranceMax = res.message[0].max_amount / 10000;
+										that.pla = that.insuranceMin + '≤'+getlg('ptnum')+'≤' + that.insuranceMax;
+										that.insuranceType = res.message[0].id;
+										that.insuranceAssets = res.message[0].insurance_assets;
+									}
+
+								}
+							})	
+					}
+				})
+
+			},
+			// 选择保险币种
+			selectedCurrency(command) {
+				var that = this;
+				that.insuranceCurrencyId = command.id;
+				that.insuranceCurrencyName = command.name;
+				that.getUserInsurance();
+			},
+			// 选择保险类型
+			selectedOne(command) {
+				var that = this;
+				that.insuranceType = command.id;
+				console.log(command)
+				that.insuranceText = command.name;
+				that.insuranceMin = command.min_amount / 10000;
+				that.insuranceMax = command.max_amount / 10000;
+				that.pla = that.insuranceMin + '≤'+getlg('ptnum')+'≤' + that.insuranceMax;
+				that.insuranceAssets = command.insurance_assets;
+
+			},
+
+			// 兑换列表加载更多
+			mores() {
+				var that = this;
+				that.page++;
+				that.getList();
+			},
+			// 兑换
+			sumbit() {
+				let that = this;
+				if (!that.inputPrice) {
+					layer_msg(getlg('ptnum'));
+					return false;
+				}
+				if (that.typeTab == 2) {
+					if ((that.inputPrice - 0) < 100) {
+						layer_msg(getlg('lowestNumber') + '100');
+						return false;
+					}
+				}
+				layer.open({
+					type: 1,
+					title: false,
+					shadeClose: true,
+					area: ['70%', 'auto'],
+					skin: 'loads-btn btn-text',
+					content: getlg('confirmExchange'),
+					btn: [getlg('ceil'), getlg('sure')],
+					btn2: function (index) {
+						initDataTokens({
+							url: 'wallet/conversion',
+							type: 'post',
+							data: {
+								form_currency: that.formCurrencyId,
+								to_currency: that.toCurrencyId,
+								num: that.inputPrice
+							}
+						}, function (res) {
+							layer_msg(res.message);
+							if (res.type == 'ok') {
+								setTimeout(function () {
+									location.reload();
+								}, 500)
+							}
+						})
+					}
+				});
+
+			},
+			// 切换头部类型
+			tabClick(types) {
+				var that = this;
+				that.tradeType = types;
+			},
+
+			// 申购保险
+			purchaseInsurance() {
+				var that = this;
+				var nums = ((that.insuranceNum - 0) + that.insuranceNum * that.insuranceAssets / 100) * 10000;
+				var content = '';
+				if (!that.insuranceNum) {
+					layer_msg(getlg('ptnum'));
+					return false;
+				}
+				if ((nums - 0) > (that.currencyBalnace - 0)) {
+					layer_msg(getlg('runningLow'));
+					return false;
+				}
+				if (that.insuranceNum < that.insuranceMin || that.insuranceNum > that.insuranceMax) {
+					layer_msg(getlg('purchase') + that.insuranceMin + getlg('reach') + that.insuranceMax + getlg('between'));
+					return false;
+				} else if (that.insuranceNum % 1 != 0) {
+					layer_msg(getlg('onlyEnter') + that.insuranceMin + '-' + that.insuranceMax + getlg('integersBetween'));
+					return false;
+				}
+				var amont = that.insuranceNum * 10000;
+				layer_confirm(getlg('notReturned'), function () {
+					initDataTokens({
+						url: 'insurance/buy_insurance',
+						type: 'post',
+						data: {
+							amount: amont,
+							type_id: that.insuranceType,
+							currency_id: that.insuranceCurrencyId
+						}
+					}, function (res) {
+						console.log(res);
+						layer_msg(res.message);
+						if (res.type == 'ok') {
+							that.getInsuranceType();
+							// setTimeout(function () {
+							// 	location.reload();
+							// }, 500)
+						}
+					})
+				})
+			},
+			// 保险理赔
+			insuranceClaims() {
+				var that = this;
+				var content = '';
+				if (that.insuranceText == '正向险') {
+					content = getlg('automatically');
+				} else {
+					content = getlg('settled') + that.multi + getlg('profitable') + that.profit + '%'+getlg('terminated');
+				}
+				layer_confirm(content, function () {
+					initDataTokens({
+						url: 'insurance/claim_apply',
+						type: 'post',
+						data: {
+							user_insurance_id: that.userInsuranceId,
+							
+						}
+					}, function (res) {
+						console.log(res);
+						layer_msg(res.message);
+						if (res.type == 'ok') {
+							that.getInsuranceType();
+							// setTimeout(function () {
+							// 	location.reload();
+							// }, 500)
+						}
+					})
+				})
+
+			},
+			// 保险解约
+			insuranceCancellation() {
+				var that = this;
+				layer_confirm(getlg('termination'), function () {
+					initDataTokens({
+						url: 'insurance/manual_rescission',
+						type: 'post',
+						data: {
+							user_insurance_id: that.userInsuranceId,
+							
+						}
+					}, function (res) {
+						console.log(res);
+						layer_msg(res.message);
+						if (res.type == 'ok') {
+							setTimeout(function () {
+								that.getInsuranceType();
+							}, 500)
+						}
+					})
+				})
+			},
+			// 转币
+			moneyTransfer() {
+				var that = this;
+				layer_msg(getlg('noOpen'))
+			},
+			// 持险生币
+			insuranceMoney(){
+				var that = this;
+				initDataTokens({
+						url: 'insurance_money',
+						
+					}, function (res) {
+						console.log(res);
+						if (res.type == 'ok') {
+							that.moneyData = res.message;
+						}
+					})
+					that.insuranceMoneyList();
+			},
+			// 生币记录
+			insuranceMoneyList(){
+				var that = this;
+				initDataTokens({
+						url: 'insurance_money_logs',
+						data:{
+							page:that.pages
+						}
+					}, function (res) {
+						console.log(res);
+						if (res.type == 'ok') {
+							var datas = res.message.data;
+							if(datas.length > 0){
+								that.moneyList = that.moneyList.concat(datas);
+								that.moneyText = getlg('more');
+							}else if(that.pages > 1){
+								that.moneyText = getlg('nomore');
+							}
+							
+						}
+					})
+			},
+			moneyMore(){
+				var that = this;
+				that.pages++;
+				that.insuranceMoneyList();
+			}
+		}
+	});
+</script>

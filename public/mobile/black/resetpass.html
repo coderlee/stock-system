@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <title>重置密码</title>
+    <link rel="stylesheet" type="text/css" href="../lib/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../css/common.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    
+    <style>
+        .theme .form-group {
+            border-bottom: 1px solid #202833;
+
+        }
+    </style>
+</head>
+
+<body class="bgBalck">
+    <header class="header">
+        <a class="back" href="javascript:history.go(-1)">
+
+        </a>
+        <h4 class="ft16" data-localize="safe.newPwd">重新设置密码</h4>
+    </header>
+    <div class="header-space"></div>
+    <div id="resetpass">
+        <div class="theme">
+           
+            <form>
+                <div class="form-group">
+                    <input type="text" style="display:none;" id="name" value="" />
+                    <input type="text" style="display:none;" id="verificate" value="" />
+                    <input type="password" id="setpassword" data-localize="safe.ppwd" placeholder="请输入密码" name="password" value="" />
+                    <!-- <p id="mes1" style="color:#cc704b;font-size: 12px;margin:5px 0 0 10px;"></p> -->
+                </div>
+                <div class="form-group">
+                    <input type="password" id="verifypassword" data-localize="safe.reppwd" placeholder="请再次输入密码" name="password" value="" />
+                    <!-- <p id="mes2" style="color:#cc704b;font-size:12px;margin:5px 0 0 10px;"></p> -->
+                </div>
+                <a class="btn btn-default ftw" id="resetp" data-localize="safe.repwd">重置密码</a>
+                <p id="mes3" style="color:#cc704b;font-size: 12px;margin:5px 0 0 10px;"></p>
+            </form>
+        </div>
+    </div>
+    <script type="text/javascript" src="../lib/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="../javascripts/jquery.cookie.js"></script>
+    <script type="text/javascript" src="../lib/layer_mobile/layer.js"></script>
+    <script type="text/javascript" src="../lib/jquery.localize.min.js"></script>
+    <script type="text/javascript" src="../lib/language_cookie.js"></script>
+    <script type="text/javascript" src="../javascripts/main.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            //验证密码
+            $("#setpassword").change(function () {
+                var pass = $("#setpassword").val();
+                if (pass.length < 6 || pass.length > 16) {
+                    $("#mes1").html(getlg('plength'));
+
+                } else {
+                    $("#mes1").html("");
+                }
+            })
+            $("#verifypassword").change(function () {
+
+                if ($("#setpassword").val() != $("#verifypassword").val()) {
+                    $("#mes2").html(getlg('twonot'));
+                    return;
+                } else {
+                    $("#mes2").html("");
+                }
+
+            })
+            //重置密码
+            $('#resetp').click(function () {
+
+                var s = function () {
+
+                    var ps = /^[a-zA-Z0-9]{6,16}$/;
+                    if (!ps.test($('#setpassword').val())) {
+                        layer_msg(getlg('plength'));
+                    } else {
+                        return true;
+                    }
+                }
+
+                var ss = function () {
+                    if ($('#verifypassword').val() == $('#setpassword').val()) {
+                        return true;
+                    } else {
+                        layer_msg(getlg('twonot'));
+                    }
+                }
+
+                var names = $('#name').val();
+                var pass = $('#setpassword').val();
+                var repass = $('#verifypassword').val();
+                var verify = $("#verificate").val();
+                if (get_param('areaCodeId')) {
+                    var areaCodeId = get_param('areaCodeId')
+                    var areaCode = get_param('areaCode')
+                } else {
+                    var areaCodeId = '';
+                    var areaCode = '';
+                }
+
+                if (s() == true && ss() == true && verify != '') {
+                    $.ajax({
+                        type: "post",
+                        url: _API + "user/forget",
+                        data: {
+                            account: names,
+                            password: pass,
+                            repassword: repass,
+                            code: verify,
+                            area_code_id: areaCodeId,
+                            area_code: areaCode
+                        },
+                        datatype: "json",
+                        success: function (data) {
+                            layer_msg(data.message);
+                            if (data.type == "ok") {
+                                $("#resetp").attr("disabled", "true");
+                                setTimeout(function () {
+                                    $("#resetp").removeAttr("disabled");
+
+                                    window.location.href = "login.html";
+                                }, 3000);
+
+
+                            }
+                        }
+                    });
+                } else {
+                    layer_msg(getlg('information'))
+                }
+            })
+        })
+        //接收多值
+        function forgetvals() {
+            var url = window.location.search;
+            var theRequest = new Object();
+            if (url.indexOf("?") != -1) {
+                var str = url.substr(1);
+                strs = str.split("&");
+                for (i = 0; i < strs.length; i++) {
+                    theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+                }
+            }
+            return theRequest;
+        }
+
+        var v = forgetvals();
+
+        $("#name").attr("value", v['user_string']);
+        $("#verificate").attr("value", v['code']);
+    </script>
+</body>
+
+</html>

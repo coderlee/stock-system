@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>订单记录</title>
+	<link rel="stylesheet" type="text/css" href="../element-ui/lib/theme-chalk/index.css" />
+	<link rel="stylesheet" type="text/css" href="../css/mescroll.min.css" />
+	<link rel="stylesheet" type="text/css" href="../lib/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="../css/common.css" />
+	<style>
+		.order-list-tab {
+			width: 100%;
+			position: fixed;
+			top: 40px;
+			line-height: 40px;
+			border-bottom: 1px solid #12151c;
+			background-color: #12151c;
+			z-index:1;
+		}
+
+		.order-list-tab p {
+			width: 50.0%;
+		}
+
+		.order-list-tab .active {
+			color: #f0b90b;
+			border-bottom: 2px solid #f0b90b;
+		}
+
+		.header-space {
+			height: 88px;
+		}
+
+		.list {
+			width: 100%;
+		}
+
+		.list li {
+			padding: 10px 0;
+			border-bottom: 1px solid #202833;
+			position: relative;
+		}
+
+		.progres {
+			position: absolute;
+			right: 0;
+			bottom: -5px;
+			width: auto;
+			height: 10px;
+		}
+
+		.progres img {
+			width: 10px;
+			height: 10px;
+			position: relative;
+			left: 0;
+			z-index: 1;
+
+		}
+
+		.progres p {
+			width: calc(100%);
+			height: 2px;
+			background-color: #f0b90b;
+			position: relative;
+			top: 4px;
+			right: 0;
+		}
+		.order-header{
+			padding-bottom: 10px;
+			border-bottom: 1px solid #202833;
+		}
+	</style>
+</head>
+
+<body class="bgBalck">
+	<div id="app" v-cloak>
+		<header class="header">
+			<a class="back" href="orderTotal.html">
+
+			</a>
+			<h4 class="bold ft18" data-localize="td.drecord">订单记录</h4>
+		</header>
+		<div class="flex between order-list-tab">
+			<p class="tc" :class="[{'active':status == 1}]" @click="tabOrder(1)" data-localize="deals.tding">交易中</p>
+			<p class="tc" :class="[{'active':status == 3}]" @click="tabOrder(3)" data-localize="deals.pied">已平仓</p>
+		</div>
+		<div class="header-space"></div>
+		<div id="mescroll" class="mescroll">
+			<p v-show="false">{{CountDown}}</p>
+			<ul class="list" v-if="orderList.length > 0">
+				<li v-for="(item,index) in orderList" v-if="item.remain_milli_seconds >0 && status==1 || status ==3" :key="item.id">
+					<div v-if="status == 3" class="bdbs order-header ml12">
+						<div class="flex"><span data-localize="contract.orderNumber">{{getlg('orderNumber')}}</span>&nbsp;&nbsp;{{item.id}}</div>
+						<div class="flex colorGrey mt5 ft10"><span data-localize="td.ptime">{{getlg('ptime')}}</span>&nbsp;&nbsp;{{item.created_at}}</div>
+					</div>
+					<div class="flex pl12" v-else>
+						<p class="mr10"><span data-localize="contract.orderNumber">{{getlg('orderNumber')}}</span>&nbsp;&nbsp;&nbsp;&nbsp;</p>
+						<p>{{item.id}}</p>
+					</div>
+					<div class="flex pl12 mt5">
+						<p class="mr10" data-localize="contract.entrustmentContract">{{getlg('entrustmentContract')}}</p>
+						<p>{{item.symbol_name|| ''}}，{{item.seconds}}s</p>
+					</div>
+					<div class="flex pl12 mt5">
+						<p class="mr10" data-localize="contract.delegateDirection">{{getlg('delegateDirection')}}</p>
+						<p :class="item.type == 1?'green':'red'">{{item.type_name}} <img v-if="item.type == 1" width="10"
+								src="../images/buy.png" alt=""> <img v-else width="10" src="../images/sell.png" alt=""></p>
+					</div>
+					<div class="flex pl12 mt5">
+						<p class="mr10" data-localize="contract.commissionPrice">{{getlg('commissionPrice')}}</p>
+						<p>{{item.open_price || '0' |toFixed4}}</p>
+					</div>
+					<div class="flex pl12 mt5">
+						<p class="mr10" data-localize="contract.orderQuantity">{{getlg('orderQuantity')}}</p>
+						<p>{{parseInt(item.number/1) || '0' | toFixedNum}} {{item.currency_name}}</p>
+					</div>
+					<!-- <div class="flex pl12 mt5">
+						<p class="mr10" data-localize="td.ptime">下单时间</p>
+						<p>{{item.created_at}}</p>
+					</div> -->
+					<div class="flex pl12 mt5" v-if="status == 1" style="display:none;">
+						<p class="mr10" data-localize="contract.countDown">{{getlg('countDown')}}</p>
+						<p class="times">{{countDown(item.endTime,index,item.seconds)}}</p>
+					</div>
+					<div class="flex pl12 mt5" v-if="status == 1">
+						<p class="mr10" data-localize="contract.dueTime">{{getlg('dueTime')}}</p>：
+						<p class="times">{{item.handled_at}}</p>
+					</div>
+					<div class="flex pl12 mt5" v-else>
+						<p class="mr10" data-localize="contract.settlementPrice">{{getlg('settlementPrice')}}</p>
+						<p>{{item.end_price || '0.0000' |toFixed4}}</p>
+					</div>
+					<!-- <div class="flex pl12 mt5" v-if="status == 3">
+							<p class="mr10" data-localize="deals.fee">手续费</p>
+							<p>{{item.fee || '0.00' | toFixeds}}</p>
+						</div> -->
+					<div class="flex pl12 mt5" v-if="status == 3">
+						<p class="mr10"><span data-localize="contract.surplus">{{getlg('surplus')}}</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span data-localize="contract.deficit">{{getlg('deficit')}}</span></p>
+						<p :class="item.fact_profits >=0?'green':'red'">{{item.fact_profits || '0' | toFixedNum}} {{item.currency_name}}</p>
+					</div>
+
+					<div class="progres flex" v-if="status == 1">
+						<!-- <img src="../images/order-progress.png" alt=""> -->
+						<p></p>
+						<!-- <el-progress :percentage="item.progress"></el-progress> -->
+					</div>
+
+				</li>
+			</ul>
+			<div class="tc mt10" v-if="orderList-length == 0" data-localize="transaction.nodata">暫無記錄</div>
+		</div>
+	</div>
+	<script type="text/javascript" src="../lib/jquery-2.1.1.min.js"></script>
+	<script type="text/javascript" src="../javascripts/jquery.cookie.js"></script>
+	<script type="text/javascript" src="../javascripts/mescroll.min.js"></script>
+	<script type="text/javascript" src="../lib/vue.min.js"></script>
+	<script type="text/javascript" src="../element-ui/lib/index.js"></script>
+	<script type="text/javascript" src="../lib/layer_mobile/layer.js"></script>
+	<script type="text/javascript" src="../lib/jquery.localize.min.js"></script>
+	<script type="text/javascript" src="../lib/language_cookie.js"></script>
+	<script type="text/javascript" src="../javascripts/main.js"></script>
+	<script>
+		var vue = new Vue({
+			el: '#app',
+			data: {
+				orderList: [],
+				mescroll: null,
+				times: '2019-04-10 17:00:00',
+				CountDown: '',
+				progressWidths: 1,
+				status: 1,
+				page: 1,
+				set: null,
+				out: null,
+			},
+			filters: {
+
+			},
+			mounted: function () {
+				var that = this;
+				that.init();
+				// that.mescroll = new MeScroll("mescroll", {
+				// 	down: {
+				// 		use: false
+				// 	},
+				// 	up: {
+				// 		callback: that.init,
+				// 		htmlNodata: '没有更多数据',
+				// 		empty: {
+				// 			warpId: "list",
+				// 			icon: '../images/nodata.png',
+				// 			tip: '暂无相关数据~'
+				// 		}
+
+				// 	}
+				// })
+			},
+			methods: {
+				init() {
+					var that = this;
+						initDataTokenNo({
+							url: "microtrade/lists",
+							data: {
+								page: that.page,
+								status: that.status,
+								limit: 20,
+							}
+						}, function(res) {
+							if(res.type == 'ok') {
+								var datas = res.message.data;
+								var nowTime = new Date().getTime();
+								var arr = [];
+								if(datas.length > 0) {
+									if(that.page == 1) {
+										that.Djs_time();
+										that.set = setTimeout(that.countDown, 200);
+									}
+									if(that.status == 1) {
+										for(var i = 0; i < datas.length; i++) {
+											if(datas[i].remain_milli_seconds > 0) {
+												datas[i].endTime = (nowTime - 0) + (datas[i].remain_milli_seconds - 0);
+												arr.push(datas[i]);
+											}
+										}
+									} else {
+										arr = datas;
+									}
+									that.orderList = that.orderList.concat(arr);
+
+								}
+							}
+						})
+
+
+				},
+				countDown(val, indexs, seconds) {
+					var that = this;
+					var timeValue = '';
+					var process = 100 / Number(seconds);
+						var endItem = val; //获取列表传的截止时间
+						var nowItem = new Date().getTime(); //获取当前时间
+						var timeSpace = endItem - nowItem; //截止时间减去当前时间
+						if (timeSpace > 0) {
+							var widths = iTofixed((process * (timeSpace / 1000) - 0),2);
+							$('.list li').eq(indexs).find('.progres').css('width', widths + '%');
+							var seconds = iTofixed(timeSpace / 1000,1);
+							// $('.list li').eq(indexs).find('.times').text(seconds + 's');
+						} else if(timeSpace <=0){
+							// 倒计时结束打开
+							// clearTimeout(that.set)
+							// that.orderList = [];
+							// that.init();
+							// 或者刷新页面
+							location.reload();
+							// $('.list li').eq(indexs).find('.times').text('00');
+						}
+
+				},
+				Djs_time: function () {
+					setInterval(() => {
+						var presentTime = new Date().getTime();
+						this.CountDown = presentTime
+					}, 200);
+				},
+				tabOrder(types) {
+					var that = this;
+					that.status = types;
+					that.orderList = [];
+					that.init();
+					// that.mescroll.resetUpScroll();
+				}
+
+			}
+		});
+	</script>
+</body>
+
+</html>

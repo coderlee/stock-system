@@ -1,0 +1,206 @@
+
+
+.bgBalck .main-asset{
+	border-bottom: 1px solid #12151c;
+}
+.border-eee{
+    border-top:1px solid #eee;
+}
+.pro-title{
+    padding: 5px 0;
+    display: flex;
+    flex-direction: row;
+    border-bottom: 1px solid #eee;
+}
+.pro-title span{
+    font-size: 12px;
+    color: #90a2b0;
+    width: 33.33%;
+    text-align: center;
+}
+.content{
+    padding-top: 5px;
+    background: #fff;
+}
+.content-tab-box{
+    width: 182px;
+    margin: 0 auto 5px;
+    display: flex;
+    flex-direction: row;
+    border:1px solid #588bf7;
+    border-radius: 5px;
+}
+.content-tab-box .active{
+    background: #588bf7;
+    color:#fff;
+}
+.content-tab-box p{
+    border-radius: 5px;
+    color: #588bf7;
+    font-weight: bold;
+    text-align: center;
+    width: 91px;
+    height: 34px;
+    font-size: 16px;
+    line-height: 34px;
+}
+.main-name {
+	width: 33%;
+}
+
+.main-price {
+	width: 30%;
+	padding-top: 10px;
+	text-align: center;
+}
+
+.main-rate {
+	width: 80px;
+}
+
+.name_1 {
+	margin-bottom: 1px;
+    font-size: 22px;
+}
+.bgBalck .name_1 h5,.bgBalck .main-price .name_1{
+	color: #fff;
+}
+.name_1 h5 {
+    font-weight: normal;
+	display: inline-block;
+	color: #000;
+	font-size: 14px;
+}
+
+.name_1 span {
+	font-size: 14px;
+	font-weight: normal;
+	color: rgb(144, 162, 176);
+}
+
+.name_2 {
+	color: #92A1A3;
+	font-size: 13px;
+}
+
+.name_2 span {
+    font-size: 13px;
+    font-weight: normal;
+    color: #90a2b0;
+}
+
+.main-price .name_1 {
+    text-align: left;
+	color: #1A384A;
+	font-size: 14px;
+	
+}
+
+.main-rate .rate_green {
+	height: 35px;
+	line-height: 35px;
+	/* background: #02BF85; */
+	background: #00c087;
+	color: #FFFFFF;
+	width: 80px;
+	text-align: center;
+	margin-top: 10px;
+	font-size: 16px;
+	font-weight: bold;
+	border-radius: 2px;
+	/* margin-right: 16px; */
+}
+
+.rate_orange {
+	height: 35px;
+	line-height: 35px;
+	background:#e3046f;
+	color: #FFFFFF;
+	width: 80px;
+	text-align: center;
+	margin-top: 10px;
+	font-size: 15px;
+	font-weight: bold;
+}
+
+
+.pr15{
+	padding-right: 16px;
+}
+
+
+.wrap-tab ul li {
+	color: #fff;
+}
+.name_1 span{
+	color: #7d818a;
+	font-size: 14px;
+}
+.name_2 {
+	color: #7d818a;
+		font-size:12px;
+		font-weight: bold;
+}
+.cnyprice{
+	font-weight: normal;
+}
+.tabs div{
+	margin-left: 15px;
+	border-bottom: 2px solid #f0b90b;
+	width: 20%;
+	text-align: center;
+	padding-bottom: 6px;
+	color: #f0b90b;
+	font-size: 16px;
+	font-weight: bold;
+}
+.market-name{
+	color: #7d818a;
+	padding: 0 16px;
+}
+.main-asset{
+	border-bottom: 1px solid #f1f1f1;
+	padding: 5px 16px 13px;
+}
+.main-change{
+	position: relative;
+	top: 3px;
+}
+.header .title{
+	font-weight: bold;
+}
+.main-asset{
+	border-bottom: 1px solid #f1f1f1;
+		padding: 5px 16px 13px;
+		overflow: hidden;
+    display: block;
+    width: 100%;
+    color: #C9CDCC;
+}
+.texts{
+	font-size: 20px;
+}
+.content-tab{
+	width: 100%;
+	border-bottom: 1px solid #f1f1f1;
+	background-color: #fff;
+}
+.content-tab p{
+	width: 50%;
+	line-height: 40px;
+	text-align: center;
+}
+.content-tab .active{
+	border-bottom: 2px solid #f0b90b;
+	color: #f0b90b;
+}
+ul{
+	background-color: #fff;
+}
+.bgBalck .content-tab,.bgBalck ul{
+	background-color: #202833;
+}
+.bgBalck .content-tab{
+	border-bottom: 1px solid #12151c;
+}
+

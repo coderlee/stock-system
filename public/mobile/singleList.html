@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, viewport-fit=cover" />
+    <title>跟单</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/singleList.css" />
+    <style>
+        .wdgd{
+            position: absolute;
+            right: 5%;
+            top: 0px;
+            color: #f0b90b;
+        }
+        .single-top article span{
+            margin-left: 0;
+        }
+    </style>
+</head>
+
+<body>
+	<div id="app" v-cloak>
+	<header class="header">
+		<a href="javascript:history.go(-1)" class="back mt5"></a>
+		<h4 class="ft16">{{getlg('gendan')}}</h4>
+		<span class="wdgd" @click="getList()">{{toprightTxt}}</span>
+	</header>
+	<div class="header-space"></div>
+	<div class="single-box">
+		<div class="single-list" v-for="item in list">
+			<div class="single-top">
+		<article>
+			<!--<img :src="item.head_portrait">-->
+			<!--<span>{{item.account_number}}</span>-->
+			<span>{{item.teacher_name}}</span>
+		</article>
+			<aside @click="jump(item)">{{getlg('gendan')}}</aside>
+		</div>
+		<div class="single-btm">
+			<div class="single-btm-list"><span>{{item.total_profit_rate}}%</span><aside>{{getlg('ljsy')}}</aside></div><div class="single-btm-list"><span>{{item.three_week_profit}}%</span><aside>{{getlg('jszsl')}}</aside></div><div class="single-btm-list"><span>{{item.total_follower}}</span><aside>{{getlg('ljgsrs')}}</aside></div>
+			</div>
+		</div>
+	</div>
+	</div>
+    <script type="text/javascript" src="lib/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="lib/bootstrap.min.js"></script>
+	<script type="text/javascript" src="javascripts/jquery.cookie.js"></script>
+	<script type="text/javascript" src="lib/layer_mobile/layer.js"></script>
+	<script type="text/javascript" src="lib/jquery.localize.min.js?v=10"></script>
+	<script type="text/javascript" src="lib/language_cookie.js"></script>
+	<script type="text/javascript" src="javascripts/main.js"></script>
+	<script type="text/javascript" src="lib/vue.min.js"></script>
+	<script>
+		var vue =new Vue({
+			el:"#app",
+			data:{
+				list:[],
+				page:1,
+				is_mine:'',
+				mygdorder:[],
+				listbool:true,
+				mybool:true,
+				toprightTxt:getlg('gdlb')
+			},
+			mounted: function () {
+                this.init();
+            },
+           created(){
+            	window.addEventListener("scroll", this.scrollBottom);	
+            },
+            methods: {
+                getList(){
+                    if(this.mybool){
+                        this.is_mine=1;
+                        this.toprightTxt=getlg('wdgd')
+                    }else{
+                        this.toprightTxt=getlg('gdlb')
+                        this.is_mine='';
+                    }
+                  this.mybool=!this.mybool;
+                  this.listbool=false;
+                  this.list=[];
+                  this.page=1;
+                  this.init();
+                },
+            	jump(item){
+            	    var gd=0;
+            	    if(this.mygdorder){
+            	        gd=item.uid==this.mygdorder.gd_user_id?1:0;   
+            	    }
+            	    var item=JSON.stringify(item);
+            	    sessionStorage.setItem('gd',item);
+            		window.location.href="single_edit.html?gdstatus="+gd
+            	},
+            	scrollBottom(){
+                	if (getScrollTop() + getClientHeight() >= getScrollHeight()) {
+                		//页面已滚动到最底部
+                		if( this.listbool){
+                			this.init();
+                		}
+                	}
+                },
+            	init(){
+            	    layer.load(1);
+            		let that=this;
+            		initDataToken({
+						url:'transaction/gd_user_list',
+						data:{page:that.page,limit:30,is_mine:that.is_mine},
+						type:'GET'
+					},function (res) {
+					    layer.closeAll();
+						if(res.list){
+							let html='';
+							var data=res.list;
+							that.mygdorder=res.my_gd_order;
+							that.page+=1;
+							if(data.length){
+    							for(let i=0;i<data.length;i++){
+    								that.list.push(data[i]);
+    							}
+							}else{
+							    that.listbool=false
+							}
+						}
+					})		
+            	}
+            }
+		})
+	</script>
+</body>
+
+</html>

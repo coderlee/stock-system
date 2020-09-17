@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<title>身份验证</title>
+	<link rel="stylesheet" type="text/css" href="../css/common.css">
+	<link rel="stylesheet" type="text/css" href="../css/style.css" />
+	<style>
+	.bgLinearblue	{
+    height: 50px;
+    border-radius: 2px;
+    color: #fff;
+    background: #f0b90b;
+    text-align: center;
+    line-height: 50px;
+    font-size: 18px;
+		padding: 0;
+		margin: 40px 12px 10px;
+		
+		}
+		.bdbs{
+			border-color: #202833;
+		}
+		.auth input{
+			color: #fff;
+		}
+	</style>
+</head>
+<style>
+</style>
+
+<body class="bgBalck">
+	<div id="app">
+		<header class="header">
+			<a class="back mt5" href="javascript:history.go(-1)">
+
+			</a>
+			<h4 class="ft16" data-localize="auth.test">身份验证</h4>
+		</header>
+		<div class="header-space"></div>
+		<div class="from mb20 ml12 auth">
+			<div class="mb20 mt20">
+				<p data-localize="auth.name">姓名：</p>
+				<input type="text" class="name bdbs pb5 ft14" data-localize="auth.pname" placeholder="请输入姓名" />
+			</div>
+			<div class="mb20">
+				<p data-localize="auth.number">身份证号：</p>
+				<input type="text" class="sfzh bdbs pb5 ft14" data-localize="auth.pnum" placeholder="请输入身份证号" />
+			</div>
+		</div>
+		<div class="text ml12 ">
+			<p class="white_gray ft12" data-localize="auth.upimg">请上传身份证正反面，第一张为正面，第二张为反面</p>
+		</div>
+		<div class="flex jucenter mt15">
+			<div class="qwe">
+				<div id="prev" class="haokan">
+					<img src="../images/myimg/688660269851391423.png" alt="" id="view" />
+					<input type="file" id="file" accept="image/*" name='file' />
+				</div>
+			</div>
+			<div class="qwe" style="margin:0 20px;">
+				<div id="prev1" class="haokan">
+					<img src="../images/myimg/688660269851391423.png" alt="" id="view1" />
+					<input type="file" id="file1" accept="image/*" />
+				</div>
+			</div>
+			<!-- <div class="qwe">
+				<div id="prev2" class="haokan">
+					<img src="../images/myimg/688660269851391423.png" alt="" id="view2" />
+					<input type="file" id="file2" accept="image/*" name='file' />
+				</div>
+			</div> -->
+		</div>
+
+
+		<button class="bgLinearblue ftw ft16" data-localize="auth.updata">提交</button>
+	</div>
+	<script type="text/javascript" src="../lib/jquery-2.1.1.min.js"></script>
+	<script type="text/javascript" src="../lib/layer_mobile/layer.js"></script>
+	<script type="text/javascript" src="../javascripts/jquery.cookie.js"></script>
+	<script type="text/javascript" src="../lib/jquery.localize.min.js"></script>
+	<script type="text/javascript" src="../lib/language_cookie.js"></script>
+	<script type="text/javascript" src="../javascripts/main.js"></script>
+	<script>
+			$(function () {
+				// FastClick.attach(document.body);
+				$('#file').change(function () {
+					var formData = new FormData();
+					formData.append("file", $("#file")[0].files[0]);
+					var i = layer_loading()
+					$.ajax({
+						url: _API + 'upload',
+						type: 'post',
+						data: formData,
+						processData: false,
+						contentType: false,
+						success: function (msg) {
+							if (msg.type == 'ok') {
+								$("#view").attr("src", msg.message);
+								setTimeout(function () {
+									layer_close(i);
+								}, 3000)
+							} else {
+								$("#view").attr("src", '../images/myimg/688660269851391423.png');
+								layer_msg(msg.message)
+							}
+						}
+					});
+				});
+				$('#file2').change(function () {
+					var formData = new FormData();
+					formData.append("file", $("#file2")[0].files[0]);
+					var i = layer_loading()
+					$.ajax({
+						url: _API + 'upload',
+						type: 'post',
+						data: formData,
+						processData: false,
+						contentType: false,
+						success: function (msg) {
+							if (msg.type == 'ok') {
+								$("#view2").attr("src", msg.message);
+								setTimeout(function () {
+									layer_close(i);
+								}, 3000)
+							} else {
+								layer_msg(msg.message)
+							}
+						}
+					});
+				});
+				$('#file1').change(function () {
+					var formData = new FormData();
+					formData.append("file", $("#file1")[0].files[0]);
+					var i = layer_loading();
+					$.ajax({
+						url: _API + 'upload',
+						type: 'post',
+						data: formData,
+						processData: false,
+						contentType: false,
+						success: function (msg) {
+							if (msg.type == 'ok') {
+								$("#view1").attr("src", msg.message);
+								setTimeout(function () {
+									layer_close(i);
+								}, 3000)
+							} else {
+								layer_msg(msg.message)
+							}
+						}
+					});
+				});
+				$("button").click(function () {
+					var token = get_user_login();
+					var name = $(".name").val();
+					var sfzh = $(".sfzh").val();
+					var img1 = $("#view").attr("src");
+					var img2 = $("#view1").attr("src");
+					var img3 = $("#view2").attr("src");
+					var aa = this;
+					var token = get_user_login();
+					if (!name) {
+						layer_msg(getlg('prname'));
+						return false;
+					}
+					if (!sfzh) {
+						layer_msg(getlg('pid'));
+						return false;
+					}
+					if (img1 == '../images/myimg/688660269851391423.png' || img2 == '../images/myimg/688660269851391423.png' ) {
+						layer_msg(getlg('pimg'));
+						return false;
+					}
+					$.ajax({
+						url: _API + 'user/real_name',
+						type: 'POST',
+						data: {
+							name: name,
+							card_id: sfzh,
+							front_pic: img1,
+							reverse_pic: img2,
+							// hand_pic: img3
+						},
+						dataType: 'JSON',
+						async: true,
+						beforeSend: function beforeSend(request) {
+							request.setRequestHeader("Authorization", token);
+						},
+						success: function (data) {
+							layer_msg(data.message);
+		
+							if (data.type == 'ok') {
+								setTimeout(function () {
+									location.href = 'index.html'
+								}, 1500)
+							}
+		
+						}
+		
+					})
+				})
+			})
+		</script>
+</body>
+
+</html>

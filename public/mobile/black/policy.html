@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>隐私或政策</title>
+		<link rel="stylesheet" type="text/css" href="../css/common.css" />
+		
+	</head>
+	<body class="bgBalck">
+		<div id="app" v-clock>
+			<header class="header">
+				<a class="back mt5" href="javascript:history.go(-1)">
+					
+				</a>
+				<h4 class="ft16">{{List.title}}</h4>
+			</header>
+     <div class="header-space"></div>
+			<div class="nav ml10 mr10">
+				<!-- <h5 class="ft16 mt20">{{List.title}}</h5> -->
+				<div v-html="List1" v-if="List1.length" class="ft14">
+					<!-- {{List1}} -->
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="../lib/jquery-2.1.1.min.js"></script>
+		<script type="text/javascript" src="../javascripts/jquery.cookie.js"></script>
+		<script type="text/javascript" src="../lib/vue.min.js"></script>
+		<script type="text/javascript" src="../lib/jquery.localize.min.js"></script>
+		<script type="text/javascript" src="../lib/language_cookie.js"></script>
+		<script type="text/javascript" src="../javascripts/main.js"></script>
+		<script>
+				var vue = new Vue({
+					el: '#app',
+					data: {
+						List: [],
+						List1: []
+					},
+					mounted: function() {
+						var self = this;
+						// var token = get_user_login();
+						$.ajax({
+							url: _API + "news/detail",
+							type: "POST",
+							dataType: "json",
+							async: true,
+							data: {
+								"id": 8
+							},
+							success: function success(data) {
+								if (data.type == 'ok') {
+									self.List = data.message;
+									self.List1 = data.message.content;
+								} else if (data.type == '999') {
+									window.location = 'login.html';
+								}
+							}
+						});
+					},
+					methods: {
+			
+					}
+				});
+			</script>
+	</body>
+</html>
+

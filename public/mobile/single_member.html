@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, viewport-fit=cover" />
+    <title>带单详情</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/single_member.css" />
+</head>
+
+<body>
+	<header class="header">
+		<a href="javascript:history.go(-1)" class="back mt5"></a>
+		<h4 class="ft16">带单详情</h4>
+	</header>
+	<div class="header-space"></div>
+	<div class="member-container">
+		<div class="member-bg">
+			<img src="images/logo2.png">
+			<span>矿工</span>
+		</div>
+		<div class="member-assest">
+			<article>
+				<span>实盘资产</span>
+				<h1>926.0896 USDT</h1>
+			</article>
+			<article>
+				<span>实盘收益率</span>
+				<h1>26.41%</h1>
+			</article>
+		</div>
+	</div>
+	<div class="member-menu">
+		<article><span class="menu-active">带单信息</span></article>
+		<article><span>带单历史</span></article>
+	</div>
+	<div class="member-kg">
+		<div class="member-kg-title">矿工</div>
+		<div class="member-kg-list">
+			<article>
+				<span>起投额度</span>
+				<h1>50 USDT</h1>
+			</article>
+			<article>
+				<span>交易品种</span>
+				<h1>BTC/USDT合约</h1>
+			</article>
+		</div>
+		<div class="member-kg-time">带单结束时间：2020-03-30 08:13:20</div>
+	</div>
+	<div class="member-kg">
+		<div class="member-kg-title">跟单信息</div>
+		<div class="member-kg-list">
+			<article>
+				<span>利润分成</span>
+				<h1>5%</h1>
+			</article>
+			<article>
+				<span>跟单保护</span>
+				<h1>止损线50%</h1>
+			</article>
+		</div>
+	</div>
+	<div class="member-kg">
+		<div class="member-kg-title">跟单信息</div>
+		<div class="member-content">123123213121531243142341423124314234</div>
+	</div>
+	<div class="btm-mar"></div>
+	<div class="member-fix">
+		<button>立即跟单</button>
+	</div>
+    <script type="text/javascript" src="lib/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="lib/bootstrap.min.js"></script>
+	<script type="text/javascript" src="javascripts/jquery.cookie.js"></script>
+	<script type="text/javascript" src="lib/layer_mobile/layer.js"></script>
+	<script type="text/javascript" src="lib/jquery.localize.min.js?v=10"></script>
+	<script type="text/javascript" src="lib/language_cookie.js"></script>
+	<script type="text/javascript" src="javascripts/main.js"></script>
+	<script>
+		$(".member-menu article").click(function(){
+			$(".member-menu article span").removeClass('menu-active');
+			$(this).find('span').addClass('menu-active');
+		})
+	</script>
+</body>
+
+</html>

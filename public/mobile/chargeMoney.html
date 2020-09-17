@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>充币</title>
+    <link rel="stylesheet" href="css/common.css">
+</head>
+<style>
+    .codes {
+        width: 220px;
+        margin: 50px auto 20px auto;
+    }
+
+    #code {
+        width: 220px;
+        height: 220px;
+        border: 10px solid #fff;
+    }
+    .tab-list{
+    	flex-direction: row;
+    	margin:1rem 5% 0;
+    	display: none;
+    }
+    .tab-list span:last-child{
+    	margin-left: 5%;
+    }
+    .tab-list span{
+    	color:#fff;
+    	width: 47%;
+	    border-radius: 20px;
+	    padding: 0.5rem 0;
+	    text-align: center;
+	    border:1px solid #588bf7;
+	    color:#333;
+    }
+    .tabactive{
+    	color:#fff !important;
+    	background: #588bf7;
+    }
+    .cz-row {
+	    display: flex;
+	    flex-direction: row;
+	    align-items: center;
+	    margin: 1rem 5%;
+	}
+	.cz-row label {
+	    width: 30%;
+	    color: #999;
+	    font-size: 1rem;
+	}
+	.cz-row input {
+	    width: 70%;
+	    background: #ddd;
+	    padding: 0.3rem;
+	    color: #999;
+	    border-radius: 3px;
+	}
+	.cz-row{
+		color:#f00;
+	}
+	.qb-box {
+	    margin: 1rem 5%;
+	    font-size: 1rem;
+	    color: #999;
+	}
+	.qb-box input {
+	    display: block;
+	    width: 100%;
+	    color: #999;
+	    background: #ddd;
+	    padding: 0.3rem;
+	    border-radius: 3px;
+	    margin: 0.3rem 0;
+	}
+	.qb-box span {
+	    font-size: 0.8rem;
+	    color: #f00;
+	}
+	.ck-btn {
+	    background: #588bf7;
+	    margin: 10px 16% 0;
+	    border-radius: 5px;
+	    padding: 10px 0;
+	    color: #fff;
+	    text-align: center;
+	}
+</style>
+
+<body class="bgWhite">
+    <header class="header">
+        <a class="back mt5" href="javascript:history.go(-1)">
+        </a>
+        <h4 class="ft16" data-localize="assets.cmoney">充币</h4>
+    </header>
+    <div class="header-space"></div>
+    <div class="tab-list">
+    </div>
+    <div class="plr15">
+        <div class="codebox">
+            <div class="codes">
+                <div id="code"></div>
+            </div>
+        </div>
+        <div class="address tc plr10 ft14 "></div>
+        <div class="copy blue tc mt10 ft14" data-localize="assets.copyaddress">复制地址</div>
+        <div class="cz-row">
+	    	<label>充值数量：</label>
+	    	<input id="number" type="number">
+	    </div>
+	    <div class="qb-box">
+	    	<aside>钱包地址：</aside>
+	    	<input id="address" type="text">
+	    	<span>*填写转币的地址(必填)</span>
+	    </div>
+	    <div class="ck-btn" id="submit">点击提交</div>
+        <div class="ft12 mt40 colorGrey">
+            * <span data-localize="assets.a01">请勿向上述地址充值任何非</span> <span class="titles"></span><span data-localize="assets.a02">资产，</span><span data-localize="assets.a03">否则将不可找回。</span><br>
+            * <span data-localize="assets.a06">最小充值金额：</span>0.1 <span class="titles"></span>。<br>
+            * <span data-localize="assets.a10">你的会在3-6个网络确认后到帐。</span> <br>
+            * <span data-localize="assets.a11">所有BITSGN的充币地址都是多重签名冷钱包地址，所有钱包均不曾被联网的机器读取。</span>
+        </div>
+    </div>
+    <script type="text/javascript" src="lib/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="javascripts/jquery.cookie.js"></script>
+    <script type="text/javascript" src="lib/layer_mobile/layer.js"></script>
+    <script type="text/javascript" src="javascripts/jquery.qrcode.min.js"></script>
+    <script type="text/javascript" src="javascripts/clipboard.min.js"></script>
+    <script type="text/javascript" src="lib/jquery.localize.min.js"></script>
+    <script type="text/javascript" src="lib/language_cookie.js"></script>
+    <script type="text/javascript" src="javascripts/main.js"></script>
+    <script>
+        var token = get_user_login();
+        var currency = get_param('id');
+        var name = get_param('name');
+        $(function () {
+        	$('#submit').on('click',function(){
+				var acc = $('#address').val();
+				var money = $('#number').val();
+				var url = _API + 'wallet/charge_req';
+				console.log(money);
+				layer_loading();
+				$.ajax({
+					type:'POST',
+					url:url,
+					data:{
+						amount:money,
+						account:acc,
+						currency:currency
+					},
+					 dataType: "json",
+					beforeSend: function beforeSend(request) {
+		                request.setRequestHeader("Authorization", token);
+		            },
+					success: function(res){
+		                layer_close();
+		                if (res.type=="ok"){
+		                	$('#address').val('');
+		                	$('#number').val('');
+		                    layer_msg('申请成功')
+		                } else {
+		                    layer_msg(res.message);
+		                }
+		            }
+				})
+			})
+            // FastClick.attach(document.body);
+            $('.titles').html(name)
+            getData();
+            getrate();
+            $('.copy').click(function () {
+                var adre = $('.address').text();
+                copy(adre);
+            })
+        })
+        // 生成二维码
+        function code(addre) {
+            $('#code').qrcode({
+                width: 200, //宽度
+                height: 200, //高度
+                text: addre
+            });
+        }
+        // 复制地址
+        function copy(addre) {
+            var content = addre;
+            var clipboard = new Clipboard('.copy', {
+                text: function () {
+                    return content;
+                }
+            });
+            clipboard.on('success', function (e) {
+                layer_msg(getlg('copys'))
+            });
+
+            clipboard.on('error', function (e) {
+                layer_msg(getlg('pcopy'))
+            });
+        }
+
+        function getData() {
+            layer_loading();
+            $.ajax({
+                type: "POST",
+                url: _API + 'wallet/get_in_address',
+                data: {
+                    currency: currency
+                },
+                dataType: "json",
+                async: true,
+                beforeSend: function beforeSend(request) {
+                    request.setRequestHeader("Authorization", token);
+                },
+                success: function (res) {
+                	let omni="";
+                	let erc20="";
+                    layer_close();
+                    if (res.type == "ok") {
+                    	let data=res.message;
+                    	if(data.erc20){
+                    		$(".tab-list").css('display','flex');
+                    		var num=0;
+                    		for(let i in data){
+                    			if(num==0){
+                    			    if(i=="omni"){
+                    			        omni="<span onclick='tabCode(this)'  data-address="+data[i]+">"+i+"</span>";
+                    			    }
+	                    			// $(".tab-list").append($("<span onclick='tabCode(this)' class='tabactive' data-address="+data[i]+">"+i+"</span>"));
+	                    			code(data[i]);
+		                        	copy(data[i]);	
+                    				$(".address").html(data[i]);
+                    			}else{
+                    			    if(i=="erc20"){
+                    			        erc20="<span onclick='tabCode(this)' class='tabactive' data-address="+data[i]+">"+i+"</span>";
+                    			    }
+                    				// $(".tab-list").append($("<span onclick='tabCode(this)' data-address="+data[i]+">"+i+"</span>"));
+                    			}
+                    			num++;
+                    		}
+                    		// code(res.message.erc20);
+	                     //   copy(res.message.erc20);
+	                     $(".tab-list").append(erc20);
+	                     $(".tab-list").append(omni);
+                    	}else{
+                    		$('.address').html(data)
+	                        code(data);
+	                        copy(data);	
+                    	}
+                    } else {
+                        layer_msg(data);
+                    }
+                }
+            })
+        }
+
+        function getrate() {
+            $.ajax({
+                type: "POST",
+                url: _API + 'wallet/get_info',
+                data: {
+                    currency: currency
+                },
+                dataType: "json",
+                async: true,
+                beforeSend: function beforeSend(request) {
+                    request.setRequestHeader("Authorization", token);
+                },
+                success: function (res) {
+                    layer_close();
+                    if (res.type == "ok") {
+                        $('.mainnum').html(iTofixed(res.message.min_number,2))
+                    } else {
+                        layer_msg(res.message)
+                    }
+                }
+            })
+        }
+        function tabCode(that){
+        	$(".tab-list span").removeClass('tabactive');
+        	$(that).addClass("tabactive");
+        	let address=$(that).attr('data-address');
+        	 $("canvas").remove();
+        	 code(address);
+             copy(address);
+             $('.address').html(address);
+        }
+    </script>
+</body>
+
+</html>

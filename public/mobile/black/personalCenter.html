@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<title>个人中心</title>
+	<link rel="stylesheet" type="text/css" href="../fonts/iconfont.css" />
+	<link rel="stylesheet" type="text/css" href="../css/common.css" />
+</head>
+<style>
+	.nav li {
+		width: 100%;
+		line-height: 50px;
+		font-size: 14px;
+		height: 50px;
+		border-bottom: 1px solid #202833;
+		padding: 0 10px 0 15px;
+	}
+
+	.nav a {
+		width: 100%;
+		display: block;
+	}
+
+	.nav .iconfont {
+		font-size: 20px;
+		color: #959eaf;
+	}
+
+	.nav li:last-child>span {
+		border: none;
+	}
+
+	.nav img {
+		width: 15px;
+		height: 15px;
+		vertical-align: middle;
+		margin-top: 18px;
+	}
+
+	.nav span {
+		margin-left: 10px;
+		font-size: 16px;
+		position: relative;
+		top: -2px;
+	}
+</style>
+
+<body class="bgBalck">
+	<div id="app">
+		<header class="header">
+			<a class="back mt5" href="personal.html">
+
+			</a>
+			<h4 class="ft16" data-localize="index.usercenter">个人中心</h4>
+			<!-- <div class="right imgRight">
+					编辑
+				</div> -->
+		</header>
+		<div class="header-space"></div>
+
+
+		<div class="nav">
+			<ul>
+					<li>
+							<a href="personage.html">
+								<div class="flex between">
+									<div>
+										<i class="iconfont icon-gerenzhongxin"></i>
+										<span data-localize="index.usercenter">个人中心</span>
+									</div>
+									<img src="../images/myimg/jitou.png" alt="">
+								</div>
+							</a>
+						</li>
+			
+						<li>
+							<a href="Security.html">
+								<div class="flex between">
+									<div>
+										<i class="iconfont icon-anquan1"></i>
+										<span data-localize="index.security">安全中心</span>
+									</div>
+									<img src="../images/myimg/jitou.png" alt="">
+								</div>
+							</a>
+						</li>
+						<li>
+							<a href="adding.html">
+								<div class="flex between">
+									<div>
+										<i class="iconfont icon-paymg"></i>
+										<span data-localize="index.pay">收付款方式</span>
+									</div>
+									<img src="../images/myimg/jitou.png" alt="">
+								</div>
+							</a>
+						</li>
+						<li>
+							<a href="javascript:;" class="share">
+								<div class="flex between">
+									<div>
+										<i class="iconfont icon-tuiguang"></i>
+										<span data-localize="code.mycode">我的推广码</span>
+									</div>
+									<img src="../images/myimg/jitou.png" alt="">
+								</div>
+							</a>
+						</li>
+			</ul>
+
+		</div>
+	</div>
+	<script type="text/javascript" src="../lib/jquery-2.1.1.min.js"></script>
+	<script type="text/javascript" src="../lib/layer_mobile/layer.js"></script>
+	<script type="text/javascript" src="../javascripts/jquery.cookie.js"></script>
+	<script type="text/javascript" src="../lib/jquery.localize.min.js"></script>
+	<script type="text/javascript" src="../lib/language_cookie.js"></script>
+	<script type="text/javascript" src="../javascripts/main.js"></script>
+	<script type="text/javascript" src="../javascripts/personal.js"></script>
+	<script>
+		$(function () {
+			initDataTokens({
+				url: 'user/info'
+			}, function (data) {
+				if (data.type == 'ok') {
+
+					$('.share').data('id', data.message.extension_code);
+
+				}
+
+			})
+		})
+	</script>
+</body>
+
+</html>

@@ -1,0 +1,115 @@
+
+.my2{
+  /*background: none;不能删*/
+}
+.chart-page .chart-container{
+  border: none;
+}
+.header-group-bars-style{
+  display: none !important;
+}
+.header-group-symbol-search{
+  display: none !important;
+}
+.header-group-properties{
+  float: right;
+}
+.header-group-indicators{
+  float: right;
+}
+.header-chart-panel .header-group-fullscreen{
+  float: right;
+  display: none;
+}
+
+
+
+.bottom-widgetbar-content.backtesting .button, .header-chart-panel .button{
+  
+  padding: 7px 5px;
+  border: none;
+  background: none;
+  color: #4e5b85;
+}
+.mydate{
+  color: #f0b90b !important;
+  border-bottom: 1px solid #f0b90b !important
+}
+.js-rootresizer__contents{
+  background:#131f30;
+}
+
+.pane-legend-item-value-wrap .pane-legend-item-value:first-child{
+	display: none;
+}
+
+.button.indicators svg {
+  fill: #4e5b85;
+}
+.button.fullscreen svg {
+  fill: #4e5b85;
+}
+.button.properties svg {
+  fill: #4e5b85;
+}
+@media only screen and (max-width: 410px){
+  .header-chart-panel .group.header-group-indicators {
+      display: block!important;
+  }
+}
+.pane-controls.toppane{
+  display: none;
+}
+.pane-legend-line.pane-legend-wrap.study{
+  display: none;
+}
+.control-bar-wrapper{
+  display: none;
+}
+.pane-controls{
+  display: none;
+}
+.tv-search-row.tv-insert-indicator-dialog__search-control{
+  display: none;
+}
+.tv-dialog{
+  background: #131f30 !important;
+  color: #5a718e;
+}
+.layout__area--top.header-chart-panel.header-chart-panel--compact{
+  background: #131f30
+}
+.pane-legend-line .pane-legend-icon-container{
+  display: none ;
+}
+.pane-legend .pane-legend-minbtn.apply-common-tooltip.apply{
+  display: none;
+}
+.pane-legend-line>span.pane-legend-line.apply-overflow-tooltip.no-context-menu.main{
+  display: none;
+}
+.feature-touch .header-chart-panel .button:active{
+  background: none !important;
+}
+.tv-dialog__section {
+  border-bottom-color: #2b323b !important;
+}
+.tv-dialog__title {
+  color: #5a718e !important;
+}
+.tv-dialog__close svg {
+  fill: #f1f3f6 !important;
+}
+.header-chart-panel .button.active{
+  background: none !important;
+}
+.tv-insert-indicator-dialog__pages::-webkit-scrollbar-thumb {
+  border-color: #081724 !important;
+  background-color: #131f30 !important;
+}
+.header-chart-panel-content>.left>.group:nth-last-child(1){
+  display: inline-block;
+}
+#loading-indicator,body.chart-page {
+  background: #131f30 !important;
+}

@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<title>邀请</title>
+	<link rel="stylesheet" href="css/elementIndex.css" />
+	<link rel="stylesheet" href="css/common.css">
+	<style>
+		.bgs {
+			width: 10px;
+			height: 10px;
+			background: #f0b90b;
+			border-radius: 50%;
+		}
+
+		.el-timeline-item__node--large {
+			left: -3px;
+			width: 16px;
+			height: 16px;
+			background-color: rgba(255, 213, 213, 1) !important;
+		}
+
+		.el-timeline-item__content {
+			color: #f0b90b;
+
+		}
+
+		.el-timeline-item__tail {
+			border-left: 2px solid #f0b90b;
+		}
+
+		.el-timeline-item__timestamp {
+			font-size: 10px;
+		}
+
+		.el-timeline {
+			padding: 0;
+		}
+
+		.el-timeline-item {
+			padding-bottom: 10px;
+		}
+
+
+		body {
+
+			height: 100.0vh;
+		}
+
+		.share-header {
+			background-color: #f0b90b;
+			width: 100%;
+		}
+
+		.backs {
+			width: 100%;
+			height: 40px;
+			line-height: 40px;
+		}
+
+		.backs a {
+			display: block;
+			background: url(images/return3.png)no-repeat;
+			background-size: 30px 24px;
+			background-position: center;
+			margin-left: 5px;
+			width: 30px;
+			height: 24px;
+			position: relative;
+			top: 8px;
+		}
+
+		.share-header-text {
+			margin-top: 20px;
+			color: #fff;
+		}
+
+		.share-header-text h3 {
+			letter-spacing: 3px;
+			font-size: 18px;
+		}
+
+		.share-header-text p {
+			background: url(images/bg1.png)no-repeat;
+			background-size: 53.06vw 36px;
+			width: 53.06vw;
+			height: 36px;
+			line-height: 36px;
+			margin: 20px auto;
+			letter-spacing: 2px;
+			font-size: 14px;
+		}
+
+		.header-bottom {
+			width: 100%;
+			padding-bottom: 50px;
+		}
+
+		.header-bottom div {
+			width: 50%;
+			color: #fff;
+			padding-bottom: 10px;
+			padding-left: 12%;
+
+		}
+
+		.header-bottom .header-right {
+			padding-left: 10px;
+			padding-right: 10px;
+
+		}
+
+		.header-right p {
+			max-width: 80%;
+			min-width: 20%;
+			width: auto;
+			margin: 0 auto;
+
+		}
+
+		.header-right p:last-child {
+			margin: 10px auto 0;
+
+		}
+
+
+		.header-bottom p {
+			line-height: 30px;
+		}
+
+		.header-left {
+			border-right: 1px solid #fff;
+		}
+
+		.share-center {
+			width: 100%;
+			background-color: #fff;
+			padding: 60px 0;
+		}
+
+		.share-img {
+			width: 100%;
+			position: relative;
+			top: -50px;
+		}
+
+		.codes {
+			width: 150px;
+			height: 150px;
+			background-color: #fff;
+			text-align: center;
+			margin: 20px auto 0;
+
+		}
+
+		#code {
+			width: 140px;
+			height: 140px;
+			margin-left: 5px;
+			position: relative;
+			top: 5px;
+		}
+
+		.code {
+			width: 80%;
+			margin: 20px auto 0;
+			color: #f0b90b;
+
+		}
+
+		.btns {
+			width: 80%;
+			margin: 2px auto 0;
+		}
+
+		.btns button {
+			/* width: 40%; */
+			background-color: #f0b90b;
+			color: #fff;
+			font-size: 10px;
+			text-align: center;
+			line-height: 30px;
+			border-radius: 4px;
+			outline: none;
+			border: none;
+			margin: 0 auto;
+			padding: 5px 15px;
+		}
+
+		.share-center-text {
+			width: 90%;
+			margin: 20px auto 0;
+			/* background: url(images/bg3.png)no-repeat; */
+			background-size: 100% 150px;
+			padding: 10px 2px;
+			-webkit-box-shadow: 0 3px 14px 6px rgba(212, 221, 253, 0.8);
+			box-shadow: 0 3px 14px 6px rgba(212, 221, 253, 0.8);
+			background-color: #fff;
+			border-radius: 8px;
+		}
+
+		.share-center-text h4 {
+			color: #f0b90b;
+			padding-left: 5px;
+		}
+
+		.share-center-text p {
+			text-indent: 28px;
+			font-size: 14px;
+			letter-spacing: 2px;
+			line-height: 26px;
+			margin-top: 4px;
+			padding: 0 5px;
+		}
+
+		.share-center-word {
+			width: 90%;
+			margin: 15px auto 0;
+			-webkit-box-shadow: 0 3px 14px 6px rgba(212, 221, 253, 0.8);
+			box-shadow: 0 3px 14px 6px rgba(212, 221, 253, 0.8);
+			background-color: #fff;
+			border-radius: 8px;
+			padding: 10px 8px;
+			font-size: 14px;
+			letter-spacing: 2px;
+			line-height: 20px;
+
+		}
+
+		.share-bottom {
+			margin-top: 10px;
+			background-color: #fff;
+			padding: 20px 0 30px;
+			position: relative;
+		}
+
+		.share-bottom-header {
+			width: 140px;
+			height: 40px;
+			/* line-height: 40px; */
+			background-color: #f0b90b;
+			text-align: center;
+			color: #fff;
+			margin: 0 auto;
+			border-radius: 4px;
+			position: absolute;
+			top: 20px;
+			left: calc(50.0vw - 70px);
+
+
+		}
+
+		.share-bottom-content {
+			width: 90%;
+			margin: 20px auto 0;
+			-webkit-box-shadow: 0 3px 14px 6px rgba(212, 221, 253, 0.8);
+			box-shadow: 0 3px 14px 6px rgba(212, 221, 253, 0.8);
+			background-color: #fff;
+			border-radius: 8px;
+			padding: 40px 10px 10px;
+		}
+
+		.share-bottom-content-header {
+			height: 44px;
+			border-bottom: 2px solid #f1f1f1;
+			font-size: 13px;
+		}
+
+		.share-bottom-content-center {
+			color: #f0b90b;
+			line-height: 40px;
+			border-bottom: 1px solid #f1f1f1;
+		}
+
+		.share-bottom-content-bottom {
+			line-height: 24px;
+			margin-bottom: 10px;
+		}
+
+		.header-right b {
+			font-weight: normal;
+			font-size: 10px;
+		}
+		.share-fenx{
+		    text-align: center;
+		    font-size: 16px;
+		    color:#90a2b0;
+		}
+		.link-fenx{
+		    margin: 30px 0 10px;
+		    text-align: center;
+		    font-size: 16px;
+		    color:#90a2b0;
+		}
+		.copy-link button{
+		    width: 20%;
+		    border: 0;
+		    background: none;
+		    color:#588bf7;
+		}
+		.copy-link span{
+		    width: 80%;
+		    white-space: nowrap;
+		    overflow: hidden;
+		    text-overflow: ellipsis;
+		}
+		.copy-link{
+		    justify-content: space-between;
+		    border-radius: 20px;
+		    padding: 10px 5%;
+		    display: flex;
+		    flex-direction: row;
+		    background: #f7f7fa;
+		    width: 80%;
+		    margin: 0 auto;
+		}
+		.bgwhite{
+		    background: #fff;
+		}
+		.yourcode{
+		    text-align: center;
+		    font-size: 16px;
+		    color:#90a2b0;
+		    margin-top: 60px;
+		    display: flex;
+		    flex-direction: column;
+		}
+		.yourcode span{
+		    margin-bottom: 50px;
+		}
+	</style>
+
+</head>
+
+<body class="bgwhite">
+	<div id="app" v-cloak>
+	    <header class="header">
+		<a class="back" href="javascript:history.go(-1)">
+		</a>
+		<h4 class="ft16" data-localize="zdy.fenxiang">我要分享</h4>
+	</header>
+	<div class="header-space"></div>
+		<div class="share-center">
+			<!-- <img class="share-img" src="images/bg6.png" alt=""> -->
+			
+	    <div class="share-fenx" data-localize="zdy.erweimafenx">二维码分享</div>
+			<div class="codes">
+				<div id="code"></div>
+			</div>
+			<div class="link-fenx" data-localize="zdy.linkfenx">鏈接分享</div>
+			<div class="copy-link">
+			    <span>{{urls}}</span>
+			    <button type="button" class="copy" @click="copys" data-localize="zdy.copy">复制</button>
+			</div>
+			<div class="yourcode">
+			    <span data-localize="zdy.yourcode">您的邀请码</span>
+			    <em>{{code}}</em>
+			</div>
+			<!--<div class="code">{{urls}}</div>-->
+			<!--<div class="btns flex ">-->
+			<!--	<button type="button" class="copy" @click="copys" data-localize="contract.copyLinks">复制推广链接</button>-->
+				<!-- <button type="button">我的专属海报</button> -->
+			<!--</div>-->
+			<!-- <div class="share-center-text">
+				<h4 data-localize="contract.moneyVein">人脉变钱脉</h4>
+				<p>{{newDetal.keyword}}</p>
+			</div>
+			<div class="share-center-word">
+				{{newDetal.abstract}}
+			</div> -->
+		</div>
+		<!-- <div class="share-bottom">
+			<p class="share-bottom-header flex alcenter jucenter" data-localize="contract.example">佣金示例</p>
+			<div class="share-bottom-content" v-html="newDetal.content">
+			</div>
+
+		</div> -->
+	</div>
+	<script type="text/javascript" src="lib/vue.min.js"></script>
+	<script type="text/javascript" src="lib/jquery-2.1.1.min.js"></script>
+	<script type="text/javascript" src="lib/layer_mobile/layer.js"></script>
+	<script type="text/javascript" src="javascripts/jquery.cookie.js"></script>
+	<script type="text/javascript" src="javascripts/elementIndex.js"></script>
+	<script type="text/javascript" src="javascripts/jquery.qrcode.min.js"></script>
+	<script type="text/javascript" src="javascripts/clipboard.min.js"></script>
+	<script type="text/javascript" src="lib/jquery.localize.min.js"></script>
+	<script type="text/javascript" src="lib/language_cookie.js"></script>
+	<script type="text/javascript" src="javascripts/main.js"></script>
+	<script>
+		var vue = new Vue({
+			el: '#app',
+			data: {
+
+				// activities: [{
+				// 	content: '一天的佣金',
+				// 	timestamp: '50USDT x 20笔 x 10位 x 20% x 2% = 40USDT',
+				// 	color: '#d6e0fd',
+				// 	icon: 'bgs',
+				// 	size: 'large',
+				// }, {
+				// 	content: '一周的佣金',
+				// 	timestamp: '50USDT x 20笔 x 10位 x 7天 x 20% x 2% = 280USDT',
+				// 	color: '#d6e0fd',
+				// 	icon: 'bgs',
+				// 	size: 'large',
+				// }, {
+				// 	content: '一月的佣金',
+				// 	timestamp: '50USDT x 20笔 x 10位 x 30天  x 20% x 2% = 40USDT',
+				// 	color: '#d6e0fd',
+				// 	icon: 'bgs',
+				// 	size: 'large',
+				// }, {
+				// 	content: '坐享好友交易',
+				// 	timestamp: '',
+				// 	color: '#d6e0fd',
+				// 	icon: 'bgs',
+				// 	size: 'large',
+				// }],
+				code: get_param('code'),
+				token: get_user_login(),
+				urls: '',
+				datas: {},
+				newDetal: {}
+			},
+
+			mounted: function () {
+				let that = this;
+				that.urls = _DOMAIN + '/mobile/register.html?code=' + that.code;
+				that.codes(that.urls);
+				var clipboard = new Clipboard(".copy", {
+					text: function () {
+						return that.urls;
+					}
+				});
+				clipboard.on("success", function (e) {
+					layer_msg(getlg('copys'));
+				});
+				clipboard.on("error", function (e) {
+					layer_msg(getlg('pcopy'));
+				});
+				that.init()
+
+			},
+			methods: {
+				init() {
+					var that = this;
+					initDataTokens({
+						url: 'mining'
+					}, function (res) {
+						console.log(res);
+						if (res.type == 'ok') {
+							that.datas = res.message;
+						}
+					});
+					$.ajax({
+						type: 'post',
+						url: _API + 'news/list',
+						dataType: 'json',
+						data: {
+							c_id: 20
+						},
+						success: function (data) {
+							console.log(data);
+							if (data.type == 'ok') {
+								initDataTokens({
+									url: 'news/detail',
+									type: 'post',
+									data: {
+										id: data.message.list[0].id
+									},
+								}, function (res) {
+									console.log(res);
+									if (res.type == 'ok') {
+										that.newDetal = res.message;
+									}
+								});
+							}
+						}
+					});
+
+				},
+				codes(addre) {
+					$('#code').qrcode({
+						width: 140, //宽度
+						height: 140, //高度
+						text: addre
+					});
+				},
+				copys() {
+					var that = this;
+					var clipboard = new Clipboard(".copy", {
+						text: function () {
+							return that.urls;
+						}
+					});
+					clipboard.on("success", function (e) {
+						layer_msg(getlg('copys'));
+					});
+					clipboard.on("error", function (e) {
+						layer_msg(getlg('pcopy'));
+					});
+
+				}
+
+
+
+
+
+			}
+		});
+	</script>
+</body>
+
+</html>

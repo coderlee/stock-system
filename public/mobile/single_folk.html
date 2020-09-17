@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, viewport-fit=cover" />
+    <title>跟单</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/single_folk.css" />
+</head>
+
+<body>
+	<div id="app" v-cloak>
+	<header class="header">
+		<a href="javascript:history.go(-1)" class="back mt5"></a>
+		<!--<h4 class="ft16">跟单</h4>-->
+		<a href="index.html"><img src="images/back_index.png" class="back_index"></a>
+	</header>
+	<div class="header-space"></div>
+	<div class="folk-container">
+		<div class="folk-title">
+			<span>{{getlg('gensui')}}</span>
+			<h1>其实金融学院</h1>
+		</div>
+		<div class="folk-currency">
+			<h1>{{getlg('gdbz')}}</h1>
+			<article>
+				<span>USDT</span>
+				<img src="images/btm_arrow.png" />
+			</article>
+		</div>
+		<div class="folk-moeny">
+			<div class="folk-box">
+				<div class="folk-left">
+					<h1>{{getlg('gdss')}}<span>(USDT)</span></h1>
+				</div>
+				<!--<div class="folk-right">-->
+				<!--	<span @click="capmoney(0)">—</span>-->
+				<!--	<input type="number"  onclick="scrollInput(this)" placeholder="请输入手数"  v-model="capval">-->
+				<!--	<span @click="capmoney(1)">+</span>-->
+				<!--</div>-->
+			</div>
+			<div class="flok-cap"><input type="number"  @input="capNum" placeholder="请输入手数"  v-model="capval"></div>
+			<div class="flok-sele">
+    			<span @click="capsele(index)" :class="[capval===item.value?'folk-active':'']"  v-for="(item,index) in capList">{{item.txt}}</span>
+    		</div>
+			<div class="folk-tip">{{getlg('mcgsxdss')}}：2.00USDT</div>
+		</div>
+		<div class="folk-moeny" style="border-bottom:0">
+			<div class="folk-box">
+				<div class="folk-left">
+					<h1>{{getlg('drgsbzj')}<span>(USDT)</span></h1>
+				</div>
+				<!--<div class="folk-right">-->
+				<!--	<span @click="daymoney(0)">—</span>-->
+				<!--	<input type="number" onclick="scrollInput(this)" placeholder="请输入保证金" v-model="daycapval">-->
+				<!--	<span @click="daymoney(1)">+</span>-->
+				<!--</div>-->
+			</div>
+			<div class="flok-cap"><input type="number"  @input="dayNum" placeholder="请输入保证金"  v-model="daycapval"></div>
+			<div class="flok-sele">
+    			<span @click="daysele(index)" :class="[daycapval===item.value?'folk-active':'']"  v-for="(item,index) in dayList">{{item.txt}}</span>
+    		</div>
+			<div class="folk-tip">{{getlg('drgsbzjmax')}}2000.00</div>
+		</div>
+	</div>
+	<div class="folk-btn">
+		<!--<article  onclick="window.location.href='single_manage.html'">立即跟随</article>-->
+		<article  @click="folkme()" :style="{'background': (btnClass? '#999':'')}">{{getlg('ljgs')}}</article>
+	</div>
+	</div>
+    <script type="text/javascript" src="lib/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="lib/bootstrap.min.js"></script>
+	<script type="text/javascript" src="javascripts/jquery.cookie.js"></script>
+	<script type="text/javascript" src="lib/layer_mobile/layer.js"></script>
+	<script type="text/javascript" src="lib/jquery.localize.min.js?v=10"></script>
+	<script type="text/javascript" src="lib/language_cookie.js"></script>
+	<script type="text/javascript" src="javascripts/main.js"></script>
+	<script type="text/javascript" src="lib/vue.min.js"></script>
+	<script>
+	// initDataToken({
+	// 	url:'new_gd',
+	// 	type:'POST',
+	// })
+	 var token = get_user_login();
+	var vue = new Vue({
+            el: '#app',
+            data: {
+            	gd_uid:'',
+            	capval:'',
+            	daycapval:'',
+            	btnClass:false,
+            	capSelected:'',
+            	capList:[
+            		{txt:'2手',value:'2'},
+            		{txt:'5手',value:'5'},
+            		{txt:'10手',value:'10'},
+            		{txt:'20手',value:'20'},
+            		{txt:'30手',value:'30'},
+            	],
+            	dayList:[
+            		{txt:'100',value:'100'},
+            		{txt:'200',value:'200'},
+            		{txt:'500',value:'500'},
+            		{txt:'1000',value:'1000'},
+            		{txt:'2000',value:'2000'},
+            	]
+            },
+            filters: {
+                toFixeds2: function (value) {
+                    var vals = iTofixed(value,2);
+						return vals;
+                },
+            },
+            mounted() {
+				let url=window.location.href;
+				this.gd_uid=url.substring(url.indexOf("uid")+4);
+            },
+            methods: {
+            	dayNum(){
+            		let that=this;
+            		let textValue = /^[1-9]*[0-9][0-9]*$/;
+            		if (!textValue.test(that.capval)) {
+						layer_msg(getlg('pznum'));
+						return false;
+					}
+            	},
+            	daysele(index){
+            		this.daycapval=this.dayList[index].value;
+            	},
+            	capNum(){
+            		let that=this;
+            		let textValue = /^[1-9]*[0-9][0-9]*$/;
+            		if (!textValue.test(that.capval)) {
+						layer_msg('请输入正整数');
+						return false;
+					}
+            	},
+            	capsele(index){
+            		this.capval=this.capList[index].value;
+            	},
+            	folkme(){
+            		if(this.capval<=0){
+            			layer_msg('跟单本金数值错误');
+            			return
+            		}
+            		if(this.daycapval<this.capval){
+            			layer_msg('单日跟随本金不能低于跟单本金');
+            			return
+            		}
+            		let that=this;
+            		this.btnClass=true;
+            		
+            		initDataToken01({
+            			url:'new_gd',
+            			data:{gd_user_id:this.gd_uid,value:this.capval,day_max:this.daycapval},
+            			type:'POST',
+            		},function(res){
+            			that.btnClass=false;
+            			layer_msg(res.message);
+            		})
+            	},
+            	capmoney(type){
+            		if(type==1){
+            			this.capval+=1;
+	            		if(this.capval>=2000){
+	            			this.capval=2000;
+	            		}
+            		}else{
+            			this.capval-=1;
+	            		if(this.capval<=2){
+	            			this.capval=2;
+	            		}
+            		}
+            	},
+            	daymoney(type){
+            		if(type==1){
+            			this.daycapval+=1;
+	            		if(this.daycapval>=2000){
+	            			this.daycapval=2000;
+	            		}
+            		}else{
+            			this.daycapval-=1;
+	            		if(this.daycapval<=this.capval){
+	            			this.daycapval=this.capval;
+	            		}
+            		}
+            	}
+            }
+	})
+	$(".folk-right")
+	function scrollInput(that){
+	  setTimeout(function(){  
+          $(that).scrollIntoView(); // 参数可以是true， false, 空参数  
+      }, 300);
+	}
+	</script>
+</body>
+
+</html>

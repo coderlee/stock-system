@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<title>商家申请</title>
+	<link rel="stylesheet" type="text/css" href="css/common.css" />
+	<style>
+		.remember-password input {
+			-webkit-appearance: checkbox;
+			width: 15px;
+			height: 15px;
+			margin-right: 10px;
+			position: relative;
+			top: 3px;
+		}
+
+		.application {
+			margin: 20px;
+		}
+
+		.application h3 {
+			margin-bottom: 20px;
+		}
+
+		.application p {
+			margin-bottom: 20px;
+			line-height: 1.5
+		}
+
+		.application-btn {
+			margin: 20px;
+			line-height: 40px;
+			border: none;
+			outline: none;
+			border-radius: 2px;
+			background: -webkit-gradient(linear, left top, right top, from(#588bf7), to(#588bf7));
+			background: linear-gradient(to right, #588bf7, #588bf7);
+		}
+
+		.application-btn button {
+			width: 100%;
+			line-height: 40px;
+			border: none;
+			outline: none;
+			border-radius: 2px;
+			background-color: rgba(0, 0, 0, 0)
+		}
+
+		body {
+			background-color: #fff;
+		}
+	</style>
+</head>
+
+<body>
+	<div id="app" v-cloak>
+		<header class="header">
+			<a class="back mt5" href="javascript:history.go(-1)">
+
+			</a>
+			<h4 class="ft16">商家申请</h4>
+		</header>
+		<div class="header-space"></div>
+		<div class="application">
+			<h3>步骤一：提交申请</h3>
+			<p>买卖商户必须为平台认证商户，并在本页面点击“确认申请”按钮，提交申请，并同意冻结<span class="lock"></span>作为商家保证金。</p>
+			<h3>步骤二：资料审核</h3>
+			<p>我们系统自动审核商家申请资料及匹配以往交易，确认符合商家申请条件，您可以在法币交易区发布广告。如申请条件未符合，我们将12小时内联系您，请保持通讯畅通。</p>
+			<div class="remember-password mt40"><input v-model="checkboxValue" @change="agree" type="checkbox" name="" id="">
+				<span>同意冻结<b class="lock"></b>作为商家保证金</span></div>
+		</div>
+		<div class="application-btn">
+			<button type="button" class="white" @click="sumbits">申请成为商家</button>
+		</div>
+	</div>
+	<script type="text/javascript" src="lib/jquery-2.1.1.min.js"></script>
+	<script type="text/javascript" src="javascripts/jquery.cookie.js"></script>
+	<script type="text/javascript" src="lib/vue.min.js"></script>
+	<script type="text/javascript" src="lib/layer_mobile/layer.js"></script>
+	<script type="text/javascript" src="lib/jquery.localize.min.js"></script>
+	<script type="text/javascript" src="lib/language_cookie.js"></script>
+	<script type="text/javascript" src="javascripts/main.js"></script>
+	<script>
+		var vue = new Vue({
+			el: '#app',
+			data: {
+				List: [],
+				checkboxValue: false
+			},
+			mounted: function () {
+				var self = this;
+				// FastClick.attach(document.body);
+				var token = get_user_login();
+				$.ajax({
+					url: _API + "user/info",
+					type: "GET",
+					dataType: "json",
+					async: true,
+					beforeSend: function beforeSend(request) {
+						request.setRequestHeader("Authorization", token);
+					},
+					success: function success(data) {
+						self.List = data.message;
+						if (data.type == 'ok') {
+							$('.lock').text(data.message.tobe_seller_lockusdt + 'USDT');
+						} else if (data.type == '999') {
+							window.location = 'login.html';
+						}
+					}
+				});
+			},
+			methods: {
+				agree(val) {
+					let that = this;
+				},
+				sumbits() {
+					let that = this;
+					if (that.checkboxValue) {
+						window.location.href = 'applicationData.html'
+					} else {
+						layer_msg('请勾选同意冻结');
+					}
+
+				}
+			}
+		});
+	</script>
+</body>
+
+</html>

@@ -1,0 +1,94 @@
+.content{
+	background: #fff;
+	padding: 0 5% 10px;
+}
+.apy-basis{
+	font-size: 16px;
+    color: #333;
+    padding: 30px 0 10px;
+    font-weight: bold;
+}
+.apy-name{
+	border-bottom:1px solid #eee;
+}
+.apy-name input{
+	color:#333;
+	font-size: 14px;
+	width: 100%;
+	padding: 10px 0;
+}
+.apy-scan{
+	display: flex;
+	flex-direction: row;
+	justify-content:space-between;
+	margin-top: 30px;
+}
+.apy-scan-left h1{
+	color:#333;
+	font-size: 16px;
+}
+.apy-scan-left a{
+	margin-left: 15px;
+	color:#f0b90b;
+}
+.apy-scan-left{
+	display: flex;
+	flex-direction: row;
+}
+.apy-scan-right img{
+	width: 100%;
+}
+.apy-scan-right{
+	width: 20px;
+}
+.apy-copy{
+	margin-top:10px;
+}
+.apy-copy-title{
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
+.apy-copy-title img{
+	width: 20px;
+	height: 20px;
+}
+.apy-tip{
+	width: 90%;
+	margin: 20px auto 0;
+	color:#999;
+	font-size: 12px;
+}
+.apy-copy-title h1{
+	margin-right: 20px;
+	font-size: 16px;
+	color:#999;
+}
+.apy-copy-form{
+	margin-top: 10px;
+}
+.apy-copy-form input{
+	color:#333;
+	width: 100%;
+	padding: 10px 5%;
+	border: 1px solid #ddd;
+}
+.btm-mar {
+    padding-bottom: 80px;
+}
+.member-fix {
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    padding: 10px 0;
+    background: #fff;
+}
+.member-fix button {
+    width: 80%;
+    margin: 0 10%;
+    padding: 10px 0;
+    border: 0;
+    border-radius: 20px;
+    background: #f0b90b;
+    color: #fff;
+}

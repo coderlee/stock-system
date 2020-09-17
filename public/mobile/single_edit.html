@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, viewport-fit=cover" />
+    <title>编辑跟单</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/single_edit.css" />
+</head>
+
+<body>
+    <div id='app' v-cloak>
+	<header class="header">
+		<a href="javascript:history.go(-1)" class="back mt5"></a>
+		<h4 class="ft16">{{getlg('bjgd')}}</h4>
+		<div class="folkme" v-if="gdstatus==1" @click="cancel(gduserInfo.uid)">{{getlg('qxgs')}}</div>
+	</header>
+	<div class="header-space"></div>
+	<div class="folk-container">
+		<div class="folk-title">
+			<div class="folk-title-list">
+				<span>{{getlg('gdzh')}}</span>
+				<span>{{getlg('gdbz')}}</span>
+			</div>
+			<div class="folk-title-list">
+				<h1>{{gduserInfo.teacher_name}}</h1>
+				<h1>USDT</h1>
+			</div>
+		</div>
+		<div class="folk-currency">
+			<h1>{{getlg('gdbz')}}</h1>
+			<article>
+				<span>USDT</span>
+				<!--<img src="images/btm_arrow.png" />-->
+			</article>
+		</div>
+		<!--<div class="folk-moeny">-->
+		<!--	<div class="folk-switch">-->
+		<!--		<h1>{{getlg('gdkg')}}</h1>-->
+		<!--		<label class="btn"><input class="mui-switch mui-switch-animbg" type="checkbox" checked="checked"></label>-->
+		<!--	</div>-->
+		<!--	<div class="folk-tip">{{getlg('gbhygs')}}</div>-->
+		<!--</div>-->
+		<div class="folk-moeny">
+			<div class="folk-box">
+				<div class="folk-left">
+					<h1>{{getlg('gdmoney')}}<span>(USDT)</span></h1>
+				</div>
+				<div class="folk-right">
+					<span>—</span>
+					<input type="number" onclick="scrollInput(this)" v-model="min" @input="inputMin()">
+					<span>+</span>
+				</div>
+			</div>
+			<div class="folk-tip">{{getlg('lrgddesc')}}10.00USDT</div>
+		</div>
+		<div class="folk-moeny" style="border-bottom:0">
+			<div class="folk-box">
+				<div class="folk-left">
+					<h1>{{getlg('drgsbz')}}<span>(USDT)</span></h1>
+				</div>
+				<div class="folk-right">
+					<span>—</span>
+					<input type="number" onclick="scrollInput(this)" v-model="max" @input="inputMax()">
+					<span>+</span>
+				</div>
+			</div>
+			<div class="folk-tip">{{getlg('drgsmax')}}500000.00</div>
+		</div>
+	</div>
+	<div class="folk-btn">
+		<article @click="submit()">{{getlg('ljgs')}}</article>
+	</div>
+	</div>
+    <script type="text/javascript" src="lib/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="lib/bootstrap.min.js"></script>
+	<script type="text/javascript" src="javascripts/jquery.cookie.js"></script>
+	<script type="text/javascript" src="lib/layer_mobile/layer.js"></script>
+	<script type="text/javascript" src="lib/jquery.localize.min.js?v=10"></script>
+	<script type="text/javascript" src="lib/language_cookie.js"></script>
+	<script type="text/javascript" src="javascripts/main.js"></script>
+	<script type="text/javascript" src="lib/vue.min.js"></script>
+	<script>
+		var vue =new Vue({
+			el:"#app",
+			data:{
+			    gdstatus:get_param('gdstatus'),
+			    uid:get_param('uid'),
+			    min:'',
+			    max:'',
+			    gduserInfo:[],
+			},
+			mounted: function () {
+			    this.gduserInfo=JSON.parse(sessionStorage.getItem('gd'));
+            },
+            methods: {
+                inputMax(){
+                    if(this.max>500000)this.max=500000;
+                },
+                inputMin(){
+                    if(this.min<10) this.min=10;
+                },
+                cancel(id){
+                    let that=this;
+                  initDataTokens({
+                      type:"post",
+                      url:"transaction/gd_order/cancel",
+                      data:{
+                          gd_order_id:that.id
+                      }
+                  },function(res){
+                      layer.msg(res.message);
+                      if(res.type=="ok"){
+                          that.gdstatus=0;
+                      }
+                  })  
+                },
+                submit(){
+                    let that=this;
+                    if(this.min%1!=0){
+                        return layer.msg(getlg('qrszs'));
+                    }
+                    if(this.max%1!=0){
+                        return layer.msg(getlg('qrszs'));
+                    }
+                    initDataToken({
+                        type:"post",
+                        url:"transaction/gd_order",
+                        data:{
+                            gd_user_id:that.gduserInfo.uid,
+                            value:that.min,
+                            day_max:that.max,
+                        }
+                    },function(res){
+                        layer.msg(res);
+                    })
+                }
+            }
+		})
+	</script>
+	<script>
+	function scrollInput(that){
+	  setTimeout(function(){  
+          $(that).scrollIntoView(); // 参数可以是true， false, 空参数  
+      }, 300);
+	}
+	</script>
+</body>
+
+</html>

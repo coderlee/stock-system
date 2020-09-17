@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<title>关于我们</title>
+	<!-- css引入 -->
+	<link rel="stylesheet" type="text/css" href="lib/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="css/common.css" />
+	<style>
+		.demos li{
+			padding: 15px;
+			border-bottom: 1px solid #f1f1f1;
+		}
+		a:link,a:hover{color: #333;}
+		.news-item a{
+			display: block;
+			width: 100%;
+		}
+	</style>
+</head>
+
+<body class="bgWhite">
+	<header class="header">
+		<a class="back" href="javascript:history.go(-1)">
+		</a>
+		<h4 class="ft16" data-localize="index.aboutus">关于我们</h4>
+	</header>
+	<div class="header-space"></div>
+	<div class="nav about-list">
+		<ul class="ft16 demos">
+
+
+
+		</ul>
+	</div>
+	<!-- js引入 -->
+	<script type="text/javascript" src="lib/layer_mobile/layer.js"></script>
+	<script type="text/javascript" src="lib/jquery-2.1.1.min.js"></script>
+	<script type="text/javascript" src="lib/jquery.localize.min.js"></script>
+	<script type="text/javascript" src="lib/language_cookie.js"></script>
+	<script type="text/javascript" src="javascripts/main.js"></script>
+	<script>
+		$(function () {
+			$.ajax({
+				type: 'post',
+				url: _API + 'news/list',
+				dataType: 'json',
+				data: {
+					c_id: 19
+				},
+				success: function (data) {
+					var html = '';
+					var title;
+					for (i = 0; i < data.message.list.length; i++) {
+						html += "<li class='news-item'><a href='journalism.html?id=" + data.message.list[i].id +
+							"'>" + data.message.list[i].title + "</a></li>";
+					};
+					$('.demos').html(html);
+				}
+			});
+		})
+	</script>
+</body>
+
+</html>

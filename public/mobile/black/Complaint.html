@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>我的留言</title>
+		<link rel="stylesheet" type="text/css" href="../css/common.css" />
+		
+	</head>
+	<body class="bgBalck">
+		<div id="app" v-cloak>
+			<header class="header">
+				<a class="back mt5" href="javascript:history.go(-1)">
+					
+				</a>
+				<h4 class="ft16" data-localize="td.message">我的留言</h4>
+			</header>
+			<div class="header-space"></div>
+			<div class="nav ml12 mt20">
+				<div class="nav1 mt10 mb10">
+					<ul class="bgBlackColor ft14 ptb15" style="border-radius: 2px;">
+						<li class="ml12 flex between"><span class="c1">{{List.account_number}}</span>
+							<sapn class="c2">{{List.create_time}}</sapn>
+						</li>
+						<li class="ml12 mt15">
+								<span>{{List.content}}</span>
+							</li>
+						<li class="ml12 mt15" v-show="List.reply_content"><span data-localize="td.reply">回复：</span> {{List.reply_content}}</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="../lib/jquery-2.1.1.min.js"></script>
+		<script type="text/javascript" src="../lib/vue.min.js"></script>
+		<script type="text/javascript" src="../lib/swiper.jquery.min.js"></script>
+		<script type="text/javascript" src="../javascripts/jquery.cookie.js"></script>
+		<script type="text/javascript" src="../lib/jquery.localize.min.js"></script>
+		<script type="text/javascript" src="../lib/language_cookie.js"></script>
+		<script type="text/javascript" src="../javascripts/main.js"></script>
+		<script>
+				var vue = new Vue({
+					el: '#app',
+					data: {
+						List: []
+					},
+					mounted: function() {
+						var self = this;
+						// FastClick.attach(document.body);
+						var id = getUrlParam("id");
+						var token = get_user_login();
+						$.ajax({
+							url: _API + "feedback/detail",
+							type: "POST",
+							dataType: "json",
+							async: true,
+							data: {
+								id: id
+							},
+							beforeSend: function beforeSend(request) {
+								request.setRequestHeader("Authorization", token);
+							},
+							success: function success(data) {
+								if (data.type == 'ok') {
+									self.List = data.message;
+								}
+							}
+						});
+			
+					},
+					methods: {
+			
+					}
+				});
+			
+				function getUrlParam(name) {
+					var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+					var r = window.location.search.substr(1).match(reg); //匹配目标参数
+					if (r != null) return unescape(r[2]);
+					return null; //返回参数值
+				}
+			</script>
+			
+	</body>
+</html>

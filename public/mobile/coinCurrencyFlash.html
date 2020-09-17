@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, minimal-ui" />
+	<title>币币交易</title>
+	<link rel="stylesheet" href="element-ui/lib/theme-chalk/index.css" />
+	<link rel="stylesheet" type="text/css" href="css/common.css" />
+	<style>
+		.content {
+			margin: 0 20px;
+		}
+
+		.content span {
+			display: block;
+			width: 60px;
+		}
+
+		.content input {
+			margin-top: 20px;
+			width: 44%;
+			border: 1px solid #f1f1f1;
+			line-height: 30px;
+			padding: 0 10px;
+		}
+
+		.password {
+			line-height: 40px;
+		}
+
+		.password input {
+			padding-left: 4px;
+		}
+
+		.btns {
+			height: 40px;
+			line-height: 40px;
+			border-radius: 2px;
+			background-color: #588bf7;
+			margin-top: 40px;
+		}
+
+		.btns button {
+			width: 100%;
+			background-color: rgba(0, 0, 0, 0);
+			border: none;
+			outline: none;
+		}
+
+		#currency {
+			padding: 0 10px;
+			border: 1px solid #f1f1f1;
+			width: 120px;
+			line-height: 30px;
+			height: 30px;
+
+		}
+
+		.logos {
+			width: 20px;
+			height: 20px;
+			position: relative;
+			top: 5px;
+			margin-right: 6px;
+		}
+
+		.tab-logo {
+			width: 30px;
+			height: 30px;
+			margin-top: 5px;
+		}
+
+		.coin-currency-flash {
+			padding-bottom: 20px;
+		}
+
+		.width1 {
+			width: 23%;
+		}
+
+		.width2 {
+			width: 15%;
+		}
+
+		.width3 {
+			width: 26.5%;
+		}
+
+		.order-list {
+			width: 100%;
+			margin-top: 10px;
+		}
+
+		.order-list ul {
+			width: 100%;
+			background-color: #fff;
+			margin-top: 10px;
+		}
+
+		.order-list ul li {
+		    word-break: break-all;
+			border-bottom: 1px solid #f1f1f1;
+			padding: 10px 0;
+		}
+
+		.bg {
+			background-color: #fff;
+			padding-bottom: 10px;
+			padding-top: 10px;
+			margin-top: 20px;
+		}
+
+		.order-list-text {
+			width: 100%;
+			line-height: 40px;
+			background-color: #fff;
+			padding-left: 10px;
+		}
+		.tl{
+		    width: 40%;
+		    text-align: left;
+            border: 1px solid #ddd;
+            height: 38px;
+            border-radius: 5px;
+		}
+		.el-dropdown {
+		    width: 100%;
+            display: inline-block;
+            position: relative;
+            color: #606266;
+            font-size: 14px;
+            padding: 10px;
+        }
+        .el-icon--right{
+            margin-left: 65px;
+        }
+        .line{
+            height: 10px;
+            background: #f4f8fb;
+        }
+        .duihuan{
+            padding: 20px 3%;
+            border-bottom: 1px solid #eee;
+        } 
+        .duihuan h1{
+            color: #90a2b0;
+            font-size: 16px;
+        }
+        .duihuan-row{
+            display: flex;
+            flex-direction: row;
+            margin-top: 20px;
+            justify-content: space-between;
+        }
+        .duihuan-row input{
+            width: 55%;
+            font-size: 20px;
+        }
+        .duihuan-row em{
+            font-size: 20px;
+        }
+        .duihuan-row span{
+            color: #588bf7;
+        }
+        .huilv{
+            display: flex;
+            flex-direction: row;
+            margin-top: 15px;
+        }
+        .huilv article{
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+            width: 33.33%;
+        }
+        .huilv span{
+            font-size: 12px;
+            color: #90a2b0;
+        }
+        .huilv em{
+            font-size: 12px;
+            color: #62759a;
+        }
+	</style>
+</head>
+
+<body>
+	<div id="app" v-cloak>
+		<header class="header">
+			<a class="back mt5" href="javascript:history.go(-1)"></a>
+			<h4 class="ft16" data-localize="footer.currency">币币交易</h4>
+			<!-- <p class="right" @click="links">
+				<img class="recordList mt10" src="images/record1.png" alt="">
+			</p> -->
+		</header>
+		<div class="header-space"></div>
+		<div class="bg">
+			<!--<div class="coin-currency-flash flex ml15">-->
+			<!--	<p class="tc" data-localize="contract.realPrice">实时价格</p>-->
+			<!--	<p class="tc ">${{prices || '0.00'}}</p>-->
+			<!--</div>-->
+			<!-- <div class="coin-currency-flash flex ml15">
+					<p class="tc">
+							{{getlg('text10')}}:{{pbPrice}}
+						</p>
+				</div> -->
+			<div class="convertibility-header flex between ml10 mr10 mb10">
+				<div class="tl">
+					<!--<p data-localize="contract.currencyExchange">兑出币种</p>-->
+					<el-dropdown trigger="click" @command="selectedOne">
+						<!-- <img class="logos" :src="leftLogo" alt=""> -->
+						<span class="el-dropdown-link">
+							<!-- <img class="logos" :src="leftLogo" alt=""> -->
+							{{value1}}<i class="el-icon-arrow-down el-icon--right"></i>
+						</span>
+						<el-dropdown-menu slot="dropdown">
+							<el-dropdown-item
+								:command="{id:item.id,name:item.name,logos:item.logo,minNUm:item.min_number,maxNUm:item.max_number,prices:item.price,balances:item.balance,pbPrice:item.to_pb_price,hq_huilv:item.hq_huilv}"
+								v-for="item in leftList" :key="item.id">
+								{{item.name}}</el-dropdown-item>
+						</el-dropdown-menu>
+
+						</el-dropdown-menu>
+					</el-dropdown>
+				</div>
+				 <!--<img class="tab-logo" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC8AAAAvCAYAAABzJ5OsAAAECElEQVRoQ+2ZT2gcdRTHv9/f2uzMRrSKHipYNGDx3009eLBFQfCgGKKbmYJ/qqCIB0GTWS1EXGNjm5kVDyK0+AcUhFlXklA8FNE29CL0IlSobYUe9GIrJWrZmd1kd55Mkt3ObjbtLux2J5A57rz3fZ/3fr95v9k3RAyvdK58r5LqNwRvgwSTbmbw01aYjCE7DNv7lmS6ziZiuZlUrpk1lvCm438N4PkorAATeUufiv4WT/iPvNtR5TyIoSslEEv4EDh9wNueUDy2JgHBZD6jvxfaxBb+SglAsM/N6O+2hB/+WLYmK4u7ANlBSKqvD7VgO4iXmxkCYk8DvLnfvwPXYRICA8RAX6GvGlxO1uGNXHkEEnxF4Pqr+sXBQGRhGd6wi0+Sag5AIg5c7TAIcJzD2YWtWko7C+LWiFMAke8F6kcw+LsdsZ7ZiHqQlLGmllkh8DhHHX+vAj6M3LxYhTxVsFI/9wyoTeG0s/RwApUjAG6ouQhQochzbiaVp+F4Jwg+VNejpN3x1Hdt6vfMbAW8egSQOjiAJaEy8+PJmeU+bzi+R0BfoeC/bjF5M7IMekbVhnA6t/hAQoKjzeCAMlwrOVuToOn4ElmSM3lLv7sN/Z6aGLY3S3I4EmSpGXy51FF4AKddS7+np2RtiJu2/0XtYBKgTMVRd0w73OwaS/jduf9uEWxxRLAtAOyCpR9tlXMs4ddbnJGp4rYtA2oKEF0x8f6Ggjed0hwgT682l5MbDN7/DUCtoZQ24dtoIF0xMZ3NynelkB2LbFa+45J1yWGz8l0qZMcyrSp/FsBdq6fWjGtpz3Sseo0c1sDvPlC+L0hUJwheKkObmLV44RqxdBxmDfx6Csa0N0KFNwX8vVwsvTWXvemfjqN12aEteMP2XyDx5eVpAnOupVldZulYznT8MwB2rDqW1kzMTNvfA+LzpjHIZ66lv9pxtK46SPgetgDwxhVZudA4MXP8VwAcBKDqcQXnJcGd+TEtfLD7dpm2/wiI4xGA+Tq8uQ54VanHCuPJU32jDgNnRRmDpWMEdtY4RNTeZfg4g6ezMqAGSwcJvBQpoF+V6hBHp4vDVGqGkXG3AEJgn0D6VnERkOQQgRcvn0N1/Kxr6ct/A38FcH9ft0UnwQU//eVpT8xnWQnhKxtmwCr4wRPt2cNv81KYbzgxO0fgzk6S74PtnyLB/ryXOhSd5tGYLr5OpRq+c4Z7PmyZBM73AbQWMpCAFwMV/IIT+olCgdVmltVuU3IAGY/eFODUIrRH4/yuE+nzGy+BhhN21PYcRTasAMDTZSR3xXEFWr3bfABiomELCT/JZ7Q3+rj/W4Zu+SnTtP2GBAQ4lLf01zYEfAg5ansZRY5BcK4aiFF4J/VH3OD/B7m52YL1LMEeAAAAAElFTkSuQmCC" alt="" @click="coinTab"> -->
+				 <img class="tab-logo" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC8AAAAvCAYAAABzJ5OsAAAECElEQVRoQ+2ZT2gcdRTHv9/f2uzMRrSKHipYNGDx3009eLBFQfCgGKKbmYJ/qqCIB0GTWS1EXGNjm5kVDyK0+AcUhFlXklA8FNE29CL0IlSobYUe9GIrJWrZmd1kd55Mkt3ObjbtLux2J5A57rz3fZ/3fr95v9k3RAyvdK58r5LqNwRvgwSTbmbw01aYjCE7DNv7lmS6ziZiuZlUrpk1lvCm438N4PkorAATeUufiv4WT/iPvNtR5TyIoSslEEv4EDh9wNueUDy2JgHBZD6jvxfaxBb+SglAsM/N6O+2hB/+WLYmK4u7ANlBSKqvD7VgO4iXmxkCYk8DvLnfvwPXYRICA8RAX6GvGlxO1uGNXHkEEnxF4Pqr+sXBQGRhGd6wi0+Sag5AIg5c7TAIcJzD2YWtWko7C+LWiFMAke8F6kcw+LsdsZ7ZiHqQlLGmllkh8DhHHX+vAj6M3LxYhTxVsFI/9wyoTeG0s/RwApUjAG6ouQhQochzbiaVp+F4Jwg+VNejpN3x1Hdt6vfMbAW8egSQOjiAJaEy8+PJmeU+bzi+R0BfoeC/bjF5M7IMekbVhnA6t/hAQoKjzeCAMlwrOVuToOn4ElmSM3lLv7sN/Z6aGLY3S3I4EmSpGXy51FF4AKddS7+np2RtiJu2/0XtYBKgTMVRd0w73OwaS/jduf9uEWxxRLAtAOyCpR9tlXMs4ddbnJGp4rYtA2oKEF0x8f6Ggjed0hwgT682l5MbDN7/DUCtoZQ24dtoIF0xMZ3NynelkB2LbFa+45J1yWGz8l0qZMcyrSp/FsBdq6fWjGtpz3Sseo0c1sDvPlC+L0hUJwheKkObmLV44RqxdBxmDfx6Csa0N0KFNwX8vVwsvTWXvemfjqN12aEteMP2XyDx5eVpAnOupVldZulYznT8MwB2rDqW1kzMTNvfA+LzpjHIZ66lv9pxtK46SPgetgDwxhVZudA4MXP8VwAcBKDqcQXnJcGd+TEtfLD7dpm2/wiI4xGA+Tq8uQ54VanHCuPJU32jDgNnRRmDpWMEdtY4RNTeZfg4g6ezMqAGSwcJvBQpoF+V6hBHp4vDVGqGkXG3AEJgn0D6VnERkOQQgRcvn0N1/Kxr6ct/A38FcH9ft0UnwQU//eVpT8xnWQnhKxtmwCr4wRPt2cNv81KYbzgxO0fgzk6S74PtnyLB/ryXOhSd5tGYLr5OpRq+c4Z7PmyZBM73AbQWMpCAFwMV/IIT+olCgdVmltVuU3IAGY/eFODUIrRH4/yuE+nzGy+BhhN21PYcRTasAMDTZSR3xXEFWr3bfABiomELCT/JZ7Q3+rj/W4Zu+SnTtP2GBAQ4lLf01zYEfAg5ansZRY5BcK4aiFF4J/VH3OD/B7m52YL1LMEeAAAAAElFTkSuQmCC" alt="" > 
+				<!--<img class="tab-logo" src="images/transer.png" alt="">-->
+				<div class="tl">
+					<!--<p data-localize="contract.currencyExchangeIn">兑入币种</p>-->
+					<el-dropdown trigger="click" @command="selectedTwo">
+						<!-- <img class="logos" :src="rightLogo" alt=""> -->
+						<span class="el-dropdown-link">
+							<!-- <img class="logos" :src="rightLogo" alt=""> -->
+							{{value2}}<i class="el-icon-arrow-down el-icon--right"></i>
+						</span>
+						<el-dropdown-menu slot="dropdown">
+							<el-dropdown-item
+								:command="{id:item.id,name:item.name,logos:item.logo,minNUm:item.min_number,maxNUm:item.max_number,prices:item.price,balances:item.balance,hq_huilv:item.hq_huilv}"
+								v-for="item in rightList" :key="item.id">{{item.name}}
+							</el-dropdown-item>
+
+
+						</el-dropdown-menu>
+					</el-dropdown>
+				</div>
+			</div>
+			<!--<div class="content ml12 flex between">-->
+				<!-- <span data-localize="transaction.price">价格</span> -->
+			<!--	<input type="number" v-model="inputPrice" readonly="readonly" data-localize="deals.inputprice" placeholder="请输入价格">-->
+				<!-- <span>数量</span> -->
+			<!--	<input type="number" v-model="inputNUm" data-localize="td.pnum" placeholder="请输入数量">-->
+			<!--</div>-->
+			<!--<div class="ml20 mr20">-->
+			<!--	<p class="mt10"><span data-localize="contract.cashableBalance">可兑出余额：</span>{{balance}}</p>-->
+				<!-- <p class="mt10"><span data-localize="contract.minimumCashable">最小可兑出：</span>{{minNumber}}</p>
+			<!--	<p class="mt10"><span data-localize="contract.maximumCashable">最大可兑出：</span>{{maxNumber}}</p> -->
+			<!--</div>-->
+			<div class="line"></div>
+			<div class="duihuan">
+			    <h1  data-localize="zdy.duihuannum">兑换数量</h1>
+			    <div class="duihuan-row">
+			        <em>{{value1}}</em>
+			        <input type="number" v-model="inputNUm" data-localize="td.pnum" placeholder="请输入数量" @input="jianting()">
+			        <span data-localize="zdy.allduihuan" @click="allduihuan()">全部兑换</span>
+			    </div>
+			</div>
+			<div class="huilv">
+			    <article>
+			        <span data-localize="zdy.huilv">兑换汇率</span>
+			        <em>{{prices || '0.00'}}</em>
+			    </article>
+			    <article>
+			        <span><span data-localize="transaction.avaiable">可用</span>{{value1}}</span>
+			        <em>{{balance | toFixeds1}}</em>
+			    </article>
+			    <article>
+			        <span><span data-localize="zdy.kede">可得</span>{{value2}}</span>
+			        <em>{{kedePrice | toFixeds1}}</em>
+			    </article>
+			</div>
+			<div class="btns ml12">
+				<button type="button" class="white" @click="sumbit()" data-localize="jc.exnow">立即兑换</button>
+			</div>
+			<!--<div class="tc mt10" style="color:#f0b90b;" data-localize="contract.automatically">点击兑换之后将自动完成，不能返回</div>-->
+		</div>
+
+		<!-- 兑换记录 -->
+		<div class="order-list">
+			<p class="order-list-text" data-localize="jc.record">兑换记录</p>
+			<ul>
+				<li class="flex between ft10 tc alcenter">
+					<p class="width1" data-localize="deals.type">类型</p>
+					<p class="width2" data-localize="assets.num">数量</p>
+					<p class="width3" data-localize="transaction.price">价格</p>
+					<p class="width3" data-localize="assets.time">时间</p>
+					<p class="width2" data-localize="contract.state">状态</p>
+				</li>
+				<li class="flex between ft10 tc alcenter" v-for="item in orderList" :key="item.id">
+					<p class="width1">{{item.l_currency}} {{getlg('match')}} {{item.r_currency}}</p>
+					<p class="width2">{{item.num}}</p>
+					<p class="width3">{{item.price}}</p>
+					<p class="width3">{{item.review_time}}</p>
+					<p class="width2">{{item.status_name}}</p>
+				</li>
+			</ul>
+		</div>
+	</div>
+</body>
+
+</html>
+<script type="text/javascript" src="lib/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="lib/vue.min.js"></script>
+<script type="text/javascript" src="element-ui/lib/index.js"></script>
+<script type="text/javascript" src="lib/layer_mobile/layer.js"></script>
+<script type="text/javascript" src="javascripts/jquery.cookie.js"></script>
+<script type="text/javascript" src="javascripts/socket.io.js"></script>
+<script type="text/javascript" src="lib/jquery.localize.min.js?v=10"></script>
+<script type="text/javascript" src="lib/language_cookie.js"></script>
+<script type="text/javascript" src="javascripts/main.js"></script>
+<script>
+	var vue = new Vue({
+		el: '#app',
+		data: {
+			selectValue: '',
+			currencyName: '',
+			value1: '',
+			value2: '',
+			leftList: [],
+			rightList: [],
+			datas: {},
+			leftLogo: '',
+			rightLogo: '',
+			prices: '',
+			inputPrice: '',
+			inputNUm: '',
+			balance: '0.00',
+			maxNumber: '',
+			minNumber: '',
+			leftId: '',
+			rightId: '',
+			orderList: [],
+			typeTab: 1,
+			pbPrice:'',
+			kedePrice:0,
+
+		},
+    	filters: {
+			toFixeds: function (value) {
+				var vals = iTofixed(value,2);
+				return vals;
+			},
+			toFixeds1: function (value) {
+				var vals = iTofixed(value,8);
+				return vals;
+			},
+			toFixed4: function (value) {
+				var vals = iTofixed(value,4);
+				return vals;
+			},
+			toFixedNum: function (value) {
+				var vals = iTofixed(value,0);
+				return vals;
+			},
+			toFixed1: function (value) {
+				var vals = iTofixed(value,1);
+				return vals;
+			}
+		},
+		mounted: function () {
+			let that = this;
+			// FastClick.attach(document.body);
+			let text = '';
+			initDataToken01({
+				url: 'wallet/flashAgainstList'
+			}, function (res) {
+				if (res.type == 'ok') {
+					that.datas = res.message;
+					that.leftList = res.message.left;
+					that.value1 = res.message.left[0].name;
+					that.leftLogo = res.message.left[0].logo;
+					
+					that.prices = res.message.left[0].hq_huilv;
+				// 	that.inputPrice=res.message.left[0].price;
+					that.maxNumber = res.message.left[0].max_number;
+					that.minNumber = res.message.left[0].min_number;
+					that.leftId = res.message.left[0].id;
+					that.balance = res.message.left[0].balance;
+					that.pbPrice = res.message.left[0].to_pb_price;
+					for(var i=0;i<res.message.right.length;i++){
+					    if(res.message.right[i].type=="usdt"){
+					        that.rightList=res.message.right[i];
+        				    that.value2 = res.message.right[i].name;
+        					that.rightLogo = res.message.right[i].logo;
+        					that.rightId = res.message.right[i].id;
+					    }
+					}
+				}
+			})
+			that.getList();
+
+		},
+		methods: {
+		    allduihuan(){
+		      if(this.balance*this.prices>0){
+		        this.kedePrice=this.balance*this.prices;
+		      }
+		    },
+		    jianting(){
+		        this.kedePrice=this.inputNUm*this.prices;
+		    },
+			// 获取兑换列表
+			getList() {
+				var that = this;
+				initDataToken01({
+					url: 'wallet/myFlashAgainstList'
+				}, function (res) {
+					if (res.type == 'ok') {
+						that.orderList = res.message.data;
+
+					}
+				})
+			},
+
+			selectedOne(command) {
+				var that = this;
+				that.kedePrice="";
+				that.inputNUm="";
+				that.value1 = command.name;
+				that.leftId = command.id;
+				that.leftLogo = command.logos;
+				// if (that.typeTab == 1) {
+					that.prices = command.hq_huilv;
+					that.maxNumber = command.maxNUm;
+					that.minNumber = command.minNUm;
+					that.balance = command.balances;
+					that.pbPrice = command.pbPrice;
+				// }
+			},
+			selectedTwo(command) {
+				var that = this;
+				that.kedePrice="";
+				that.inputNUm="";
+				that.value2 = command.name;
+				that.rightId = command.id;
+				that.rightLogo = command.logos;
+				// if(that.typeTab == 2){
+					// that.prices = command.prices;
+					// that.maxNumber = command.maxNUm;
+					// that.minNumber = command.minNUm;
+					// that.balance = command.balances;
+				// }
+			},
+			coinTab() {
+				var that = this;
+				that.typeTab = that.typeTab == 1 ? 2 : 1;
+				let leftId=that.leftId;
+				let rightId=that.rightId;
+				if (that.typeTab == 1) {
+					
+					that.leftList = that.datas.left;
+					that.rightList = that.datas.right;
+					for(let i=0;i<that.leftList.length;i++){
+						if(that.leftList[i].id==rightId){
+							that.value1 = that.leftList[i].name;
+							that.leftLogo = that.leftList[i].logo;
+							that.prices = that.leftList[i].hq_huilv;
+							that.maxNumber = that.leftList[i].max_number;
+							that.minNumber = that.leftList[i].min_number;
+							that.leftId = that.leftList[i].id;
+							that.balance = that.leftList[i].balance;
+							that.pbPrice = that.leftList[i].to_pb_price;
+							break;
+						}
+					}
+					for(let i=0;i<that.rightList.length;i++){
+						if(that.rightList[i].id==leftId){
+							that.value2 = that.rightList[i].name;
+							that.rightLogo = that.rightList[i].logo;
+							that.rightId = that.rightList[i].id;
+							break;
+						}
+					}
+					// that.value1 = that.datas.left[0].name;
+					// that.leftLogo = that.datas.left[0].logo;
+					// that.value2 = that.datas.right[0].name;
+					// that.rightLogo = that.datas.right[0].logo;
+					// that.prices = that.datas.left[0].price;
+					// that.maxNumber = that.datas.left[0].max_number;
+					// that.minNumber = that.datas.left[0].min_number;
+					// that.leftId = that.datas.left[0].id;
+					// that.rightId = that.datas.right[0].id;
+					// that.balance = that.datas.left[0].balance;
+					// that.pbPrice = that.datas.left[0].to_pb_price;
+				} else {
+					that.leftList = that.datas.right;
+					that.rightList = that.datas.left;
+					for(let i=0;i<that.leftList.length;i++){
+						if(that.leftList[i].id==rightId){
+							that.value1 = that.leftList[i].name;
+							that.leftLogo = that.leftList[i].logo;
+							that.prices = that.leftList[i].hq_huilv;
+							that.leftId = that.leftList[i].id;
+							that.balance = that.leftList[i].balance;
+							that.pbPrice = that.leftList[i].to_pb_price;
+							break;
+						}
+					}
+					for(let i=0;i<that.rightList.length;i++){
+						if(that.rightList[i].id==leftId){
+							that.value2 = that.rightList[i].name;
+							that.rightLogo = that.rightList[i].logo;
+							that.maxNumber = that.rightList[i].max_number;
+							that.minNumber = that.rightList[i].min_number;
+							that.rightId = that.rightList[i].id;
+							break;
+						}
+					}
+					// that.value1 = that.datas.right[0].name;
+					// that.leftLogo = that.datas.right[0].logo;
+					// that.value2 = that.datas.left[0].name;
+					// that.rightLogo = that.datas.left[0].logo;
+					// that.prices = that.datas.right[0].price;
+					// that.maxNumber = that.datas.left[0].max_number;
+					// that.minNumber = that.datas.left[0].min_number;
+					// that.leftId = that.datas.right[0].id;
+					// that.rightId = that.datas.left[0].id;
+					// that.balance = that.datas.right[0].balance;
+					// that.pbPrice = that.datas.right[0].to_pb_price;
+				}
+
+			},
+			// 兑换
+			sumbit() {
+				let that = this;
+				if (!that.prices) {
+					layer_msg(getlg('ptprice'));
+					return false;
+				}
+				if (!that.inputNUm) {
+					layer_msg(getlg('ptnum'));
+					return false;
+				}
+				initDataToken01({
+					url: 'wallet/flashAgainst',
+					data: {
+						l_currency_id: that.leftId,
+						price: that.prices,
+						num: that.inputNUm,
+						r_currency_id: that.rightId,
+					},
+					type: 'post'
+				}, function (res) {
+					layer_msg(res.message)
+					if (res.type == 'ok') {
+						setTimeout(function () {
+							location.reload();
+						}, 1000)
+
+					}
+				})
+
+			},
+			links() {
+				location.href = 'convertibilityRecord.html';
+			}
+		}
+	});
+</script>

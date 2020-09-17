@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>实名认证</title>
+		<link rel="stylesheet" type="text/css" href="css/common.css"/>
+	</head>
+	<body>
+		<div id="app" v-cloak>
+			<header class="header">
+				<a class="back mt5" href="javascript:history.go(-1)">
+					
+				</a>
+				<h4 class="ft20 bold" data-localize="fat.auName">实名认证</h4>
+			</header>
+			<div class="header-space"></div>
+			<div class="aaa ft14 mt10">
+				<h3 class="ptb10 pb10 pl12 clearfix">
+					<span data-localize="auth.test">身份验证</span>
+					<span v-show="List.review_status==0" @click="aa()" class="fr ftColor" data-localize="auth.gotest">去认证</span>
+					<span v-show="List.review_status==1" class="fr ftColor" data-localize="auth.testing">审核中</span>
+					<span v-show="List.review_status==2" class="fr ftColor" data-localize="auth.tested">已认证</span>
+				</h3>
+				<ul class="ml12">
+					<li class="mt15" v-show="List.review_status==0">·&nbsp;
+						<span data-localize="auth.t1">认证后可提升提币额度</span>
+					</li>
+					<li class="mt15" v-show="List.review_status==0">·&nbsp;
+						<span data-localize="auth.t3">认证后可进行资产交易</span>
+					</li>
+					<li class="mt15" v-show="List.review_status==1">·&nbsp;
+						<span data-localize="auth.t1">认证后可提升提币额度</span>
+					</li>
+					<li class="mt15" v-show="List.review_status==1">·&nbsp;
+						<span data-localize="auth.t3">认证后可进行资产交易</span>
+					</li>
+					<li class="mt15" v-show="List.review_status==2"><span data-localize="auth.name">姓名</span>：<span>{{List.name}}</span></li>
+					<li class="mt15" v-show="List.review_status==2"><span data-localize="auth.account">账户</span>：<span>{{List.account}}</span></li>
+					<li class="mt15" v-show="false && List.review_status==2">UID：<span>{{List.id}}</span></li>
+					<li class="mt15" v-show="List.review_status==2"><span data-localize="auth.number">身份证号</span>：<span>{{List.card_id}}</span></li>
+				</ul>
+			</div>
+		</div>
+		<script type="text/javascript" src="lib/jquery-2.1.1.min.js"></script>
+		<script type="text/javascript" src="javascripts/jquery.cookie.js"></script>
+		<script type="text/javascript" src="lib/vue.min.js"></script>
+		<script type="text/javascript" src="lib/layer_mobile/layer.js"></script>
+		<script type="text/javascript" src="lib/jquery.localize.min.js"></script>
+		<script type="text/javascript" src="lib/language_cookie.js"></script>
+		<script type="text/javascript" src="javascripts/main.js"></script>
+		<script>
+			var vue = new Vue({
+				el: '#app',
+				data: {
+					List: []
+				},
+				mounted: function() {
+					var self = this;
+					// FastClick.attach(document.body);
+					var token = get_user_login();
+					$.ajax({
+						url: _API + "user/center",
+						type: "GET",
+						dataType: "json",
+						async: true,
+						beforeSend: function beforeSend(request) {
+							request.setRequestHeader("Authorization", token);
+						},
+						success: function success(data) {
+							self.List = data.message;
+							if (data.type == 'ok') {
+		
+							} else if (data.type == '999') {
+								window.location ='login.html';
+							}
+						}
+					});
+				},
+				methods: {
+					aa: function() {
+						window.location ='authentication.html';
+					}
+				}
+			});
+		</script>
+		
+	</body>
+</html>
